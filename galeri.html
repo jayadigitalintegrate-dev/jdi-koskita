@@ -132,6 +132,41 @@
             transition: 0.3s;
         }
 
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        .lang-switcher .lang-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .lang-switcher .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .lang-switcher .lang-btn.active {
+            background: #FF7A00;
+            color: #fff;
+            border-color: #FF7A00;
+        }
+
+        .lang-switcher .lang-btn .flag {
+            margin-right: 4px;
+        }
+
         /* ============================================================
            BREADCRUMB
            ============================================================ */
@@ -353,7 +388,7 @@
         }
 
         /* ============================================================
-           GALLERY WITH SIDEBAR - KONTENER FUTURE GAMBAR DI KANAN
+           GALLERY WITH SIDEBAR
            ============================================================ */
         .gallery-wrapper {
             display: grid;
@@ -475,7 +510,7 @@
             opacity: 1;
         }
 
-        /* ---- RIGHT: SIDEBAR - FUTURE GAMBAR ---- */
+        /* ---- RIGHT: SIDEBAR ---- */
         .gallery-sidebar {
             display: flex;
             flex-direction: column;
@@ -510,7 +545,6 @@
             color: #FF7A00;
         }
 
-        /* Featured Image in Sidebar */
         .sidebar-featured {
             position: relative;
             border-radius: 10px;
@@ -539,11 +573,6 @@
             font-weight: 600;
         }
 
-        .sidebar-featured .featured-label .icon {
-            margin-right: 4px;
-        }
-
-        /* Sidebar Image List */
         .sidebar-image-list {
             display: flex;
             flex-direction: column;
@@ -592,12 +621,6 @@
             color: #888;
         }
 
-        .sidebar-image-list .sidebar-img-item .info .loc {
-            font-size: 10px;
-            color: #FF7A00;
-        }
-
-        /* Empty Sidebar State */
         .sidebar-empty {
             text-align: center;
             padding: 30px 20px;
@@ -912,6 +935,9 @@
                 padding: 6px 12px;
                 font-size: 13px;
             }
+            .lang-switcher {
+                margin-left: 0;
+            }
             .breadcrumb {
                 padding: 12px 20px;
             }
@@ -1000,6 +1026,10 @@
                 text-align: center;
                 padding: 10px;
                 font-size: 14px;
+            }
+            .lang-switcher {
+                margin-top: 4px;
+                justify-content: center;
             }
             .breadcrumb-container {
                 flex-direction: column;
@@ -1096,7 +1126,7 @@
 <body>
 
     <!-- ============================================================
-    HEADER - MENU UPLOAD PEMBAYARAN TELAH DIHAPUS
+    HEADER - DENGAN LANGUAGE SWITCHER
     ============================================================ -->
     <header>
         <div class="header-container">
@@ -1104,7 +1134,7 @@
                 <img src="assets/logo-jdi.png" alt="Logo JDI KOSKITA" />
                 <div>
                     <h2>JDI <span>KOSKITA</span></h2>
-                    <p>Smart Boarding House Management System</p>
+                    <p id="headerTagline">Smart Boarding House Management System</p>
                 </div>
             </div>
 
@@ -1114,16 +1144,25 @@
                 <span></span>
             </div>
 
-            <!-- ✅ MENU UPLOAD PEMBAYARAN DIHAPUS -->
             <nav class="nav-menu" id="navMenu">
-                <a href="index.html">Beranda</a>
-                <a href="cek-in.html">Cek-in</a>
-                <a href="galeri.html" class="active">Galeri</a>
-                <a href="fasilitas.html">Fasilitas</a>
-                <a href="#">Daftar Harga</a>
-                <a href="#">Kontak</a>
-                <a href="#" class="btn-login">Login Tamu</a>
-                <a href="#" class="btn-login">Login Admin</a>
+                <a href="index.html" id="menuHome">Beranda</a>
+                <a href="cek-in.html" id="menuCheckin">Cek-in</a>
+                <a href="galeri.html" class="active" id="menuGallery">Galeri</a>
+                <a href="fasilitas.html" id="menuFacilities">Fasilitas</a>
+                <a href="daftar-harga.html" id="menuPricing">Daftar Harga</a>
+                <a href="kontak.html" id="menuContact">Kontak</a>
+                <a href="#" class="btn-login" id="menuGuestLogin">👤 Login Tamu</a>
+                <a href="#" class="btn-login" id="menuAdminLogin">🔐 Login Admin</a>
+
+                <!-- Language Switcher -->
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="id" onclick="switchLanguage('id')">
+                        <span class="flag">🇮🇩</span> ID
+                    </button>
+                    <button class="lang-btn" data-lang="en" onclick="switchLanguage('en')">
+                        <span class="flag">🇬🇧</span> EN
+                    </button>
+                </div>
             </nav>
         </div>
     </header>
@@ -1133,9 +1172,9 @@
     ============================================================ -->
     <div class="breadcrumb">
         <div class="breadcrumb-container">
-            <h1>📸 Galeri & <span>Lokasi</span></h1>
+            <h1 id="breadcrumbTitle">📸 Galeri & <span>Lokasi</span></h1>
             <div class="breadcrumb-links">
-                <a href="index.html">Beranda</a> &gt; <span>Galeri & Lokasi</span>
+                <a href="index.html" id="breadcrumbHome">Beranda</a> &gt; <span id="breadcrumbCurrent">Galeri & Lokasi</span>
             </div>
         </div>
     </div>
@@ -1151,15 +1190,13 @@
         <div class="location-section" id="locationSection">
             <div class="location-header">
                 <span class="loc-icon">📍</span>
-                <h3>Lokasi <span>JDI KOSKITA</span></h3>
+                <h3 id="locationTitle">Lokasi <span>JDI KOSKITA</span></h3>
             </div>
 
-            <!-- Location Tabs (Multi Property) -->
             <div class="location-tabs" id="locationTabs">
                 <!-- Akan di-generate oleh JavaScript -->
             </div>
 
-            <!-- Location Content -->
             <div class="location-grid" id="locationContent">
                 <!-- Akan di-generate oleh JavaScript -->
             </div>
@@ -1169,8 +1206,8 @@
         GALLERY HEADER
         ============================================================ -->
         <div class="gallery-header">
-            <h2>Lihat Suasana <span>Kos Kami</span></h2>
-            <p>Jelajahi berbagai sudut dan fasilitas JDI KOSKITA melalui galeri foto</p>
+            <h2 id="galleryTitle">Lihat Suasana <span>Kos Kami</span></h2>
+            <p id="gallerySubtitle">Jelajahi berbagai sudut dan fasilitas JDI KOSKITA melalui galeri foto</p>
         </div>
 
         <!-- Category Filter -->
@@ -1179,18 +1216,16 @@
         </div>
 
         <!-- ============================================================
-        GALLERY WRAPPER - LEFT GRID + RIGHT SIDEBAR
+        GALLERY WRAPPER
         ============================================================ -->
         <div class="gallery-wrapper">
 
-            <!-- LEFT: Gallery Grid -->
             <div class="gallery-grid-container">
                 <div class="gallery-grid" id="galleryGrid">
                     <!-- Akan di-generate oleh JavaScript -->
                 </div>
             </div>
 
-            <!-- RIGHT: Sidebar untuk Future Gambar -->
             <div class="gallery-sidebar" id="gallerySidebar">
                 <!-- Akan di-generate oleh JavaScript -->
             </div>
@@ -1217,30 +1252,192 @@
     </div>
 
     <!-- ============================================================
-    FOOTER - MENU UPLOAD PEMBAYARAN TELAH DIHAPUS
+    FOOTER
     ============================================================ -->
     <footer>
         <div class="footer-brand">JDI <span>KOSKITA</span></div>
-        <p>Smart Boarding House Management System</p>
+        <p id="footerTagline">Smart Boarding House Management System</p>
         <div class="footer-divider"></div>
-        <p>&copy; 2026 JDI KOSKITA. All Rights Reserved.</p>
-        <!-- ✅ MENU UPLOAD PEMBAYARAN DIHAPUS -->
+        <p id="footerCopyright">&copy; 2026 JDI KOSKITA. All Rights Reserved.</p>
         <div class="footer-links">
-            <a href="index.html">Beranda</a>
-            <a href="cek-in.html">Cek-in</a>
-            <a href="galeri.html">Galeri</a>
-            <a href="fasilitas.html">Fasilitas</a>
-            <a href="#">Daftar Harga</a>
-            <a href="#">Kontak</a>
+            <a href="index.html" id="footerHome">Beranda</a>
+            <a href="cek-in.html" id="footerCheckin">Cek-in</a>
+            <a href="galeri.html" id="footerGallery">Galeri</a>
+            <a href="fasilitas.html" id="footerFacilities">Fasilitas</a>
+            <a href="daftar-harga.html" id="footerPricing">Daftar Harga</a>
+            <a href="kontak.html" id="footerContact">Kontak</a>
         </div>
     </footer>
 
     <!-- ============================================================
-    JAVASCRIPT - CMS READY
+    JAVASCRIPT - CMS READY + MULTI LANGUAGE
     ============================================================ -->
     <script>
         (function() {
             'use strict';
+
+            // ============================================================
+            // 🌐 LANGUAGE DATA
+            // ============================================================
+            const LANGUAGES = {
+                id: {
+                    code: 'id',
+                    name: 'Indonesia',
+                    flag: '🇮🇩',
+                    translations: {
+                        'headerTagline': 'Smart Boarding House Management System',
+                        'menuHome': 'Beranda',
+                        'menuCheckin': 'Cek-in',
+                        'menuGallery': 'Galeri',
+                        'menuFacilities': 'Fasilitas',
+                        'menuPricing': 'Daftar Harga',
+                        'menuContact': 'Kontak',
+                        'menuGuestLogin': '👤 Login Tamu',
+                        'menuAdminLogin': '🔐 Login Admin',
+                        'breadcrumbTitle': '📸 Galeri & <span>Lokasi</span>',
+                        'breadcrumbHome': 'Beranda',
+                        'breadcrumbCurrent': 'Galeri & Lokasi',
+                        'locationTitle': 'Lokasi <span>JDI KOSKITA</span>',
+                        'galleryTitle': 'Lihat Suasana <span>Kos Kami</span>',
+                        'gallerySubtitle': 'Jelajahi berbagai sudut dan fasilitas JDI KOSKITA melalui galeri foto',
+                        'sidebarTitle': '⭐ <span>Gambar Unggulan</span>',
+                        'sidebarEmpty': 'Belum ada gambar unggulan',
+                        'sidebarEmptyDesc': 'Tambahkan gambar unggulan dari CMS.',
+                        'sidebarLocation': '📍 <span>Lokasi Kami</span>',
+                        'sidebarLocationDesc': 'Temukan kami di lokasi strategis dengan akses mudah ke pusat kota dan fasilitas umum.',
+                        'sidebarLocationLink': 'Lihat Lokasi Lengkap →',
+                        'filterAll': 'Semua',
+                        'filterKamar': 'Kamar',
+                        'filterFasilitas': 'Fasilitas',
+                        'filterEksterior': 'Eksterior',
+                        'footerTagline': 'Smart Boarding House Management System',
+                        'footerCopyright': '© 2026 JDI KOSKITA. All Rights Reserved.',
+                        'footerHome': 'Beranda',
+                        'footerCheckin': 'Cek-in',
+                        'footerGallery': 'Galeri',
+                        'footerFacilities': 'Fasilitas',
+                        'footerPricing': 'Daftar Harga',
+                        'footerContact': 'Kontak',
+                    }
+                },
+                en: {
+                    code: 'en',
+                    name: 'English',
+                    flag: '🇬🇧',
+                    translations: {
+                        'headerTagline': 'Smart Boarding House Management System',
+                        'menuHome': 'Home',
+                        'menuCheckin': 'Check-in',
+                        'menuGallery': 'Gallery',
+                        'menuFacilities': 'Facilities',
+                        'menuPricing': 'Pricing',
+                        'menuContact': 'Contact',
+                        'menuGuestLogin': '👤 Guest Login',
+                        'menuAdminLogin': '🔐 Admin Login',
+                        'breadcrumbTitle': '📸 Gallery & <span>Location</span>',
+                        'breadcrumbHome': 'Home',
+                        'breadcrumbCurrent': 'Gallery & Location',
+                        'locationTitle': 'Location <span>JDI KOSKITA</span>',
+                        'galleryTitle': 'See the <span>Boarding House</span> Atmosphere',
+                        'gallerySubtitle': 'Explore various corners and facilities of JDI KOSKITA through the photo gallery',
+                        'sidebarTitle': '⭐ <span>Featured Images</span>',
+                        'sidebarEmpty': 'No featured images yet',
+                        'sidebarEmptyDesc': 'Add featured images from CMS.',
+                        'sidebarLocation': '📍 <span>Our Location</span>',
+                        'sidebarLocationDesc': 'Find us in a strategic location with easy access to the city center and public facilities.',
+                        'sidebarLocationLink': 'View Full Location →',
+                        'filterAll': 'All',
+                        'filterKamar': 'Room',
+                        'filterFasilitas': 'Facilities',
+                        'filterEksterior': 'Exterior',
+                        'footerTagline': 'Smart Boarding House Management System',
+                        'footerCopyright': '© 2026 JDI KOSKITA. All Rights Reserved.',
+                        'footerHome': 'Home',
+                        'footerCheckin': 'Check-in',
+                        'footerGallery': 'Gallery',
+                        'footerFacilities': 'Facilities',
+                        'footerPricing': 'Pricing',
+                        'footerContact': 'Contact',
+                    }
+                }
+            };
+
+            // ============================================================
+            // STATE
+            // ============================================================
+            let currentLang = localStorage.getItem('jdi_lang') || 'id';
+
+            // ============================================================
+            // SWITCH LANGUAGE FUNCTION
+            // ============================================================
+            window.switchLanguage = function(langCode) {
+                if (langCode === currentLang) return;
+                currentLang = langCode;
+                localStorage.setItem('jdi_lang', langCode);
+                applyLanguage(langCode);
+                updateLangButtons(langCode);
+                // Re-render semua konten dinamis
+                renderLocationTabs();
+                renderLocationContent();
+                renderCategories();
+                renderGallery();
+                renderSidebar();
+            };
+
+            // ============================================================
+            // APPLY LANGUAGE
+            // ============================================================
+            function applyLanguage(langCode) {
+                const langData = LANGUAGES[langCode];
+                if (!langData) return;
+
+                const t = langData.translations;
+                document.documentElement.lang = langCode;
+
+                const idMap = {
+                    'headerTagline': 'headerTagline',
+                    'menuHome': 'menuHome',
+                    'menuCheckin': 'menuCheckin',
+                    'menuGallery': 'menuGallery',
+                    'menuFacilities': 'menuFacilities',
+                    'menuPricing': 'menuPricing',
+                    'menuContact': 'menuContact',
+                    'menuGuestLogin': 'menuGuestLogin',
+                    'menuAdminLogin': 'menuAdminLogin',
+                    'breadcrumbTitle': 'breadcrumbTitle',
+                    'breadcrumbHome': 'breadcrumbHome',
+                    'breadcrumbCurrent': 'breadcrumbCurrent',
+                    'locationTitle': 'locationTitle',
+                    'galleryTitle': 'galleryTitle',
+                    'gallerySubtitle': 'gallerySubtitle',
+                    'footerTagline': 'footerTagline',
+                    'footerCopyright': 'footerCopyright',
+                    'footerHome': 'footerHome',
+                    'footerCheckin': 'footerCheckin',
+                    'footerGallery': 'footerGallery',
+                    'footerFacilities': 'footerFacilities',
+                    'footerPricing': 'footerPricing',
+                    'footerContact': 'footerContact',
+                };
+
+                Object.keys(idMap).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && t[idMap[id]] !== undefined) {
+                        el.innerHTML = t[idMap[id]];
+                    }
+                });
+
+                console.log('🌐 Language switched to:', langCode, '-', LANGUAGES[langCode].name);
+            }
+
+            // ============================================================
+            // UPDATE LANGUAGE BUTTONS
+            // ============================================================
+            function updateLangButtons(langCode) {
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === langCode);
+                });
+            }
 
             // ============================================================
             // 📍 LOCATION DATA (CMS Ready)
@@ -1256,10 +1453,7 @@
                     postalCode: '40162',
                     phone: '+62 812-3456-7890',
                     email: 'info@jdikoskita.com',
-                    gps: {
-                        lat: -6.9175,
-                        lng: 107.6191
-                    },
+                    gps: { lat: -6.9175, lng: 107.6191 },
                     googleMapsUrl: 'https://maps.google.com/maps?q=-6.9175,107.6191',
                     wazeUrl: 'https://waze.com/ul?ll=-6.9175,107.6191&navigate=yes',
                     description: 'Cabang utama dengan fasilitas lengkap dan akses mudah ke pusat kota.',
@@ -1274,10 +1468,7 @@
                     postalCode: '40132',
                     phone: '+62 812-3456-7891',
                     email: 'cabang2@jdikoskita.com',
-                    gps: {
-                        lat: -6.8892,
-                        lng: 107.6106
-                    },
+                    gps: { lat: -6.8892, lng: 107.6106 },
                     googleMapsUrl: 'https://maps.google.com/maps?q=-6.8892,107.6106',
                     wazeUrl: 'https://waze.com/ul?ll=-6.8892,107.6106&navigate=yes',
                     description: 'Cabang dengan tipe kamar Deluxe dan VIP, lebih eksklusif.',
@@ -1292,10 +1483,7 @@
                     postalCode: '40143',
                     phone: '+62 812-3456-7892',
                     email: 'cabang3@jdikoskita.com',
-                    gps: {
-                        lat: -6.8793,
-                        lng: 107.5987
-                    },
+                    gps: { lat: -6.8793, lng: 107.5987 },
                     googleMapsUrl: 'https://maps.google.com/maps?q=-6.8793,107.5987',
                     wazeUrl: 'https://waze.com/ul?ll=-6.8793,107.5987&navigate=yes',
                     description: 'Cabang premium dengan fasilitas terbaik dan view pegunungan.',
@@ -1308,10 +1496,10 @@
             // ============================================================
             const GALLERY_DATA = {
                 categories: [
-                    { id: 'all', label: 'Semua', icon: '🔍' },
-                    { id: 'kamar', label: 'Kamar', icon: '🏠' },
-                    { id: 'fasilitas', label: 'Fasilitas', icon: '⭐' },
-                    { id: 'eksterior', label: 'Eksterior', icon: '🌳' }
+                    { id: 'all', labelKey: 'filterAll', icon: '🔍' },
+                    { id: 'kamar', labelKey: 'filterKamar', icon: '🏠' },
+                    { id: 'fasilitas', labelKey: 'filterFasilitas', icon: '⭐' },
+                    { id: 'eksterior', labelKey: 'filterEksterior', icon: '🌳' }
                 ],
                 images: [{
                     id: 1,
@@ -1424,9 +1612,10 @@
                     const tab = document.createElement('button');
                     tab.className = 'loc-tab' + (prop.id === currentLocation ? ' active' : '');
                     tab.dataset.location = prop.id;
+                    const t = LANGUAGES[currentLang].translations;
                     tab.innerHTML = `
                         📍 ${prop.name}
-                        ${prop.isMain ? '<span style="font-size:10px;background:#FF7A00;color:#fff;padding:0 8px;border-radius:10px;">Utama</span>' : ''}
+                        ${prop.isMain ? `<span style="font-size:10px;background:#FF7A00;color:#fff;padding:0 8px;border-radius:10px;">${t['mainLabel'] || 'Utama'}</span>` : ''}
                     `;
                     tab.addEventListener('click', () => {
                         currentLocation = prop.id;
@@ -1447,12 +1636,13 @@
                 const mapsEmbedUrl =
                     `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${prop.gps.lat},${prop.gps.lng}&zoom=15`;
 
+                const t = LANGUAGES[currentLang].translations;
                 locationContent.innerHTML = `
                     <div class="location-info">
                         <div class="address-item">
                             <span class="addr-icon">📍</span>
                             <div class="addr-content">
-                                <div class="addr-label">Alamat Lengkap</div>
+                                <div class="addr-label">${t['fullAddress'] || 'Alamat Lengkap'}</div>
                                 <div class="addr-value">${prop.address}</div>
                                 <div class="addr-desc">${prop.description || ''}</div>
                             </div>
@@ -1460,7 +1650,7 @@
                         <div class="address-item">
                             <span class="addr-icon">📞</span>
                             <div class="addr-content">
-                                <div class="addr-label">Kontak</div>
+                                <div class="addr-label">${t['contactLabel'] || 'Kontak'}</div>
                                 <div class="addr-value">${prop.phone || '-'}</div>
                                 <div class="addr-desc">${prop.email || ''}</div>
                             </div>
@@ -1468,20 +1658,20 @@
                         <div class="address-item" style="border-color:#FF7A00;background:#fff8f0;">
                             <span class="addr-icon">🗺️</span>
                             <div class="addr-content">
-                                <div class="addr-label">Navigasi GPS</div>
+                                <div class="addr-label">${t['gpsNav'] || 'Navigasi GPS'}</div>
                                 <div class="addr-value" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
                                     <a href="${prop.googleMapsUrl}" target="_blank" style="background:#0A2E6D;color:#fff;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
-                                        🗺️ Google Maps
+                                        🗺️ ${t['googleMaps'] || 'Google Maps'}
                                     </a>
                                     <a href="${prop.wazeUrl}" target="_blank" style="background:#1a1a2e;color:#fff;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
-                                        🧭 Waze
+                                        🧭 ${t['waze'] || 'Waze'}
                                     </a>
                                     <a href="#" onclick="copyAddress('${prop.address}');return false;" style="background:#28a745;color:#fff;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
-                                        📋 Salin Alamat
+                                        📋 ${t['copyAddress'] || 'Salin Alamat'}
                                     </a>
                                 </div>
                                 <div class="addr-desc" style="margin-top:4px;">
-                                    <small>Koordinat: ${prop.gps.lat}, ${prop.gps.lng}</small>
+                                    <small>${t['coordinates'] || 'Koordinat'}: ${prop.gps.lat}, ${prop.gps.lng}</small>
                                 </div>
                             </div>
                         </div>
@@ -1504,7 +1694,8 @@
             window.copyAddress = function(address) {
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(address).then(() => {
-                        alert('✅ Alamat berhasil disalin!');
+                        const t = LANGUAGES[currentLang].translations;
+                        alert(t['copySuccess'] || '✅ Alamat berhasil disalin!');
                     }).catch(() => {
                         fallbackCopy(address);
                     });
@@ -1522,9 +1713,11 @@
                 textarea.select();
                 try {
                     document.execCommand('copy');
-                    alert('✅ Alamat berhasil disalin!');
+                    const t = LANGUAGES[currentLang].translations;
+                    alert(t['copySuccess'] || '✅ Alamat berhasil disalin!');
                 } catch (e) {
-                    alert('❌ Gagal menyalin alamat. Silakan salin manual.');
+                    const t = LANGUAGES[currentLang].translations;
+                    alert(t['copyFailed'] || '❌ Gagal menyalin alamat. Silakan salin manual.');
                 }
                 document.body.removeChild(textarea);
             }
@@ -1534,6 +1727,7 @@
             // ============================================================
             function renderCategories() {
                 const categories = GALLERY_DATA.categories;
+                const t = LANGUAGES[currentLang].translations;
                 categoryFilter.innerHTML = '';
 
                 categories.forEach(cat => {
@@ -1544,8 +1738,9 @@
                     const btn = document.createElement('button');
                     btn.className = 'filter-btn' + (cat.id === currentCategory ? ' active' : '');
                     btn.dataset.category = cat.id;
+                    const label = t[cat.labelKey] || cat.labelKey;
                     btn.innerHTML = `
-                        ${cat.icon} ${cat.label}
+                        ${cat.icon} ${label}
                         <span class="count">${count}</span>
                     `;
                     btn.addEventListener('click', () => {
@@ -1569,24 +1764,27 @@
                 currentImages = filtered;
 
                 if (filtered.length === 0) {
+                    const t = LANGUAGES[currentLang].translations;
                     galleryGrid.innerHTML = `
                         <div class="empty-state">
                             <div class="empty-icon">📷</div>
-                            <h3>Belum ada gambar</h3>
-                            <p>Belum ada foto untuk kategori ini.</p>
+                            <h3>${t['noImages'] || 'Belum ada gambar'}</h3>
+                            <p>${t['noImagesDesc'] || 'Belum ada foto untuk kategori ini.'}</p>
                         </div>
                     `;
                     return;
                 }
 
+                const t = LANGUAGES[currentLang].translations;
                 galleryGrid.innerHTML = '';
                 filtered.forEach((img, index) => {
                     const item = document.createElement('div');
                     item.className = 'gallery-item';
                     item.dataset.index = index;
 
-                    const categoryLabel = GALLERY_DATA.categories.find(c => c.id === img.category)?.label || img
-                    .category;
+                    const categoryLabel = GALLERY_DATA.categories.find(c => c.id === img.category)?.labelKey || img
+                        .category;
+                    const catLabel = t[categoryLabel] || categoryLabel;
 
                     item.innerHTML = `
                         ${img.featured ? '<div class="featured-badge">⭐ Featured</div>' : ''}
@@ -1596,7 +1794,7 @@
                         <div class="gallery-overlay">
                             <h4>${img.title}</h4>
                             <p>${img.description || ''}</p>
-                            <span class="category-badge">${categoryLabel}</span>
+                            <span class="category-badge">${catLabel}</span>
                         </div>
                     `;
 
@@ -1609,34 +1807,33 @@
             }
 
             // ============================================================
-            // RENDER SIDEBAR - FUTURE GAMBAR
+            // RENDER SIDEBAR
             // ============================================================
             function renderSidebar() {
-                // Ambil gambar unggulan (featured) atau 4 gambar terbaru
+                const t = LANGUAGES[currentLang].translations;
                 const featuredImages = GALLERY_DATA.images.filter(img => img.featured === true);
                 const topImages = featuredImages.length > 0 ? featuredImages : GALLERY_DATA.images.slice(0, 4);
 
                 if (topImages.length === 0) {
                     gallerySidebar.innerHTML = `
                         <div class="sidebar-card">
-                            <div class="sidebar-title">⭐ <span>Gambar Unggulan</span></div>
+                            <div class="sidebar-title">${t['sidebarTitle'] || '⭐ <span>Gambar Unggulan</span>'}</div>
                             <div class="sidebar-empty">
                                 <div class="empty-icon">🖼️</div>
-                                <h4>Belum ada gambar unggulan</h4>
-                                <p>Tambahkan gambar unggulan dari CMS.</p>
+                                <h4>${t['sidebarEmpty'] || 'Belum ada gambar unggulan'}</h4>
+                                <p>${t['sidebarEmptyDesc'] || 'Tambahkan gambar unggulan dari CMS.'}</p>
                             </div>
                         </div>
                     `;
                     return;
                 }
 
-                // Ambil gambar pertama sebagai featured besar
                 const mainFeatured = topImages[0];
                 const restImages = topImages.slice(1, 5);
 
                 let sidebarHTML = `
                     <div class="sidebar-card">
-                        <div class="sidebar-title">⭐ <span>Gambar Unggulan</span></div>
+                        <div class="sidebar-title">${t['sidebarTitle'] || '⭐ <span>Gambar Unggulan</span>'}</div>
                         <div class="sidebar-featured">
                             <img src="${mainFeatured.image}" alt="${mainFeatured.title}" 
                                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22 viewBox=%220 0 400 300%22%3E%3Crect fill=%22%23e9edf2%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%22200%22 y=%22150%22 font-family=%22Arial%22 font-size=%2220%22 fill=%22%23999%22 text-anchor=%22middle%22%3EGambar Tidak Tersedia%3C/text%3E%3C/svg%3E'" />
@@ -1648,15 +1845,16 @@
                 `;
 
                 restImages.forEach(img => {
-                    const categoryLabel = GALLERY_DATA.categories.find(c => c.id === img.category)?.label || img
+                    const categoryLabel = GALLERY_DATA.categories.find(c => c.id === img.category)?.labelKey || img
                         .category;
+                    const catLabel = t[categoryLabel] || categoryLabel;
                     sidebarHTML += `
                         <div class="sidebar-img-item" onclick="openLightboxByIndex(${GALLERY_DATA.images.indexOf(img)})">
                             <img src="${img.thumbnail}" alt="${img.title}" class="thumb" 
                                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22%3E%3Crect fill=%22%23e9edf2%22 width=%2260%22 height=%2260%22/%3E%3Ctext x=%2230%22 y=%2235%22 font-family=%22Arial%22 font-size=%2210%22 fill=%22%23999%22 text-anchor=%22middle%22%3ENo%20Image%3C/text%3E%3C/svg%3E'" />
                             <div class="info">
                                 <div class="name">${img.title}</div>
-                                <div class="cat">${categoryLabel}</div>
+                                <div class="cat">${catLabel}</div>
                             </div>
                         </div>
                     `;
@@ -1667,15 +1865,14 @@
                     </div>
                 `;
 
-                // Tambahkan card untuk lokasi
                 sidebarHTML += `
                     <div class="sidebar-card" style="border-color:#FF7A00;background:#fff8f0;">
-                        <div class="sidebar-title">📍 <span>Lokasi Kami</span></div>
+                        <div class="sidebar-title">${t['sidebarLocation'] || '📍 <span>Lokasi Kami</span>'}</div>
                         <p style="font-size:14px;color:#666;line-height:1.6;margin-bottom:10px;">
-                            Temukan kami di lokasi strategis dengan akses mudah ke pusat kota dan fasilitas umum.
+                            ${t['sidebarLocationDesc'] || 'Temukan kami di lokasi strategis dengan akses mudah ke pusat kota dan fasilitas umum.'}
                         </p>
                         <a href="#locationSection" style="color:#FF7A00;font-weight:600;text-decoration:none;">
-                            Lihat Lokasi Lengkap →
+                            ${t['sidebarLocationLink'] || 'Lihat Lokasi Lengkap →'}
                         </a>
                     </div>
                 `;
@@ -1684,7 +1881,7 @@
             }
 
             // ============================================================
-            // OPEN LIGHTBOX BY INDEX (dari sidebar)
+            // OPEN LIGHTBOX BY INDEX
             // ============================================================
             window.openLightboxByIndex = function(index) {
                 const filtered = currentCategory === 'all' ?
@@ -1694,7 +1891,6 @@
                 if (actualIndex !== -1) {
                     openLightbox(actualIndex);
                 } else {
-                    // Jika gambar tidak ada di filter saat ini, buka semua gambar
                     const allIndex = GALLERY_DATA.images.findIndex(img => img.id === GALLERY_DATA.images[index].id);
                     if (allIndex !== -1) {
                         currentCategory = 'all';
@@ -1732,8 +1928,10 @@
                         'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%22600%22 viewBox=%220 0 800 600%22%3E%3Crect fill=%22%231a1a2e%22 width=%22800%22 height=%22600%22/%3E%3Ctext x=%22400%22 y=%22300%22 font-family=%22Arial%22 font-size=%2230%22 fill=%22%23999%22 text-anchor=%22middle%22%3EGambar Tidak Tersedia%3C/text%3E%3C/svg%3E';
                 };
                 lightboxTitle.textContent = img.title;
-                const categoryLabel = GALLERY_DATA.categories.find(c => c.id === img.category)?.label || img.category;
-                lightboxCategory.innerHTML = `<span>${categoryLabel}</span>`;
+                const categoryLabel = GALLERY_DATA.categories.find(c => c.id === img.category)?.labelKey || img.category;
+                const t = LANGUAGES[currentLang].translations;
+                const catLabel = t[categoryLabel] || categoryLabel;
+                lightboxCategory.innerHTML = `<span>${catLabel}</span>`;
                 lightboxCounter.textContent = `${currentIndex + 1} / ${currentImages.length}`;
 
                 lightboxPrev.style.display = currentIndex === 0 ? 'none' : 'flex';
@@ -1849,16 +2047,18 @@
             // ============================================================
             // INIT
             // ============================================================
+            applyLanguage(currentLang);
+            updateLangButtons(currentLang);
             renderLocationTabs();
             renderLocationContent();
             renderCategories();
             renderGallery();
             renderSidebar();
 
-            console.log('✅ JDI KOSKITA - Galeri & Lokasi CMS Ready');
+            console.log('✅ JDI KOSKITA - Galeri & Lokasi CMS Ready + Multi Language');
+            console.log('🌐 Bahasa saat ini:', LANGUAGES[currentLang].name);
             console.log('📍 Data lokasi dapat diedit melalui window.LocationCMS');
             console.log('📸 Data galeri dapat diedit melalui window.GalleryCMS');
-            console.log('🖼️ Sidebar menampilkan gambar unggulan (featured)');
 
         })();
     </script>

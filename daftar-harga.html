@@ -132,6 +132,41 @@
             transition: 0.3s;
         }
 
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        .lang-switcher .lang-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .lang-switcher .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .lang-switcher .lang-btn.active {
+            background: #FF7A00;
+            color: #fff;
+            border-color: #FF7A00;
+        }
+
+        .lang-switcher .lang-btn .flag {
+            margin-right: 4px;
+        }
+
         /* ============================================================
            BREADCRUMB
            ============================================================ */
@@ -818,6 +853,9 @@
                 padding: 6px 12px;
                 font-size: 13px;
             }
+            .lang-switcher {
+                margin-left: 0;
+            }
             .breadcrumb {
                 padding: 12px 20px;
             }
@@ -896,6 +934,10 @@
                 text-align: center;
                 padding: 10px;
                 font-size: 14px;
+            }
+            .lang-switcher {
+                margin-top: 4px;
+                justify-content: center;
             }
             .breadcrumb-container {
                 flex-direction: column;
@@ -1061,7 +1103,7 @@
 <body>
 
     <!-- ============================================================
-    HEADER - SEMUA LINK SUDAH DIPERBAIKI
+    HEADER - DENGAN LANGUAGE SWITCHER
     ============================================================ -->
     <header>
         <div class="header-container">
@@ -1069,7 +1111,7 @@
                 <img src="assets/logo-jdi.png" alt="Logo JDI KOSKITA" />
                 <div>
                     <h2>JDI <span>KOSKITA</span></h2>
-                    <p>Smart Boarding House Management System</p>
+                    <p id="headerTagline">Smart Boarding House Management System</p>
                 </div>
             </div>
 
@@ -1079,16 +1121,25 @@
                 <span></span>
             </div>
 
-            <!-- ✅ SEMUA LINK SUDAH DIPERBAIKI -->
             <nav class="nav-menu" id="navMenu">
-                <a href="index.html">Beranda</a>
-                <a href="cek-in.html">Cek-in</a>
-                <a href="galeri.html">Galeri</a>
-                <a href="fasilitas.html">Fasilitas</a>
-                <a href="daftar-harga.html" class="active">Daftar Harga</a>
-                <a href="kontak.html">Kontak</a>
-                <a href="#" class="btn-login">Login Tamu</a>
-                <a href="#" class="btn-login">Login Admin</a>
+                <a href="index.html" id="menuHome">Beranda</a>
+                <a href="cek-in.html" id="menuCheckin">Cek-in</a>
+                <a href="galeri.html" id="menuGallery">Galeri</a>
+                <a href="fasilitas.html" id="menuFacilities">Fasilitas</a>
+                <a href="daftar-harga.html" class="active" id="menuPricing">Daftar Harga</a>
+                <a href="kontak.html" id="menuContact">Kontak</a>
+                <a href="#" class="btn-login" id="menuGuestLogin">👤 Login Tamu</a>
+                <a href="#" class="btn-login" id="menuAdminLogin">🔐 Login Admin</a>
+
+                <!-- Language Switcher -->
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="id" onclick="switchLanguage('id')">
+                        <span class="flag">🇮🇩</span> ID
+                    </button>
+                    <button class="lang-btn" data-lang="en" onclick="switchLanguage('en')">
+                        <span class="flag">🇬🇧</span> EN
+                    </button>
+                </div>
             </nav>
         </div>
     </header>
@@ -1098,9 +1149,9 @@
     ============================================================ -->
     <div class="breadcrumb">
         <div class="breadcrumb-container">
-            <h1>💰 <span>Daftar Harga</span> JDI KOSKITA</h1>
+            <h1 id="breadcrumbTitle">💰 <span>Daftar Harga</span> JDI KOSKITA</h1>
             <div class="breadcrumb-links">
-                <a href="index.html">Beranda</a> &gt; <span>Daftar Harga</span>
+                <a href="index.html" id="breadcrumbHome">Beranda</a> &gt; <span id="breadcrumbCurrent">Daftar Harga</span>
             </div>
         </div>
     </div>
@@ -1112,8 +1163,8 @@
 
         <!-- Header -->
         <div class="harga-header">
-            <h2>Transparansi Biaya untuk <span>Kenyamanan</span> Penghuni</h2>
-            <p>Informasi lengkap tentang harga sewa, deposit, dan biaya tambahan</p>
+            <h2 id="pricingTitle">Transparansi Biaya untuk <span>Kenyamanan</span> Penghuni</h2>
+            <p id="pricingSubtitle">Informasi lengkap tentang harga sewa, deposit, dan biaya tambahan</p>
         </div>
 
         <!-- ============================================================
@@ -1128,7 +1179,7 @@
         ============================================================ -->
         <div class="section-title">
             <span class="title-icon">🏠</span>
-            <h3>Harga <span>Per Tipe Kamar</span></h3>
+            <h3 id="sectionPriceTitle">Harga <span>Per Tipe Kamar</span></h3>
             <span class="title-line"></span>
         </div>
 
@@ -1136,11 +1187,11 @@
             <table class="price-table" id="priceTable">
                 <thead>
                     <tr>
-                        <th>Tipe Kamar</th>
-                        <th>Harga / Bulan</th>
-                        <th>Deposit</th>
-                        <th>Fasilitas</th>
-                        <th>Status</th>
+                        <th id="thRoomType">Tipe Kamar</th>
+                        <th id="thPrice">Harga / Bulan</th>
+                        <th id="thDeposit">Deposit</th>
+                        <th id="thFacilities">Fasilitas</th>
+                        <th id="thStatus">Status</th>
                     </tr>
                 </thead>
                 <tbody id="priceTableBody">
@@ -1154,7 +1205,7 @@
         ============================================================ -->
         <div class="section-title">
             <span class="title-icon">🏷️</span>
-            <h3>Diskon & <span>Promo</span></h3>
+            <h3 id="sectionDiscountTitle">Diskon & <span>Promo</span></h3>
             <span class="title-line"></span>
         </div>
 
@@ -1167,7 +1218,7 @@
         ============================================================ -->
         <div class="section-title">
             <span class="title-icon">📋</span>
-            <h3>Biaya <span>Tambahan</span></h3>
+            <h3 id="sectionFeeTitle">Biaya <span>Tambahan</span></h3>
             <span class="title-line"></span>
         </div>
 
@@ -1180,60 +1231,60 @@
         ============================================================ -->
         <div class="section-title">
             <span class="title-icon">🧮</span>
-            <h3>Simulasi <span>Biaya Sewa</span></h3>
+            <h3 id="sectionCalcTitle">Simulasi <span>Biaya Sewa</span></h3>
             <span class="title-line"></span>
         </div>
 
         <div class="calculator-container" id="calculatorContainer">
             <div class="calc-header">
                 <span class="calc-icon">🧮</span>
-                <h4>Kalkulator <span>Perkiraan Biaya</span></h4>
+                <h4 id="calcHeaderTitle">Kalkulator <span>Perkiraan Biaya</span></h4>
             </div>
             <div class="calculator-grid">
                 <div class="calculator-form">
                     <div class="form-group">
-                        <label for="calcRoomType">Tipe Kamar</label>
+                        <label for="calcRoomType" id="labelCalcRoom">Tipe Kamar</label>
                         <select id="calcRoomType">
                             <!-- Akan di-generate oleh JavaScript -->
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="calcDuration">Durasi Sewa</label>
+                        <label for="calcDuration" id="labelCalcDuration">Durasi Sewa</label>
                         <select id="calcDuration">
-                            <option value="1">1 Bulan</option>
-                            <option value="3">3 Bulan (Diskon 5%)</option>
-                            <option value="6">6 Bulan (Diskon 10%)</option>
-                            <option value="12">12 Bulan (Diskon 15%)</option>
+                            <option value="1" id="opt1Month">1 Bulan</option>
+                            <option value="3" id="opt3Month">3 Bulan (Diskon 5%)</option>
+                            <option value="6" id="opt6Month">6 Bulan (Diskon 10%)</option>
+                            <option value="12" id="opt12Month">12 Bulan (Diskon 15%)</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="calcDeposit">Deposit</label>
+                        <label for="calcDeposit" id="labelCalcDeposit">Deposit</label>
                         <input type="text" id="calcDeposit" readonly style="background:#f0f4f9;color:#0A2E6D;font-weight:600;" />
                     </div>
                 </div>
                 <div class="calculator-result" id="calculatorResult">
                     <div class="result-item">
-                        <span class="label">Harga Sewa / Bulan</span>
+                        <span class="label" id="calcLabelMonthly">Harga Sewa / Bulan</span>
                         <span class="value" id="calcMonthlyPrice">Rp 0</span>
                     </div>
                     <div class="result-item">
-                        <span class="label">Durasi Sewa</span>
+                        <span class="label" id="calcLabelDuration">Durasi Sewa</span>
                         <span class="value" id="calcDurationDisplay">1 Bulan</span>
                     </div>
                     <div class="result-item">
-                        <span class="label">Subtotal</span>
+                        <span class="label" id="calcLabelSubtotal">Subtotal</span>
                         <span class="value" id="calcSubtotal">Rp 0</span>
                     </div>
                     <div class="result-item">
-                        <span class="label">Diskon</span>
+                        <span class="label" id="calcLabelDiscount">Diskon</span>
                         <span class="value discounted" id="calcDiscount">Rp 0</span>
                     </div>
                     <div class="result-item total">
-                        <span class="label">Total Bayar</span>
+                        <span class="label" id="calcLabelTotal">Total Bayar</span>
                         <span class="value" id="calcTotal">Rp 0</span>
                     </div>
                     <div class="result-item" style="border-bottom:none;padding-top:4px;">
-                        <span class="label" style="font-size:12px;color:#888;">*Deposit dibayarkan di awal</span>
+                        <span class="label" style="font-size:12px;color:#888;" id="calcDepositNote">*Deposit dibayarkan di awal</span>
                         <span class="value" style="font-size:12px;color:#888;" id="calcDepositDisplay">+ Rp 500.000</span>
                     </div>
                 </div>
@@ -1245,7 +1296,7 @@
         ============================================================ -->
         <div class="section-title">
             <span class="title-icon">❓</span>
-            <h3>Pertanyaan <span>Umum</span></h3>
+            <h3 id="sectionFaqTitle">Pertanyaan <span>Umum</span></h3>
             <span class="title-line"></span>
         </div>
 
@@ -1258,8 +1309,8 @@
         ============================================================ -->
         <div class="contact-card" id="contactCard">
             <div class="contact-info">
-                <div class="contact-title">📞 Butuh Bantuan?</div>
-                <div class="contact-desc">Hubungi kami untuk informasi lebih lanjut tentang harga dan ketersediaan kamar.</div>
+                <div class="contact-title" id="contactTitle">📞 Butuh Bantuan?</div>
+                <div class="contact-desc" id="contactDesc">Hubungi kami untuk informasi lebih lanjut tentang harga dan ketersediaan kamar.</div>
                 <div class="contact-detail" id="contactDetail">
                     <!-- Akan di-generate oleh JavaScript -->
                 </div>
@@ -1270,30 +1321,287 @@
     </section>
 
     <!-- ============================================================
-    FOOTER - SEMUA LINK SUDAH DIPERBAIKI
+    FOOTER
     ============================================================ -->
     <footer>
         <div class="footer-brand">JDI <span>KOSKITA</span></div>
-        <p>Smart Boarding House Management System</p>
+        <p id="footerTagline">Smart Boarding House Management System</p>
         <div class="footer-divider"></div>
-        <p>&copy; 2026 JDI KOSKITA. All Rights Reserved.</p>
-        <!-- ✅ SEMUA LINK SUDAH DIPERBAIKI -->
+        <p id="footerCopyright">&copy; 2026 JDI KOSKITA. All Rights Reserved.</p>
         <div class="footer-links">
-            <a href="index.html">Beranda</a>
-            <a href="cek-in.html">Cek-in</a>
-            <a href="galeri.html">Galeri</a>
-            <a href="fasilitas.html">Fasilitas</a>
-            <a href="daftar-harga.html">Daftar Harga</a>
-            <a href="kontak.html">Kontak</a>
+            <a href="index.html" id="footerHome">Beranda</a>
+            <a href="cek-in.html" id="footerCheckin">Cek-in</a>
+            <a href="galeri.html" id="footerGallery">Galeri</a>
+            <a href="fasilitas.html" id="footerFacilities">Fasilitas</a>
+            <a href="daftar-harga.html" id="footerPricing">Daftar Harga</a>
+            <a href="kontak.html" id="footerContact">Kontak</a>
         </div>
     </footer>
 
     <!-- ============================================================
-    JAVASCRIPT - CMS READY
+    JAVASCRIPT - CMS READY + MULTI LANGUAGE
     ============================================================ -->
     <script>
         (function() {
             'use strict';
+
+            // ============================================================
+            // 🌐 LANGUAGE DATA
+            // ============================================================
+            const LANGUAGES = {
+                id: {
+                    code: 'id',
+                    name: 'Indonesia',
+                    flag: '🇮🇩',
+                    translations: {
+                        // Header
+                        'headerTagline': 'Smart Boarding House Management System',
+                        'menuHome': 'Beranda',
+                        'menuCheckin': 'Cek-in',
+                        'menuGallery': 'Galeri',
+                        'menuFacilities': 'Fasilitas',
+                        'menuPricing': 'Daftar Harga',
+                        'menuContact': 'Kontak',
+                        'menuGuestLogin': '👤 Login Tamu',
+                        'menuAdminLogin': '🔐 Login Admin',
+
+                        // Breadcrumb
+                        'breadcrumbTitle': '💰 <span>Daftar Harga</span> JDI KOSKITA',
+                        'breadcrumbHome': 'Beranda',
+                        'breadcrumbCurrent': 'Daftar Harga',
+
+                        // Pricing Header
+                        'pricingTitle': 'Transparansi Biaya untuk <span>Kenyamanan</span> Penghuni',
+                        'pricingSubtitle': 'Informasi lengkap tentang harga sewa, deposit, dan biaya tambahan',
+
+                        // Section Titles
+                        'sectionPriceTitle': 'Harga <span>Per Tipe Kamar</span>',
+                        'sectionDiscountTitle': 'Diskon & <span>Promo</span>',
+                        'sectionFeeTitle': 'Biaya <span>Tambahan</span>',
+                        'sectionCalcTitle': 'Simulasi <span>Biaya Sewa</span>',
+                        'sectionFaqTitle': 'Pertanyaan <span>Umum</span>',
+
+                        // Table Headers
+                        'thRoomType': 'Tipe Kamar',
+                        'thPrice': 'Harga / Bulan',
+                        'thDeposit': 'Deposit',
+                        'thFacilities': 'Fasilitas',
+                        'thStatus': 'Status',
+
+                        // Calculator
+                        'calcHeaderTitle': 'Kalkulator <span>Perkiraan Biaya</span>',
+                        'labelCalcRoom': 'Tipe Kamar',
+                        'labelCalcDuration': 'Durasi Sewa',
+                        'labelCalcDeposit': 'Deposit',
+                        'calcLabelMonthly': 'Harga Sewa / Bulan',
+                        'calcLabelDuration': 'Durasi Sewa',
+                        'calcLabelSubtotal': 'Subtotal',
+                        'calcLabelDiscount': 'Diskon',
+                        'calcLabelTotal': 'Total Bayar',
+                        'calcDepositNote': '*Deposit dibayarkan di awal',
+                        'opt1Month': '1 Bulan',
+                        'opt3Month': '3 Bulan (Diskon 5%)',
+                        'opt6Month': '6 Bulan (Diskon 10%)',
+                        'opt12Month': '12 Bulan (Diskon 15%)',
+
+                        // Contact
+                        'contactTitle': '📞 Butuh Bantuan?',
+                        'contactDesc': 'Hubungi kami untuk informasi lebih lanjut tentang harga dan ketersediaan kamar.',
+                        'contactBtn': '💬 Hubungi Kami',
+
+                        // Footer
+                        'footerTagline': 'Smart Boarding House Management System',
+                        'footerCopyright': '© 2026 JDI KOSKITA. All Rights Reserved.',
+                        'footerHome': 'Beranda',
+                        'footerCheckin': 'Cek-in',
+                        'footerGallery': 'Galeri',
+                        'footerFacilities': 'Fasilitas',
+                        'footerPricing': 'Daftar Harga',
+                        'footerContact': 'Kontak',
+                    }
+                },
+                en: {
+                    code: 'en',
+                    name: 'English',
+                    flag: '🇬🇧',
+                    translations: {
+                        // Header
+                        'headerTagline': 'Smart Boarding House Management System',
+                        'menuHome': 'Home',
+                        'menuCheckin': 'Check-in',
+                        'menuGallery': 'Gallery',
+                        'menuFacilities': 'Facilities',
+                        'menuPricing': 'Pricing',
+                        'menuContact': 'Contact',
+                        'menuGuestLogin': '👤 Guest Login',
+                        'menuAdminLogin': '🔐 Admin Login',
+
+                        // Breadcrumb
+                        'breadcrumbTitle': '💰 <span>Pricing</span> JDI KOSKITA',
+                        'breadcrumbHome': 'Home',
+                        'breadcrumbCurrent': 'Pricing',
+
+                        // Pricing Header
+                        'pricingTitle': 'Cost Transparency for <span>Tenant Comfort</span>',
+                        'pricingSubtitle': 'Complete information about rental prices, deposits, and additional fees',
+
+                        // Section Titles
+                        'sectionPriceTitle': 'Price <span>Per Room Type</span>',
+                        'sectionDiscountTitle': 'Discounts & <span>Promo</span>',
+                        'sectionFeeTitle': '<span>Additional</span> Fees',
+                        'sectionCalcTitle': 'Rental <span>Cost Simulation</span>',
+                        'sectionFaqTitle': 'Frequently Asked <span>Questions</span>',
+
+                        // Table Headers
+                        'thRoomType': 'Room Type',
+                        'thPrice': 'Price / Month',
+                        'thDeposit': 'Deposit',
+                        'thFacilities': 'Facilities',
+                        'thStatus': 'Status',
+
+                        // Calculator
+                        'calcHeaderTitle': 'Estimated Cost <span>Calculator</span>',
+                        'labelCalcRoom': 'Room Type',
+                        'labelCalcDuration': 'Rental Duration',
+                        'labelCalcDeposit': 'Deposit',
+                        'calcLabelMonthly': 'Rental Price / Month',
+                        'calcLabelDuration': 'Rental Duration',
+                        'calcLabelSubtotal': 'Subtotal',
+                        'calcLabelDiscount': 'Discount',
+                        'calcLabelTotal': 'Total Payment',
+                        'calcDepositNote': '*Deposit paid upfront',
+                        'opt1Month': '1 Month',
+                        'opt3Month': '3 Months (5% Discount)',
+                        'opt6Month': '6 Months (10% Discount)',
+                        'opt12Month': '12 Months (15% Discount)',
+
+                        // Contact
+                        'contactTitle': '📞 Need Help?',
+                        'contactDesc': 'Contact us for more information about prices and room availability.',
+                        'contactBtn': '💬 Contact Us',
+
+                        // Footer
+                        'footerTagline': 'Smart Boarding House Management System',
+                        'footerCopyright': '© 2026 JDI KOSKITA. All Rights Reserved.',
+                        'footerHome': 'Home',
+                        'footerCheckin': 'Check-in',
+                        'footerGallery': 'Gallery',
+                        'footerFacilities': 'Facilities',
+                        'footerPricing': 'Pricing',
+                        'footerContact': 'Contact',
+                    }
+                }
+            };
+
+            // ============================================================
+            // STATE
+            // ============================================================
+            let currentLang = localStorage.getItem('jdi_lang') || 'id';
+
+            // ============================================================
+            // SWITCH LANGUAGE FUNCTION
+            // ============================================================
+            window.switchLanguage = function(langCode) {
+                if (langCode === currentLang) return;
+                currentLang = langCode;
+                localStorage.setItem('jdi_lang', langCode);
+                applyLanguage(langCode);
+                updateLangButtons(langCode);
+                // Re-render konten dinamis
+                renderQuickSummary();
+                renderPriceTable();
+                renderDiscounts();
+                renderFees();
+                renderFAQs();
+                renderContact();
+                updateCalculator();
+            };
+
+            // ============================================================
+            // APPLY LANGUAGE
+            // ============================================================
+            function applyLanguage(langCode) {
+                const langData = LANGUAGES[langCode];
+                if (!langData) return;
+
+                const t = langData.translations;
+                document.documentElement.lang = langCode;
+
+                const idMap = {
+                    'headerTagline': 'headerTagline',
+                    'menuHome': 'menuHome',
+                    'menuCheckin': 'menuCheckin',
+                    'menuGallery': 'menuGallery',
+                    'menuFacilities': 'menuFacilities',
+                    'menuPricing': 'menuPricing',
+                    'menuContact': 'menuContact',
+                    'menuGuestLogin': 'menuGuestLogin',
+                    'menuAdminLogin': 'menuAdminLogin',
+                    'breadcrumbTitle': 'breadcrumbTitle',
+                    'breadcrumbHome': 'breadcrumbHome',
+                    'breadcrumbCurrent': 'breadcrumbCurrent',
+                    'pricingTitle': 'pricingTitle',
+                    'pricingSubtitle': 'pricingSubtitle',
+                    'sectionPriceTitle': 'sectionPriceTitle',
+                    'sectionDiscountTitle': 'sectionDiscountTitle',
+                    'sectionFeeTitle': 'sectionFeeTitle',
+                    'sectionCalcTitle': 'sectionCalcTitle',
+                    'sectionFaqTitle': 'sectionFaqTitle',
+                    'thRoomType': 'thRoomType',
+                    'thPrice': 'thPrice',
+                    'thDeposit': 'thDeposit',
+                    'thFacilities': 'thFacilities',
+                    'thStatus': 'thStatus',
+                    'calcHeaderTitle': 'calcHeaderTitle',
+                    'labelCalcRoom': 'labelCalcRoom',
+                    'labelCalcDuration': 'labelCalcDuration',
+                    'labelCalcDeposit': 'labelCalcDeposit',
+                    'calcLabelMonthly': 'calcLabelMonthly',
+                    'calcLabelDuration': 'calcLabelDuration',
+                    'calcLabelSubtotal': 'calcLabelSubtotal',
+                    'calcLabelDiscount': 'calcLabelDiscount',
+                    'calcLabelTotal': 'calcLabelTotal',
+                    'calcDepositNote': 'calcDepositNote',
+                    'opt1Month': 'opt1Month',
+                    'opt3Month': 'opt3Month',
+                    'opt6Month': 'opt6Month',
+                    'opt12Month': 'opt12Month',
+                    'contactTitle': 'contactTitle',
+                    'contactDesc': 'contactDesc',
+                    'footerTagline': 'footerTagline',
+                    'footerCopyright': 'footerCopyright',
+                    'footerHome': 'footerHome',
+                    'footerCheckin': 'footerCheckin',
+                    'footerGallery': 'footerGallery',
+                    'footerFacilities': 'footerFacilities',
+                    'footerPricing': 'footerPricing',
+                    'footerContact': 'footerContact',
+                };
+
+                Object.keys(idMap).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && t[idMap[id]] !== undefined) {
+                        el.innerHTML = t[idMap[id]];
+                    }
+                });
+
+                // Update contact button
+                const contactBtn = document.getElementById('contactWhatsApp');
+                if (contactBtn && t['contactBtn']) {
+                    contactBtn.innerHTML = t['contactBtn'];
+                }
+
+                console.log('🌐 Language switched to:', langCode, '-', LANGUAGES[langCode].name);
+            }
+
+            // ============================================================
+            // UPDATE LANGUAGE BUTTONS
+            // ============================================================
+            function updateLangButtons(langCode) {
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === langCode);
+                });
+            }
 
             // ============================================================
             // 📊 HARGA DATA (CMS Ready)
@@ -1529,6 +1837,7 @@
                 rooms.forEach(room => {
                     const option = document.createElement('option');
                     option.value = room.id;
+                    const t = LANGUAGES[currentLang].translations;
                     option.textContent = `${room.icon} ${room.name} - Rp ${room.price.toLocaleString('id-ID')}`;
                     calcRoomType.appendChild(option);
                 });
@@ -1557,7 +1866,6 @@
 
                     question.addEventListener('click', function() {
                         const isOpen = answer.classList.contains('show');
-                        // Tutup semua
                         document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('show'));
                         document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('open'));
 
@@ -1567,7 +1875,6 @@
                         }
                     });
 
-                    // Buka yang pertama secara default
                     if (index === 0) {
                         answer.classList.add('show');
                         icon.classList.add('open');
@@ -1585,6 +1892,10 @@
                     <a href="mailto:${c.email}">✉️ ${c.email}</a>
                 `;
                 contactWhatsApp.href = `https://wa.me/${c.whatsapp.replace(/[^0-9]/g, '')}`;
+                const t = LANGUAGES[currentLang].translations;
+                if (t['contactBtn']) {
+                    contactWhatsApp.innerHTML = t['contactBtn'];
+                }
             }
 
             // ============================================================
@@ -1598,7 +1909,6 @@
                 const deposit = selectedRoom.deposit;
                 const duration = parseInt(calcDuration.value);
 
-                // Cari diskon
                 const discountData = HARGA_DATA.discounts.find(d => d.duration === duration);
                 const discountPercent = discountData ? discountData.discount : 0;
 
@@ -1606,7 +1916,6 @@
                 const discountAmount = Math.round(subtotal * (discountPercent / 100));
                 const total = subtotal - discountAmount;
 
-                // Update display
                 calcMonthlyPrice.textContent = `Rp ${price.toLocaleString('id-ID')}`;
                 calcDurationDisplay.textContent = `${duration} Bulan`;
                 calcSubtotal.textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
@@ -1687,6 +1996,8 @@
             // ============================================================
             // INIT
             // ============================================================
+            applyLanguage(currentLang);
+            updateLangButtons(currentLang);
             renderQuickSummary();
             renderPriceTable();
             renderDiscounts();
@@ -1695,10 +2006,9 @@
             renderContact();
             updateCalculator();
 
-            console.log('✅ JDI KOSKITA - Daftar Harga CMS Ready');
+            console.log('✅ JDI KOSKITA - Daftar Harga CMS Ready + Multi Language');
+            console.log('🌐 Bahasa saat ini:', LANGUAGES[currentLang].name);
             console.log('💰 Data harga dapat diedit melalui window.HargaCMS');
-            console.log('   Contoh: window.HargaCMS.updateRoomTypes([...])');
-            console.log('   Contoh: window.HargaCMS.updateDiscounts([...])');
 
         })();
     </script>

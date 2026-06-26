@@ -132,6 +132,36 @@
             transition: 0.3s;
         }
 
+        /* Language Switcher - di sebelah kanan */
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .lang-switcher .lang-btn {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .lang-switcher .lang-btn:hover {
+            border-color: #FF7A00;
+            color: #fff;
+        }
+
+        .lang-switcher .lang-btn.active {
+            background: #FF7A00;
+            border-color: #FF7A00;
+            color: #fff;
+        }
+
         /* ============================================================
            BREADCRUMB
            ============================================================ */
@@ -183,7 +213,6 @@
             padding: 0 40px;
         }
 
-        /* ---- Header ---- */
         .facilities-header {
             text-align: center;
             margin-bottom: 35px;
@@ -204,7 +233,6 @@
             font-size: 16px;
         }
 
-        /* ---- Quick Summary ---- */
         .quick-summary {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -238,7 +266,6 @@
             color: #888;
         }
 
-        /* ---- Section Title ---- */
         .section-title {
             display: flex;
             align-items: center;
@@ -265,7 +292,6 @@
             background: linear-gradient(90deg, #FF7A00, transparent);
         }
 
-        /* ---- Room Types (Fasilitas Kamar) ---- */
         .room-types-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -307,14 +333,6 @@
             color: #FF7A00;
             font-weight: 600;
             margin-bottom: 12px;
-        }
-
-        .room-type-card .room-type-price .original {
-            font-size: 13px;
-            color: #999;
-            text-decoration: line-through;
-            font-weight: 400;
-            margin-left: 6px;
         }
 
         .room-type-card .facility-list {
@@ -360,7 +378,6 @@
             background: #e9edf2;
         }
 
-        /* ---- Property Facilities ---- */
         .property-facilities-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -421,7 +438,6 @@
             color: #856404;
         }
 
-        /* ---- Nearby Facilities ---- */
         .nearby-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -474,7 +490,6 @@
             color: #888;
         }
 
-        /* ---- Transportation ---- */
         .transport-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -523,7 +538,6 @@
             font-weight: 600;
         }
 
-        /* ---- Location Map ---- */
         .location-map-container {
             background: #fff;
             border-radius: 16px;
@@ -606,7 +620,6 @@
             border: none;
         }
 
-        /* ---- Testimonials ---- */
         .testimonials-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -668,9 +681,6 @@
             display: block;
         }
 
-        /* ============================================================
-           FOOTER
-           ============================================================ */
         footer {
             background: #1a1a2e;
             color: rgba(255, 255, 255, 0.8);
@@ -720,9 +730,6 @@
             color: #FF7A00;
         }
 
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
         @media (max-width: 1024px) {
             .room-types-grid {
                 grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -885,9 +892,6 @@
             }
         }
 
-        /* ============================================================
-           LOADING SPINNER
-           ============================================================ */
         .loading-spinner {
             text-align: center;
             padding: 40px;
@@ -915,7 +919,6 @@
             font-size: 14px;
         }
 
-        /* Error State */
         .error-state {
             text-align: center;
             padding: 40px 20px;
@@ -953,12 +956,20 @@
         .error-state .btn-retry:hover {
             background: #e06a00;
         }
+
+        /* Tambahan untuk memastikan language switcher di kanan */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
 
     <!-- ============================================================
-    HEADER - SEMUA LINK SUDAH DIPERBAIKI
+    HEADER
     ============================================================ -->
     <header>
         <div class="header-container">
@@ -966,7 +977,7 @@
                 <img src="assets/logo-jdi.png" alt="Logo JDI KOSKITA" />
                 <div>
                     <h2>JDI <span>KOSKITA</span></h2>
-                    <p>Smart Boarding House Management System</p>
+                    <p id="taglineHeader">Smart Boarding House Management System</p>
                 </div>
             </div>
 
@@ -976,16 +987,23 @@
                 <span></span>
             </div>
 
-            <!-- ✅ SEMUA LINK SUDAH DIPERBAIKI -->
             <nav class="nav-menu" id="navMenu">
-                <a href="index.html">Beranda</a>
-                <a href="cek-in.html">Cek-in</a>
-                <a href="galeri.html">Galeri</a>
-                <a href="fasilitas.html" class="active">Fasilitas</a>
-                <a href="daftar-harga.html">Daftar Harga</a>
-                <a href="kontak.html">Kontak</a>
-                <a href="#" class="btn-login">Login Tamu</a>
-                <a href="#" class="btn-login">Login Admin</a>
+                <a href="index.html" id="navHome">Beranda</a>
+                <a href="cek-in.html" id="navCheckin">Cek-in</a>
+                <a href="galeri.html" id="navGallery">Galeri</a>
+                <a href="fasilitas.html" class="active" id="navFacilities">Fasilitas</a>
+                <a href="daftar-harga.html" id="navPrice">Daftar Harga</a>
+                <a href="kontak.html" id="navContact">Kontak</a>
+                
+                <!-- Group Kanan: Language Switcher + Login buttons -->
+                <div class="nav-right">
+                    <div class="lang-switcher">
+                        <button class="lang-btn active" id="langId">🇮🇩 ID</button>
+                        <button class="lang-btn" id="langEn">🇬🇧 EN</button>
+                    </div>
+                    <a href="#" class="btn-login" id="navGuestLogin">Login Tamu</a>
+                    <a href="#" class="btn-login" id="navAdminLogin">Login Admin</a>
+                </div>
             </nav>
         </div>
     </header>
@@ -995,9 +1013,9 @@
     ============================================================ -->
     <div class="breadcrumb">
         <div class="breadcrumb-container">
-            <h1>🏠 <span>Fasilitas</span> JDI KOSKITA</h1>
+            <h1>🏠 <span id="breadTitle">Fasilitas</span> JDI KOSKITA</h1>
             <div class="breadcrumb-links">
-                <a href="index.html">Beranda</a> &gt; <span>Fasilitas</span>
+                <a href="index.html" id="breadHome">Beranda</a> &gt; <span id="breadCurrent">Fasilitas</span>
             </div>
         </div>
     </div>
@@ -1007,152 +1025,188 @@
     ============================================================ -->
     <section class="facilities-section">
 
-        <!-- Header -->
         <div class="facilities-header">
-            <h2>Kenyamanan & <span>Kemudahan</span> untuk Penghuni</h2>
-            <p>Semua fasilitas terbaik untuk pengalaman tinggal yang nyaman</p>
+            <h2 id="headerTitle">Kenyamanan & <span>Kemudahan</span> untuk Penghuni</h2>
+            <p id="headerSub">Semua fasilitas terbaik untuk pengalaman tinggal yang nyaman</p>
         </div>
 
-        <!-- ============================================================
-        QUICK SUMMARY
-        ============================================================ -->
-        <div class="quick-summary" id="quickSummary">
-            <!-- Akan di-generate oleh JavaScript -->
-        </div>
+        <div class="quick-summary" id="quickSummary"></div>
 
-        <!-- ============================================================
-        FASILITAS KAMAR (Room Types)
-        ============================================================ -->
         <div class="section-title">
             <span class="title-icon">🛏️</span>
-            <h3>Fasilitas <span>Kamar</span></h3>
+            <h3><span id="roomTitle">Fasilitas Kamar</span></h3>
             <span class="title-line"></span>
         </div>
+        <div class="room-types-grid" id="roomTypesGrid"></div>
 
-        <div class="room-types-grid" id="roomTypesGrid">
-            <!-- Akan di-generate oleh JavaScript -->
-        </div>
-
-        <!-- ============================================================
-        FASILITAS PROPERTI
-        ============================================================ -->
         <div class="section-title">
             <span class="title-icon">🏢</span>
-            <h3>Fasilitas <span>Properti</span></h3>
+            <h3><span id="propertyTitle">Fasilitas Properti</span></h3>
             <span class="title-line"></span>
         </div>
+        <div class="property-facilities-grid" id="propertyFacilitiesGrid"></div>
 
-        <div class="property-facilities-grid" id="propertyFacilitiesGrid">
-            <!-- Akan di-generate oleh JavaScript -->
-        </div>
-
-        <!-- ============================================================
-        AKSES FASILITAS UMUM
-        ============================================================ -->
         <div class="section-title">
             <span class="title-icon">📍</span>
-            <h3>Akses ke <span>Fasilitas Umum</span></h3>
+            <h3><span id="nearbyTitle">Akses ke Fasilitas Umum</span></h3>
             <span class="title-line"></span>
         </div>
+        <div class="nearby-grid" id="nearbyGrid"></div>
 
-        <div class="nearby-grid" id="nearbyGrid">
-            <!-- Akan di-generate oleh JavaScript -->
-        </div>
-
-        <!-- ============================================================
-        TRANSPORTASI
-        ============================================================ -->
         <div class="section-title">
             <span class="title-icon">🚗</span>
-            <h3>Transportasi & <span>Online Services</span></h3>
+            <h3><span id="transportTitle">Transportasi & Online Services</span></h3>
             <span class="title-line"></span>
         </div>
+        <div class="transport-grid" id="transportGrid"></div>
 
-        <div class="transport-grid" id="transportGrid">
-            <!-- Akan di-generate oleh JavaScript -->
-        </div>
-
-        <!-- ============================================================
-        LOKASI MAP
-        ============================================================ -->
         <div class="location-map-container" id="locationMapContainer">
             <div class="map-header">
                 <div class="map-title">
-                    📍 <span>Lokasi</span> JDI KOSKITA
+                    📍 <span id="mapTitle">Lokasi</span> JDI KOSKITA
                 </div>
                 <div class="map-actions">
                     <a href="#" target="_blank" class="btn-map google" id="btnGoogleMaps">🗺️ Google Maps</a>
                     <a href="#" target="_blank" class="btn-map waze" id="btnWaze">🧭 Waze</a>
                 </div>
             </div>
-            <div class="map-wrapper" id="mapWrapper">
-                <!-- Akan di-generate oleh JavaScript -->
-            </div>
+            <div class="map-wrapper" id="mapWrapper"></div>
         </div>
 
-        <!-- ============================================================
-        TESTIMONI
-        ============================================================ -->
         <div class="section-title">
             <span class="title-icon">💬</span>
-            <h3>Testimoni <span>Penghuni</span></h3>
+            <h3><span id="testimonialTitle">Testimoni Penghuni</span></h3>
             <span class="title-line"></span>
         </div>
-
-        <div class="testimonials-grid" id="testimonialsGrid">
-            <!-- Akan di-generate oleh JavaScript -->
-        </div>
+        <div class="testimonials-grid" id="testimonialsGrid"></div>
 
     </section>
 
     <!-- ============================================================
-    FOOTER - SEMUA LINK SUDAH DIPERBAIKI
+    FOOTER
     ============================================================ -->
     <footer>
         <div class="footer-brand">JDI <span>KOSKITA</span></div>
-        <p>Smart Boarding House Management System</p>
+        <p id="footerTagline">Smart Boarding House Management System</p>
         <div class="footer-divider"></div>
-        <p>&copy; 2026 JDI KOSKITA. All Rights Reserved.</p>
-        <!-- ✅ SEMUA LINK SUDAH DIPERBAIKI -->
+        <p id="footerCopyright">&copy; 2026 JDI KOSKITA. All Rights Reserved.</p>
         <div class="footer-links">
-            <a href="index.html">Beranda</a>
-            <a href="cek-in.html">Cek-in</a>
-            <a href="galeri.html">Galeri</a>
-            <a href="fasilitas.html">Fasilitas</a>
-            <a href="daftar-harga.html">Daftar Harga</a>
-            <a href="kontak.html">Kontak</a>
+            <a href="index.html" id="footerHome">Beranda</a>
+            <a href="cek-in.html" id="footerCheckin">Cek-in</a>
+            <a href="galeri.html" id="footerGallery">Galeri</a>
+            <a href="fasilitas.html" id="footerFacilities">Fasilitas</a>
+            <a href="daftar-harga.html" id="footerPrice">Daftar Harga</a>
+            <a href="kontak.html" id="footerContact">Kontak</a>
         </div>
     </footer>
 
     <!-- ============================================================
-    JAVASCRIPT - CMS READY WITH API
+    JAVASCRIPT - LANGSUNG TAMPILKAN DATA TANPA LOADING
     ============================================================ -->
     <script>
         (function() {
             'use strict';
 
             // ============================================================
-            // 🔧 API CONFIGURATION
+            // 🌐 TRANSLATION DATA
             // ============================================================
-            const API_CONFIG = {
-                // Ganti dengan URL API Anda
-                baseUrl: 'https://api.jdikoskita.com/v1',
-                endpoints: {
-                    facilities: '/facilities',
-                    roomTypes: '/room-types',
-                    testimonials: '/testimonials',
-                    location: '/location'
+            var TRANSLATIONS = {
+                id: {
+                    tagline: 'Smart Boarding House Management System',
+                    navHome: 'Beranda',
+                    navCheckin: 'Cek-in',
+                    navGallery: 'Galeri',
+                    navFacilities: 'Fasilitas',
+                    navPrice: 'Daftar Harga',
+                    navContact: 'Kontak',
+                    navGuestLogin: 'Login Tamu',
+                    navAdminLogin: 'Login Admin',
+                    breadTitle: 'Fasilitas',
+                    breadHome: 'Beranda',
+                    breadCurrent: 'Fasilitas',
+                    headerTitle: 'Kenyamanan & <span>Kemudahan</span> untuk Penghuni',
+                    headerSub: 'Semua fasilitas terbaik untuk pengalaman tinggal yang nyaman',
+                    roomTitle: 'Fasilitas Kamar',
+                    propertyTitle: 'Fasilitas Properti',
+                    nearbyTitle: 'Akses ke Fasilitas Umum',
+                    transportTitle: 'Transportasi & Online Services',
+                    mapTitle: 'Lokasi',
+                    testimonialTitle: 'Testimoni Penghuni',
+                    footerTagline: 'Smart Boarding House Management System',
+                    footerCopyright: '&copy; 2026 JDI KOSKITA. All Rights Reserved.',
+                    footerHome: 'Beranda',
+                    footerCheckin: 'Cek-in',
+                    footerGallery: 'Galeri',
+                    footerFacilities: 'Fasilitas',
+                    footerPrice: 'Daftar Harga',
+                    footerContact: 'Kontak',
+                    summaryTotalRooms: 'Total Kamar',
+                    summaryBathrooms: 'Kamar Mandi',
+                    summaryWifi: 'WiFi Speed',
+                    summaryParking: 'Kapasitas Parkir',
+                    summarySecurity: 'Keamanan',
+                    pricePerMonth: '/ bulan',
+                    contactUs: 'Hubungi Kami',
+                    popular: '⭐ Populer',
+                    available: '✅ Tersedia',
+                    comingSoon: '⏳ Coming Soon',
+                    availableShort: 'Tersedia',
+                    unavailableShort: 'Tidak Tersedia',
+                    googleMaps: '🗺️ Google Maps',
+                    waze: '🧭 Waze',
+                    roomPrefix: 'Kamar '
                 },
-                // Untuk development, gunakan data lokal
-                useLocalData: true,
-                // Timeout untuk fetch (ms)
-                timeout: 10000
+                en: {
+                    tagline: 'Smart Boarding House Management System',
+                    navHome: 'Home',
+                    navCheckin: 'Check-in',
+                    navGallery: 'Gallery',
+                    navFacilities: 'Facilities',
+                    navPrice: 'Price List',
+                    navContact: 'Contact',
+                    navGuestLogin: 'Guest Login',
+                    navAdminLogin: 'Admin Login',
+                    breadTitle: 'Facilities',
+                    breadHome: 'Home',
+                    breadCurrent: 'Facilities',
+                    headerTitle: 'Comfort & <span>Convenience</span> for Residents',
+                    headerSub: 'All the best facilities for a comfortable living experience',
+                    roomTitle: 'Room Facilities',
+                    propertyTitle: 'Property Facilities',
+                    nearbyTitle: 'Access to Public Facilities',
+                    transportTitle: 'Transportation & Online Services',
+                    mapTitle: 'Location',
+                    testimonialTitle: 'Resident Testimonials',
+                    footerTagline: 'Smart Boarding House Management System',
+                    footerCopyright: '&copy; 2026 JDI KOSKITA. All Rights Reserved.',
+                    footerHome: 'Home',
+                    footerCheckin: 'Check-in',
+                    footerGallery: 'Gallery',
+                    footerFacilities: 'Facilities',
+                    footerPrice: 'Price List',
+                    footerContact: 'Contact',
+                    summaryTotalRooms: 'Total Rooms',
+                    summaryBathrooms: 'Bathrooms',
+                    summaryWifi: 'WiFi Speed',
+                    summaryParking: 'Parking Capacity',
+                    summarySecurity: 'Security',
+                    pricePerMonth: '/ month',
+                    contactUs: 'Contact Us',
+                    popular: '⭐ Popular',
+                    available: '✅ Available',
+                    comingSoon: '⏳ Coming Soon',
+                    availableShort: 'Available',
+                    unavailableShort: 'Unavailable',
+                    googleMaps: '🗺️ Google Maps',
+                    waze: '🧭 Waze',
+                    roomPrefix: 'Room '
+                }
             };
 
             // ============================================================
-            // 📊 LOCAL DATA (Fallback jika API tidak tersedia)
+            // 📊 DATA LENGKAP
             // ============================================================
-            const LOCAL_DATA = {
+            var DATA = {
                 summary: {
                     totalRooms: 22,
                     totalBathrooms: 12,
@@ -1161,11 +1215,9 @@
                     cctv: '24 Jam'
                 },
                 roomTypes: [{
-                    id: 'standard',
                     name: 'Standard',
                     price: 500000,
-                    icon: 'https://api.iconify.design/emojione/bed.svg',
-                    image: 'https://via.placeholder.com/400x300/0A2E6D/FFFFFF?text=Kamar+Standard',
+                    icon: '🛏️',
                     facilities: [
                         { icon: '❄️', name: 'AC' },
                         { icon: '🪑', name: 'Meja Belajar' },
@@ -1176,11 +1228,9 @@
                     popular: false,
                     description: 'Kamar standar nyaman dengan fasilitas dasar.'
                 }, {
-                    id: 'deluxe',
                     name: 'Deluxe',
                     price: 650000,
-                    icon: 'https://api.iconify.design/emojione/luxury-hotel.svg',
-                    image: 'https://via.placeholder.com/400x300/FF7A00/FFFFFF?text=Kamar+Deluxe',
+                    icon: '🌟',
                     facilities: [
                         { icon: '❄️', name: 'AC' },
                         { icon: '📺', name: 'TV 32"' },
@@ -1192,11 +1242,9 @@
                     popular: true,
                     description: 'Kamar deluxe dengan balkon dan TV untuk kenyamanan ekstra.'
                 }, {
-                    id: 'vip',
                     name: 'VIP',
                     price: 850000,
-                    icon: 'https://api.iconify.design/emojione/crown.svg',
-                    image: 'https://via.placeholder.com/400x300/1a1a2e/FFFFFF?text=Kamar+VIP',
+                    icon: '👑',
                     facilities: [
                         { icon: '❄️', name: 'AC' },
                         { icon: '📺', name: 'TV 42"' },
@@ -1211,40 +1259,30 @@
                     description: 'Kamar VIP premium dengan fasilitas terbaik dan view kota.'
                 }],
                 propertyFacilities: [
-                    { id: 'ruang-tamu', name: 'Ruang Tamu', icon: '🛋️', description: 'Ruang tamu luas dengan sofa dan TV',
-                        available: true },
-                    { id: 'dapur', name: 'Dapur Bersama', icon: '🍽️', description: 'Dapur dengan peralatan lengkap',
-                        available: true },
-                    { id: 'laundry', name: 'Laundry Service', icon: '🧺', description: 'Mesin cuci dan pengering',
-                        available: true },
-                    { id: 'parkir', name: 'Parkir Luas', icon: '🅿️', description: 'Area parkir yang aman',
-                    available: true },
-                    { id: 'cctv', name: 'CCTV 24 Jam', icon: '🔒', description: 'Keamanan 24 jam dengan CCTV',
-                        available: true },
-                    { id: 'wifi', name: 'WiFi Cepat', icon: '📶', description: 'WiFi 100 Mbps untuk semua penghuni',
-                        available: true },
-                    { id: 'gym', name: 'Gym / Fitness', icon: '🏋️', description: 'Peralatan gym lengkap',
-                        available: false },
-                    { id: 'taman', name: 'Taman', icon: '🌳', description: 'Taman hijau untuk relaksasi',
-                    available: true }
+                    { name: 'Ruang Tamu', icon: '🛋️', description: 'Ruang tamu luas dengan sofa dan TV', available: true },
+                    { name: 'Dapur Bersama', icon: '🍽️', description: 'Dapur dengan peralatan lengkap', available: true },
+                    { name: 'Laundry Service', icon: '🧺', description: 'Mesin cuci dan pengering', available: true },
+                    { name: 'Parkir Luas', icon: '🅿️', description: 'Area parkir yang aman', available: true },
+                    { name: 'CCTV 24 Jam', icon: '🔒', description: 'Keamanan 24 jam dengan CCTV', available: true },
+                    { name: 'WiFi Cepat', icon: '📶', description: 'WiFi 100 Mbps untuk semua penghuni', available: true },
+                    { name: 'Gym / Fitness', icon: '🏋️', description: 'Peralatan gym lengkap', available: false },
+                    { name: 'Taman', icon: '🌳', description: 'Taman hijau untuk relaksasi', available: true }
                 ],
                 nearbyFacilities: [
-                    { id: 'rs', name: 'Rumah Sakit', icon: '🏥', distance: '5 menit', address: 'RS. Hasan Sadikin' },
-                    { id: 'supermarket', name: 'Supermarket', icon: '🛒', distance: '10 menit',
-                        address: 'Indomaret / Alfamart' },
-                    { id: 'kampus', name: 'Kampus', icon: '🎓', distance: '15 menit', address: 'UNPAD / ITB' },
-                    { id: 'halte', name: 'Halte Bus', icon: '🚌', distance: '5 menit', address: 'Halte Cisitu' },
-                    { id: 'stasiun', name: 'Stasiun Kereta', icon: '🚆', distance: '20 menit',
-                        address: 'Stasiun Bandung' },
-                    { id: 'warung', name: 'Warung Makan', icon: '🍜', distance: '2 menit', address: 'Warung Sunda' },
-                    { id: 'atm', name: 'ATM Center', icon: '🏧', distance: '3 menit', address: 'Bank BRI / BCA' },
-                    { id: 'spbu', name: 'SPBU', icon: '⛽', distance: '8 menit', address: 'SPBU Setiabudi' }
+                    { name: 'Rumah Sakit', icon: '🏥', distance: '5 menit', address: 'RS. Hasan Sadikin' },
+                    { name: 'Supermarket', icon: '🛒', distance: '10 menit', address: 'Indomaret / Alfamart' },
+                    { name: 'Kampus', icon: '🎓', distance: '15 menit', address: 'UNPAD / ITB' },
+                    { name: 'Halte Bus', icon: '🚌', distance: '5 menit', address: 'Halte Cisitu' },
+                    { name: 'Stasiun Kereta', icon: '🚆', distance: '20 menit', address: 'Stasiun Bandung' },
+                    { name: 'Warung Makan', icon: '🍜', distance: '2 menit', address: 'Warung Sunda' },
+                    { name: 'ATM Center', icon: '🏧', distance: '3 menit', address: 'Bank BRI / BCA' },
+                    { name: 'SPBU', icon: '⛽', distance: '8 menit', address: 'SPBU Setiabudi' }
                 ],
                 transportation: [
-                    { id: 'gojek', name: 'Gojek', icon: '🛵', available: true, info: 'Estimasi 5 menit' },
-                    { id: 'grab', name: 'Grab', icon: '🚗', available: true, info: 'Estimasi 5 menit' },
-                    { id: 'taxi', name: 'Blue Bird Taxi', icon: '🚕', available: true, info: 'Estimasi 10 menit' },
-                    { id: 'bus', name: 'Bus Kota', icon: '🚌', available: true, info: 'Halte 5 menit' }
+                    { name: 'Gojek', icon: '🛵', available: true, info: 'Estimasi 5 menit' },
+                    { name: 'Grab', icon: '🚗', available: true, info: 'Estimasi 5 menit' },
+                    { name: 'Blue Bird Taxi', icon: '🚕', available: true, info: 'Estimasi 10 menit' },
+                    { name: 'Bus Kota', icon: '🚌', available: true, info: 'Halte 5 menit' }
                 ],
                 location: {
                     name: 'JDI KOSKITA',
@@ -1254,475 +1292,322 @@
                     wazeUrl: 'https://waze.com/ul?ll=-6.9175,107.6191&navigate=yes'
                 },
                 testimonials: [
-                    { id: 1, name: 'Budi Santoso', room: 'A1',
-                        message: 'Fasilitas lengkap, AC dingin, WiFi cepat. Dekat ke kampus dan super market. Sangat recomended!',
-                        rating: 5, date: '2026-06-01' },
-                    { id: 2, name: 'Siti Rahayu', room: 'B3',
-                        message: 'Kamar nyaman, parkir luas, dan lingkungannya bersih. Owner ramah dan responsif.',
-                        rating: 5, date: '2026-06-15' },
-                    { id: 3, name: 'Andi Wijaya', room: 'C2',
-                        message: 'Lokasi strategis, dekat ke mana-mana. Fasilitas dapur dan laundry sangat membantu.',
-                        rating: 4, date: '2026-06-20' }
+                    { name: 'Budi Santoso', room: 'A1', message: 'Fasilitas lengkap, AC dingin, WiFi cepat. Dekat ke kampus dan super market. Sangat recomended!', rating: 5, date: '2026-06-01' },
+                    { name: 'Siti Rahayu', room: 'B3', message: 'Kamar nyaman, parkir luas, dan lingkungannya bersih. Owner ramah dan responsif.', rating: 5, date: '2026-06-15' },
+                    { name: 'Andi Wijaya', room: 'C2', message: 'Lokasi strategis, dekat ke mana-mana. Fasilitas dapur dan laundry sangat membantu.', rating: 4, date: '2026-06-20' }
                 ]
             };
 
             // ============================================================
-            // 🚀 API HELPER FUNCTIONS
+            // 🌐 LANGUAGE STATE
             // ============================================================
-            let CACHED_DATA = null;
-
-            async function fetchWithTimeout(url, options = {}, timeout = API_CONFIG.timeout) {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeout);
-                try {
-                    const response = await fetch(url, { ...options, signal: controller.signal });
-                    clearTimeout(timeoutId);
-                    return response;
-                } catch (error) {
-                    clearTimeout(timeoutId);
-                    throw error;
-                }
-            }
-
-            async function fetchFacilitiesData() {
-                // Jika menggunakan data lokal
-                if (API_CONFIG.useLocalData) {
-                    return LOCAL_DATA;
-                }
-
-                // Jika menggunakan API
-                try {
-                    const baseUrl = API_CONFIG.baseUrl;
-                    const endpoints = API_CONFIG.endpoints;
-
-                    // Fetch semua data secara paralel
-                    const [facilitiesRes, roomTypesRes, testimonialsRes, locationRes] = await Promise.all([
-                        fetchWithTimeout(`${baseUrl}${endpoints.facilities}`),
-                        fetchWithTimeout(`${baseUrl}${endpoints.roomTypes}`),
-                        fetchWithTimeout(`${baseUrl}${endpoints.testimonials}`),
-                        fetchWithTimeout(`${baseUrl}${endpoints.location}`)
-                    ]);
-
-                    if (!facilitiesRes.ok || !roomTypesRes.ok || !testimonialsRes.ok || !locationRes.ok) {
-                        throw new Error('Gagal mengambil data dari API');
-                    }
-
-                    const facilities = await facilitiesRes.json();
-                    const roomTypes = await roomTypesRes.json();
-                    const testimonials = await testimonialsRes.json();
-                    const location = await locationRes.json();
-
-                    return {
-                        summary: facilities.summary,
-                        propertyFacilities: facilities.propertyFacilities,
-                        nearbyFacilities: facilities.nearbyFacilities,
-                        transportation: facilities.transportation,
-                        roomTypes: roomTypes,
-                        testimonials: testimonials,
-                        location: location
-                    };
-                } catch (error) {
-                    console.warn('⚠️ Gagal mengambil data dari API, menggunakan data lokal:', error.message);
-                    return LOCAL_DATA;
-                }
-            }
-
-            // ============================================================
-            // 🖼️ ICON HELPER - Support API Icon
-            // ============================================================
-            function getIconHtml(icon) {
-                if (!icon) return '📦';
-
-                // Jika icon adalah URL (dari API)
-                if (icon.startsWith('http://') || icon.startsWith('https://')) {
-                    // Icon dari Iconify API atau CDN
-                    if (icon.includes('iconify.design') || icon.includes('cdn')) {
-                        return `<img src="${icon}" alt="icon" style="width:32px;height:32px;display:inline-block;vertical-align:middle;" />`;
-                    }
-                    return `<img src="${icon}" alt="icon" style="width:32px;height:32px;display:inline-block;vertical-align:middle;" />`;
-                }
-
-                // Emoji atau karakter
-                return icon;
-            }
+            var currentLang = 'id';
 
             // ============================================================
             // DOM REFS
             // ============================================================
-            const quickSummary = document.getElementById('quickSummary');
-            const roomTypesGrid = document.getElementById('roomTypesGrid');
-            const propertyFacilitiesGrid = document.getElementById('propertyFacilitiesGrid');
-            const nearbyGrid = document.getElementById('nearbyGrid');
-            const transportGrid = document.getElementById('transportGrid');
-            const testimonialsGrid = document.getElementById('testimonialsGrid');
-            const mapWrapper = document.getElementById('mapWrapper');
-            const btnGoogleMaps = document.getElementById('btnGoogleMaps');
-            const btnWaze = document.getElementById('btnWaze');
+            var quickSummary = document.getElementById('quickSummary');
+            var roomTypesGrid = document.getElementById('roomTypesGrid');
+            var propertyFacilitiesGrid = document.getElementById('propertyFacilitiesGrid');
+            var nearbyGrid = document.getElementById('nearbyGrid');
+            var transportGrid = document.getElementById('transportGrid');
+            var testimonialsGrid = document.getElementById('testimonialsGrid');
+            var mapWrapper = document.getElementById('mapWrapper');
+            var btnGoogleMaps = document.getElementById('btnGoogleMaps');
+            var btnWaze = document.getElementById('btnWaze');
 
             // ============================================================
-            // RENDER FUNCTIONS
+            // 📝 TRANSLATION HELPER
+            // ============================================================
+            function t(key) {
+                return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key] !== undefined) ? 
+                    TRANSLATIONS[currentLang][key] : key;
+            }
+
+            // ============================================================
+            // 🌐 UPDATE UI LANGUAGE
+            // ============================================================
+            function updateUILanguage() {
+                var dict = TRANSLATIONS[currentLang];
+
+                document.getElementById('taglineHeader').textContent = dict.tagline;
+                document.getElementById('navHome').textContent = dict.navHome;
+                document.getElementById('navCheckin').textContent = dict.navCheckin;
+                document.getElementById('navGallery').textContent = dict.navGallery;
+                document.getElementById('navFacilities').textContent = dict.navFacilities;
+                document.getElementById('navPrice').textContent = dict.navPrice;
+                document.getElementById('navContact').textContent = dict.navContact;
+                document.getElementById('navGuestLogin').textContent = dict.navGuestLogin;
+                document.getElementById('navAdminLogin').textContent = dict.navAdminLogin;
+
+                document.getElementById('breadTitle').textContent = dict.breadTitle;
+                document.getElementById('breadHome').textContent = dict.breadHome;
+                document.getElementById('breadCurrent').textContent = dict.breadCurrent;
+
+                document.getElementById('headerTitle').innerHTML = dict.headerTitle;
+                document.getElementById('headerSub').textContent = dict.headerSub;
+
+                document.getElementById('roomTitle').textContent = dict.roomTitle;
+                document.getElementById('propertyTitle').textContent = dict.propertyTitle;
+                document.getElementById('nearbyTitle').textContent = dict.nearbyTitle;
+                document.getElementById('transportTitle').textContent = dict.transportTitle;
+                document.getElementById('mapTitle').textContent = dict.mapTitle;
+                document.getElementById('testimonialTitle').textContent = dict.testimonialTitle;
+
+                document.getElementById('btnGoogleMaps').textContent = dict.googleMaps;
+                document.getElementById('btnWaze').textContent = dict.waze;
+
+                document.getElementById('footerTagline').textContent = dict.footerTagline;
+                document.getElementById('footerCopyright').innerHTML = dict.footerCopyright;
+                document.getElementById('footerHome').textContent = dict.footerHome;
+                document.getElementById('footerCheckin').textContent = dict.footerCheckin;
+                document.getElementById('footerGallery').textContent = dict.footerGallery;
+                document.getElementById('footerFacilities').textContent = dict.footerFacilities;
+                document.getElementById('footerPrice').textContent = dict.footerPrice;
+                document.getElementById('footerContact').textContent = dict.footerContact;
+
+                document.getElementById('langId').className = currentLang === 'id' ? 'lang-btn active' : 'lang-btn';
+                document.getElementById('langEn').className = currentLang === 'en' ? 'lang-btn active' : 'lang-btn';
+            }
+
+            // ============================================================
+            // RENDER FUNCTIONS - LANGSUNG RENDER TANPA LOADING
             // ============================================================
 
-            // Show Loading
-            function showLoading(container) {
-                container.innerHTML = `
-                    <div class="loading-spinner">
-                        <div class="spinner"></div>
-                        <p>Memuat data...</p>
-                    </div>
-                `;
-            }
-
-            // Show Error
-            function showError(container, message) {
-                container.innerHTML = `
-                    <div class="error-state">
-                        <span class="error-icon">⚠️</span>
-                        <h4>Gagal Memuat Data</h4>
-                        <p>${message}</p>
-                        <button class="btn-retry" onclick="location.reload()">🔄 Coba Lagi</button>
-                    </div>
-                `;
-            }
-
-            // Render Quick Summary
-            function renderQuickSummary(data) {
-                const s = data.summary;
+            function renderQuickSummary() {
+                var s = DATA.summary;
                 quickSummary.innerHTML = `
                     <div class="summary-item">
                         <span class="summary-icon">🏠</span>
                         <div class="summary-number">${s.totalRooms}</div>
-                        <div class="summary-label">Total Kamar</div>
+                        <div class="summary-label">${t('summaryTotalRooms')}</div>
                     </div>
                     <div class="summary-item">
                         <span class="summary-icon">🚿</span>
                         <div class="summary-number">${s.totalBathrooms}</div>
-                        <div class="summary-label">Kamar Mandi</div>
+                        <div class="summary-label">${t('summaryBathrooms')}</div>
                     </div>
                     <div class="summary-item">
                         <span class="summary-icon">📶</span>
                         <div class="summary-number">${s.wifiSpeed}</div>
-                        <div class="summary-label">WiFi Speed</div>
+                        <div class="summary-label">${t('summaryWifi')}</div>
                     </div>
                     <div class="summary-item">
                         <span class="summary-icon">🅿️</span>
                         <div class="summary-number">${s.parkingCapacity}</div>
-                        <div class="summary-label">Kapasitas Parkir</div>
+                        <div class="summary-label">${t('summaryParking')}</div>
                     </div>
                     <div class="summary-item">
                         <span class="summary-icon">🔒</span>
                         <div class="summary-number">${s.cctv}</div>
-                        <div class="summary-label">Keamanan</div>
+                        <div class="summary-label">${t('summarySecurity')}</div>
                     </div>
                 `;
             }
 
-            // Render Room Types
-            function renderRoomTypes(data) {
-                const rooms = data.roomTypes || [];
+            function renderRoomTypes() {
+                var rooms = DATA.roomTypes || [];
                 roomTypesGrid.innerHTML = '';
-
-                if (rooms.length === 0) {
-                    roomTypesGrid.innerHTML = `
-                        <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:40px;">
-                            <span style="font-size:48px;">🛏️</span>
-                            <h3 style="color:#0A2E6D;margin-top:8px;">Belum ada data kamar</h3>
-                            <p style="color:#888;">Tambahkan tipe kamar melalui CMS.</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                rooms.forEach(room => {
-                    const card = document.createElement('div');
+                
+                for (var i = 0; i < rooms.length; i++) {
+                    var room = rooms[i];
+                    var card = document.createElement('div');
                     card.className = 'room-type-card';
-
-                    let facilitiesHTML = '';
+                    
+                    var facilitiesHTML = '';
                     if (room.facilities && room.facilities.length > 0) {
-                        room.facilities.forEach(f => {
-                            const iconHtml = getIconHtml(f.icon);
+                        for (var j = 0; j < room.facilities.length; j++) {
+                            var f = room.facilities[j];
                             facilitiesHTML += `
                                 <span class="facility-tag">
-                                    <span class="tag-icon">${iconHtml}</span> ${f.name}
+                                    <span class="tag-icon">${f.icon}</span> ${f.name}
                                 </span>
                             `;
-                        });
+                        }
                     }
-
-                    const iconHtml = getIconHtml(room.icon);
-                    const price = room.price ? `Rp ${room.price.toLocaleString('id-ID')} / bulan` : 'Hubungi Kami';
-
+                    
+                    var price = room.price ? 'Rp ' + room.price.toLocaleString('id-ID') + ' ' + t('pricePerMonth') : t('contactUs');
+                    
                     card.innerHTML = `
-                        ${room.popular ? '<span class="badge-populer">⭐ Populer</span>' : ''}
-                        <span class="room-type-icon">${iconHtml}</span>
-                        <div class="room-type-name">${room.name || 'Tipe Kamar'}</div>
+                        ${room.popular ? '<span class="badge-populer">' + t('popular') + '</span>' : ''}
+                        <span class="room-type-icon">${room.icon}</span>
+                        <div class="room-type-name">${room.name}</div>
                         <div class="room-type-price">${price}</div>
                         <div class="facility-list">${facilitiesHTML}</div>
-                        <p style="font-size:13px;color:#888;margin-top:10px;">${room.description || ''}</p>
+                        <p style="font-size:13px;color:#888;margin-top:10px;">${room.description}</p>
                     `;
-
-                    // Load gambar jika ada
-                    if (room.image) {
-                        const img = document.createElement('img');
-                        img.src = room.image;
-                        img.className = 'room-image';
-                        img.alt = room.name || 'Kamar';
-                        img.onerror = function() { this.style.display = 'none'; };
-                        card.prepend(img);
-                    }
-
+                    
                     roomTypesGrid.appendChild(card);
-                });
+                }
             }
 
-            // Render Property Facilities
-            function renderPropertyFacilities(data) {
-                const facilities = data.propertyFacilities || [];
+            function renderPropertyFacilities() {
+                var facilities = DATA.propertyFacilities || [];
                 propertyFacilitiesGrid.innerHTML = '';
-
-                if (facilities.length === 0) {
-                    propertyFacilitiesGrid.innerHTML = `
-                        <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:30px;">
-                            <span style="font-size:36px;">🏢</span>
-                            <h4 style="color:#0A2E6D;margin-top:6px;">Belum ada fasilitas properti</h4>
-                            <p style="color:#888;font-size:13px;">Tambahkan melalui CMS.</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                facilities.forEach(f => {
-                    const item = document.createElement('div');
+                
+                for (var i = 0; i < facilities.length; i++) {
+                    var f = facilities[i];
+                    var item = document.createElement('div');
                     item.className = 'property-facility-item';
-                    const iconHtml = getIconHtml(f.icon);
                     item.innerHTML = `
-                        <span class="pf-icon">${iconHtml}</span>
-                        <div class="pf-name">${f.name || 'Fasilitas'}</div>
-                        <div class="pf-desc">${f.description || ''}</div>
+                        <span class="pf-icon">${f.icon}</span>
+                        <div class="pf-name">${f.name}</div>
+                        <div class="pf-desc">${f.description}</div>
                         <span class="pf-status ${f.available ? 'available' : 'coming'}">
-                            ${f.available ? '✅ Tersedia' : '⏳ Coming Soon'}
+                            ${f.available ? t('available') : t('comingSoon')}
                         </span>
                     `;
                     propertyFacilitiesGrid.appendChild(item);
-                });
+                }
             }
 
-            // Render Nearby Facilities
-            function renderNearby(data) {
-                const nearby = data.nearbyFacilities || [];
+            function renderNearby() {
+                var nearby = DATA.nearbyFacilities || [];
                 nearbyGrid.innerHTML = '';
-
-                if (nearby.length === 0) {
-                    nearbyGrid.innerHTML = `
-                        <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:30px;">
-                            <span style="font-size:36px;">📍</span>
-                            <h4 style="color:#0A2E6D;margin-top:6px;">Belum ada data fasilitas umum</h4>
-                            <p style="color:#888;font-size:13px;">Tambahkan melalui CMS.</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                nearby.forEach(n => {
-                    const item = document.createElement('div');
+                
+                for (var i = 0; i < nearby.length; i++) {
+                    var n = nearby[i];
+                    var item = document.createElement('div');
                     item.className = 'nearby-item';
-                    const iconHtml = getIconHtml(n.icon);
                     item.innerHTML = `
-                        <span class="nearby-icon">${iconHtml}</span>
+                        <span class="nearby-icon">${n.icon}</span>
                         <div class="nearby-info">
-                            <div class="nearby-name">${n.name || 'Fasilitas'}</div>
-                            <div class="nearby-distance">⏱️ ${n.distance || '-'}</div>
-                            <div class="nearby-address">📍 ${n.address || ''}</div>
+                            <div class="nearby-name">${n.name}</div>
+                            <div class="nearby-distance">⏱️ ${n.distance}</div>
+                            <div class="nearby-address">📍 ${n.address}</div>
                         </div>
                     `;
                     nearbyGrid.appendChild(item);
-                });
+                }
             }
 
-            // Render Transportation
-            function renderTransportation(data) {
-                const transports = data.transportation || [];
+            function renderTransportation() {
+                var transports = DATA.transportation || [];
                 transportGrid.innerHTML = '';
-
-                if (transports.length === 0) {
-                    transportGrid.innerHTML = `
-                        <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:30px;">
-                            <span style="font-size:36px;">🚗</span>
-                            <h4 style="color:#0A2E6D;margin-top:6px;">Belum ada data transportasi</h4>
-                            <p style="color:#888;font-size:13px;">Tambahkan melalui CMS.</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                transports.forEach(t => {
-                    const item = document.createElement('div');
+                
+                for (var i = 0; i < transports.length; i++) {
+                    var t = transports[i];
+                    var item = document.createElement('div');
                     item.className = 'transport-item';
-                    const iconHtml = getIconHtml(t.icon);
                     item.innerHTML = `
-                        <span class="transport-icon">${iconHtml}</span>
-                        <div class="transport-name">${t.name || 'Transportasi'}</div>
+                        <span class="transport-icon">${t.icon}</span>
+                        <div class="transport-name">${t.name}</div>
                         <div class="transport-info">
                             <span class="${t.available ? 'available' : 'unavailable'}">
-                                ${t.available ? '✅ Tersedia' : '❌ Tidak Tersedia'}
+                                ${t.available ? t('availableShort') : t('unavailableShort')}
                             </span>
-                            <br />${t.info || ''}
+                            <br />${t.info}
                         </div>
                     `;
                     transportGrid.appendChild(item);
-                });
+                }
             }
 
-            // Render Map
-            function renderMap(data) {
-                const loc = data.location || LOCAL_DATA.location;
-                const mapsEmbedUrl =
-                    `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${loc.gps.lat},${loc.gps.lng}&zoom=15`;
-
+            function renderMap() {
+                var loc = DATA.location;
+                var mapsEmbedUrl =
+                    'https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=' + 
+                    loc.gps.lat + ',' + loc.gps.lng + '&zoom=15';
                 mapWrapper.innerHTML = `
                     <iframe 
                         src="${mapsEmbedUrl}" 
                         allowfullscreen=""
                         loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade"
-                        title="Peta Lokasi JDI KOSKITA"
+                        title="JDI KOSKITA Location Map"
                     ></iframe>
                 `;
-
-                // Update tombol navigasi
-                btnGoogleMaps.href = loc.googleMapsUrl || `https://maps.google.com/maps?q=${loc.gps.lat},${loc.gps.lng}`;
-                btnWaze.href = loc.wazeUrl || `https://waze.com/ul?ll=${loc.gps.lat},${loc.gps.lng}&navigate=yes`;
+                btnGoogleMaps.href = loc.googleMapsUrl;
+                btnWaze.href = loc.wazeUrl;
             }
 
-            // Render Testimonials
-            function renderTestimonials(data) {
-                const testimonials = data.testimonials || [];
+            function renderTestimonials() {
+                var testimonials = DATA.testimonials || [];
                 testimonialsGrid.innerHTML = '';
-
-                if (testimonials.length === 0) {
-                    testimonialsGrid.innerHTML = `
-                        <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:30px;">
-                            <span style="font-size:36px;">💬</span>
-                            <h4 style="color:#0A2E6D;margin-top:6px;">Belum ada testimoni</h4>
-                            <p style="color:#888;font-size:13px;">Testimoni akan muncul setelah penghuni memberi ulasan.</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                testimonials.forEach(t => {
-                    const card = document.createElement('div');
+                
+                for (var i = 0; i < testimonials.length; i++) {
+                    var t = testimonials[i];
+                    var card = document.createElement('div');
                     card.className = 'testimonial-card';
-
-                    let stars = '';
-                    for (let i = 0; i < 5; i++) {
-                        stars += i < (t.rating || 0) ? '⭐' : '☆';
+                    
+                    var stars = '';
+                    for (var s = 0; s < 5; s++) {
+                        stars += s < (t.rating || 0) ? '⭐' : '☆';
                     }
-
-                    const dateStr = t.date ? new Date(t.date).toLocaleDateString('id-ID', { day: 'numeric',
-                        month: 'long', year: 'numeric' }) : '';
-
+                    
+                    var dateStr = t.date ? new Date(t.date).toLocaleDateString('id-ID', 
+                        { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+                    
                     card.innerHTML = `
                         <div class="testimonial-header">
-                            <span class="testi-name">${t.name || 'Penghuni'}</span>
-                            <span class="testi-room">${t.room ? 'Kamar ' + t.room : ''}</span>
+                            <span class="testi-name">${t.name}</span>
+                            <span class="testi-room">${t.room ? t('roomPrefix') + t.room : ''}</span>
                         </div>
                         <div class="testimonial-stars">${stars}</div>
-                        <p class="testimonial-message">"${t.message || ''}"</p>
-                        ${dateStr ? `<span class="testimonial-date">📅 ${dateStr}</span>` : ''}
+                        <p class="testimonial-message">"${t.message}"</p>
+                        ${dateStr ? '<span class="testimonial-date">📅 ' + dateStr + '</span>' : ''}
                     `;
                     testimonialsGrid.appendChild(card);
-                });
-            }
-
-            // ============================================================
-            // 🚀 MAIN LOAD FUNCTION
-            // ============================================================
-            async function loadFacilitiesData() {
-                // Tampilkan loading state di semua container
-                const containers = [
-                    quickSummary, roomTypesGrid, propertyFacilitiesGrid,
-                    nearbyGrid, transportGrid, testimonialsGrid
-                ];
-                containers.forEach(c => showLoading(c));
-
-                try {
-                    const data = await fetchFacilitiesData();
-
-                    // Simpan ke cache
-                    CACHED_DATA = data;
-
-                    // Render semua data
-                    renderQuickSummary(data);
-                    renderRoomTypes(data);
-                    renderPropertyFacilities(data);
-                    renderNearby(data);
-                    renderTransportation(data);
-                    renderMap(data);
-                    renderTestimonials(data);
-
-                    console.log('✅ JDI KOSKITA - Fasilitas berhasil dimuat!');
-                    console.log('📊 Data:', data);
-
-                } catch (error) {
-                    console.error('❌ Gagal memuat data fasilitas:', error);
-                    const errorMsg = 'Gagal memuat data. ' + (error.message || '');
-                    showError(quickSummary, errorMsg);
-                    showError(roomTypesGrid, errorMsg);
-                    showError(propertyFacilitiesGrid, errorMsg);
-                    showError(nearbyGrid, errorMsg);
-                    showError(transportGrid, errorMsg);
-                    showError(testimonialsGrid, errorMsg);
                 }
             }
 
             // ============================================================
-            // HAMBURGER MENU
+            // 🚀 RENDER SEMUA
             // ============================================================
-            const hamburger = document.getElementById('hamburger');
-            const navMenu = document.getElementById('navMenu');
+            function renderAll() {
+                renderQuickSummary();
+                renderRoomTypes();
+                renderPropertyFacilities();
+                renderNearby();
+                renderTransportation();
+                renderMap();
+                renderTestimonials();
+                updateUILanguage();
+                console.log('✅ JDI KOSKITA - Facilities rendered successfully!');
+            }
 
+            // ============================================================
+            // 🌐 LANGUAGE SWITCHER
+            // ============================================================
+            document.getElementById('langId').addEventListener('click', function() {
+                if (currentLang !== 'id') {
+                    currentLang = 'id';
+                    renderAll();
+                }
+            });
+
+            document.getElementById('langEn').addEventListener('click', function() {
+                if (currentLang !== 'en') {
+                    currentLang = 'en';
+                    renderAll();
+                }
+            });
+
+            // ============================================================
+            // HAMBURGER
+            // ============================================================
+            var hamburger = document.getElementById('hamburger');
+            var navMenu = document.getElementById('navMenu');
             if (hamburger && navMenu) {
-                hamburger.addEventListener('click', () => {
+                hamburger.addEventListener('click', function() {
                     navMenu.classList.toggle('open');
                 });
-
-                navMenu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
+                var links = navMenu.querySelectorAll('a');
+                for (var i = 0; i < links.length; i++) {
+                    links[i].addEventListener('click', function() {
                         if (window.innerWidth <= 576) {
                             navMenu.classList.remove('open');
                         }
                     });
-                });
+                }
             }
 
             // ============================================================
-            // EXPOSE FOR CMS
+            // INIT - LANGSUNG RENDER
             // ============================================================
-            window.FasilitasCMS = {
-                data: LOCAL_DATA,
-                reload: loadFacilitiesData,
-                updateConfig: function(newConfig) {
-                    Object.assign(API_CONFIG, newConfig);
-                    console.log('✅ Konfigurasi API diperbarui:', API_CONFIG);
-                },
-                useLocalData: function(useLocal) {
-                    API_CONFIG.useLocalData = useLocal;
-                    loadFacilitiesData();
-                },
-                refresh: loadFacilitiesData
-            };
-
-            // ============================================================
-            // INIT - LOAD DATA
-            // ============================================================
-            loadFacilitiesData();
-
-            console.log('✅ JDI KOSKITA - Fasilitas CMS Ready with API Support');
-            console.log('📊 Data dapat diambil dari API atau lokal');
-            console.log('🔧 API Config:', API_CONFIG);
-            console.log('   📌 Untuk menggunakan API, set API_CONFIG.useLocalData = false');
-            console.log('   📌 Dan atur API_CONFIG.baseUrl dengan URL API Anda');
+            renderAll();
+            console.log('✅ JDI KOSKITA - Facilities Ready with Bilingual Support');
+            console.log('📍 Tombol bahasa ada di sebelah kanan bersebelahan dengan Login Admin');
 
         })();
     </script>

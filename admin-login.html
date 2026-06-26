@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Admin - JDI KOSKITA</title>
+    <style>
+        /* ============================================================
+           RESET & BASE
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0A2E6D 0%, #1a4a8a 50%, #FF7A00 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Floating shapes background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(255, 122, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(10, 46, 109, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 32px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-logo .logo-icon {
+            width: 72px;
+            height: 72px;
+            background: #0A2E6D;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 32px;
+            color: #fff;
+            box-shadow: 0 8px 30px rgba(10, 46, 109, 0.3);
+        }
+
+        .login-logo h1 {
+            font-size: 24px;
+            color: #0A2E6D;
+        }
+
+        .login-logo h1 span {
+            color: #FF7A00;
+        }
+
+        .login-logo p {
+            font-size: 14px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .login-form .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #0A2E6D;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .login-form .form-group label .required {
+            color: #dc3545;
+        }
+
+        .login-form .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9edf2;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: 0.3s;
+            background: #fafcff;
+        }
+
+        .login-form .form-group input:focus {
+            outline: none;
+            border-color: #FF7A00;
+            box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.1);
+            background: #fff;
+        }
+
+        .login-form .form-group .input-icon {
+            position: relative;
+        }
+
+        .login-form .form-group .input-icon .icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            opacity: 0.5;
+        }
+
+        .login-form .form-group .input-icon input {
+            padding-left: 44px;
+        }
+
+        .login-form .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 16px 0 24px;
+            font-size: 14px;
+        }
+
+        .login-form .form-options .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .login-form .form-options .remember input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #FF7A00;
+            cursor: pointer;
+        }
+
+        .login-form .form-options .forgot {
+            color: #FF7A00;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-form .form-options .forgot:hover {
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #FF7A00, #e06a00);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 30px rgba(255, 122, 0, 0.3);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(255, 122, 0, 0.4);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .login-error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            display: none;
+            font-size: 14px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .login-error.show {
+            display: block;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-8px);
+            }
+            75% {
+                transform: translateX(8px);
+            }
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .login-footer a {
+            color: #FF7A00;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Security badge */
+        .security-badge {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .security-badge span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 28px 20px;
+            }
+
+            .login-logo h1 {
+                font-size: 20px;
+            }
+
+            .login-form .form-options {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .btn-login {
+                padding: 12px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- Logo -->
+        <div class="login-logo">
+            <div class="logo-icon">🏠</div>
+            <h1>JDI <span>KOSKITA</span></h1>
+            <p>Admin Panel • Smart Boarding House Management</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="login-error" id="loginError">
+            ⚠️ Username atau password salah. Silakan coba lagi.
+        </div>
+
+        <!-- Login Form -->
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label>Username <span class="required">*</span></label>
+                <div class="input-icon">
+                    <span class="icon">👤</span>
+                    <input type="text" id="username" placeholder="Masukkan username" value="admin" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Password <span class="required">*</span></label>
+                <div class="input-icon">
+                    <span class="icon">🔒</span>
+                    <input type="password" id="password" placeholder="Masukkan password" value="bukadong821" required />
+                </div>
+            </div>
+
+            <div class="form-options">
+                <label class="remember">
+                    <input type="checkbox" checked /> Ingat saya
+                </label>
+                <a href="#" class="forgot">Lupa Password?</a>
+            </div>
+
+            <button type="submit" class="btn-login" id="loginBtn">
+                <span id="loginText">🔑 Masuk Dashboard</span>
+                <span id="loginLoading" style="display:none;">⏳ Memproses...</span>
+            </button>
+        </form>
+
+        <div class="security-badge">
+            <span>🔒 SSL Secure</span>
+            <span>🛡️ Protected</span>
+            <span>⚡ 256-bit Encryption</span>
+        </div>
+
+        <div class="login-footer">
+            Kembali ke <a href="index.html">Beranda</a> &bull; v2.0.1
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            const loginForm = document.getElementById('loginForm');
+            const username = document.getElementById('username');
+            const password = document.getElementById('password');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginText = document.getElementById('loginText');
+            const loginLoading = document.getElementById('loginLoading');
+            const loginError = document.getElementById('loginError');
+
+            // Credentials yang valid
+            const VALID_CREDENTIALS = {
+                username: 'admin',
+                password: 'bukadong821'
+            };
+
+            // Simpan ke session untuk demo
+            const SESSION_KEY = 'admin_logged_in';
+
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const user = username.value.trim();
+                const pass = password.value.trim();
+
+                // Validasi kosong
+                if (!user || !pass) {
+                    showError('Username dan password wajib diisi!');
+                    return;
+                }
+
+                // Cek kredensial
+                if (user === VALID_CREDENTIALS.username && pass === VALID_CREDENTIALS.password) {
+                    // Login berhasil
+                    sessionStorage.setItem(SESSION_KEY, 'true');
+                    sessionStorage.setItem('admin_username', user);
+                    sessionStorage.setItem('admin_login_time', new Date().toISOString());
+
+                    // Tampilkan loading
+                    loginText.style.display = 'none';
+                    loginLoading.style.display = 'inline';
+                    loginBtn.disabled = true;
+
+                    // Redirect ke dashboard setelah 1 detik
+                    setTimeout(function() {
+                        window.location.href = 'admin-dashboard.html';
+                    }, 800);
+                } else {
+                    showError('⚠️ Username atau password salah. Silakan coba lagi.');
+                    // Animasi shake pada form
+                    document.querySelector('.login-container').style.animation = 'shake 0.4s ease';
+                    setTimeout(function() {
+                        document.querySelector('.login-container').style.animation = 'slideUp 0.6s ease';
+                    }, 500);
+                }
+            });
+
+            function showError(message) {
+                loginError.textContent = message;
+                loginError.classList.add('show');
+                setTimeout(function() {
+                    loginError.classList.remove('show');
+                }, 5000);
+            }
+
+            // Enter key submit
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    loginForm.dispatchEvent(new Event('submit'));
+                }
+            });
+
+            // Cek apakah sudah login sebelumnya
+            if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+                // Langsung redirect ke dashboard
+                window.location.href = 'admin-dashboard.html';
+            }
+
+            console.log('🔐 Admin Login Page Loaded');
+            console.log('📝 Gunakan username: admin | password: bukadong821');
+
+        })();
+    </script>
+
+</body>
+</html>

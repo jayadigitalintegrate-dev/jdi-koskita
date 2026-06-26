@@ -132,6 +132,41 @@
             transition: 0.3s;
         }
 
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        .lang-switcher .lang-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .lang-switcher .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .lang-switcher .lang-btn.active {
+            background: #FF7A00;
+            color: #fff;
+            border-color: #FF7A00;
+        }
+
+        .lang-switcher .lang-btn .flag {
+            margin-right: 4px;
+        }
+
         /* ============================================================
            BREADCRUMB
            ============================================================ */
@@ -954,6 +989,9 @@
                 padding: 6px 12px;
                 font-size: 13px;
             }
+            .lang-switcher {
+                margin-left: 0;
+            }
             .breadcrumb {
                 padding: 12px 20px;
             }
@@ -1027,6 +1065,10 @@
                 padding: 10px;
                 font-size: 14px;
             }
+            .lang-switcher {
+                margin-top: 4px;
+                justify-content: center;
+            }
             .breadcrumb-container {
                 flex-direction: column;
                 align-items: flex-start;
@@ -1074,7 +1116,7 @@
 <body>
 
     <!-- ============================================================
-    HEADER
+    HEADER - DENGAN LANGUAGE SWITCHER
     ============================================================ -->
     <header>
         <div class="header-container">
@@ -1082,7 +1124,7 @@
                 <img src="assets/logo-jdi.png" alt="Logo JDI KOSKITA" />
                 <div>
                     <h2>JDI <span>KOSKITA</span></h2>
-                    <p>Smart Boarding House Management System</p>
+                    <p id="headerTagline">Smart Boarding House Management System</p>
                 </div>
             </div>
 
@@ -1093,14 +1135,24 @@
             </div>
 
             <nav class="nav-menu" id="navMenu">
-                <a href="index.html">Beranda</a>
-                <a href="cek-in.html">Cek-in</a>
-                <a href="galeri.html">Galeri</a>
-                <a href="fasilitas.html">Fasilitas</a>
-                <a href="daftar-harga.html">Daftar Harga</a>
-                <a href="kontak.html" class="active">Kontak</a>
-                <a href="#" class="btn-login">Login Tamu</a>
-                <a href="#" class="btn-login">Login Admin</a>
+                <a href="index.html" id="menuHome">Beranda</a>
+                <a href="cek-in.html" id="menuCheckin">Cek-in</a>
+                <a href="galeri.html" id="menuGallery">Galeri</a>
+                <a href="fasilitas.html" id="menuFacilities">Fasilitas</a>
+                <a href="daftar-harga.html" id="menuPricing">Daftar Harga</a>
+                <a href="kontak.html" class="active" id="menuContact">Kontak</a>
+                <a href="#" class="btn-login" id="menuGuestLogin">👤 Login Tamu</a>
+                <a href="#" class="btn-login" id="menuAdminLogin">🔐 Login Admin</a>
+
+                <!-- Language Switcher -->
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="id" onclick="switchLanguage('id')">
+                        <span class="flag">🇮🇩</span> ID
+                    </button>
+                    <button class="lang-btn" data-lang="en" onclick="switchLanguage('en')">
+                        <span class="flag">🇬🇧</span> EN
+                    </button>
+                </div>
             </nav>
         </div>
     </header>
@@ -1110,9 +1162,9 @@
     ============================================================ -->
     <div class="breadcrumb">
         <div class="breadcrumb-container">
-            <h1>📞 <span>Kontak</span> JDI KOSKITA</h1>
+            <h1 id="breadcrumbTitle">📞 <span>Kontak</span> JDI KOSKITA</h1>
             <div class="breadcrumb-links">
-                <a href="index.html">Beranda</a> &gt; <span>Kontak</span>
+                <a href="index.html" id="breadcrumbHome">Beranda</a> &gt; <span id="breadcrumbCurrent">Kontak</span>
             </div>
         </div>
     </div>
@@ -1124,8 +1176,8 @@
 
         <!-- Header -->
         <div class="kontak-header">
-            <h2>Hubungi <span>Kami</span></h2>
-            <p>Kami siap membantu Anda 24/7 untuk informasi dan pendaftaran</p>
+            <h2 id="contactTitle">Hubungi <span>Kami</span></h2>
+            <p id="contactSubtitle">Kami siap membantu Anda 24/7 untuk informasi dan pendaftaran</p>
         </div>
 
         <!-- ============================================================
@@ -1159,33 +1211,33 @@
         ============================================================ -->
         <div class="email-form-container" id="emailFormContainer">
             <div class="form-header">
-                <h4>✉️ Kirim Email</h4>
+                <h4 id="emailFormTitle">✉️ Kirim Email</h4>
                 <button class="btn-close-form" id="closeEmailForm">✕</button>
             </div>
             <form class="email-form" id="emailForm">
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Nama Lengkap <span class="required">*</span></label>
+                        <label id="labelFullName">Nama Lengkap <span class="required">*</span></label>
                         <input type="text" id="emailName" placeholder="Nama Anda" required />
                     </div>
                     <div class="form-group">
-                        <label>Email <span class="required">*</span></label>
+                        <label id="labelEmail">Email <span class="required">*</span></label>
                         <input type="email" id="emailAddress" placeholder="email@example.com" required />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Subjek <span class="required">*</span></label>
+                    <label id="labelSubject">Subjek <span class="required">*</span></label>
                     <select id="emailSubject" required>
-                        <option value="">Pilih Subjek...</option>
-                        <option value="Informasi Sewa">Informasi Sewa</option>
-                        <option value="Pendaftaran">Pendaftaran</option>
-                        <option value="Fasilitas">Fasilitas</option>
-                        <option value="Keluhan">Keluhan</option>
-                        <option value="Lainnya">Lainnya</option>
+                        <option value="" id="optSubject">Pilih Subjek...</option>
+                        <option value="Informasi Sewa" id="optRentalInfo">Informasi Sewa</option>
+                        <option value="Pendaftaran" id="optRegistration">Pendaftaran</option>
+                        <option value="Fasilitas" id="optFacilities">Fasilitas</option>
+                        <option value="Keluhan" id="optComplaint">Keluhan</option>
+                        <option value="Lainnya" id="optOther">Lainnya</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Pesan <span class="required">*</span></label>
+                    <label id="labelMessage">Pesan <span class="required">*</span></label>
                     <textarea id="emailMessage" placeholder="Tulis pesan Anda di sini..." required></textarea>
                 </div>
                 <button type="submit" class="btn-submit" id="submitEmail">📨 Kirim Email</button>
@@ -1219,15 +1271,15 @@
             <div class="chat-header">
                 <div class="chat-title">
                     <span class="status-dot online"></span>
-                    💬 Live Chat
+                    <span id="chatTitle">💬 Live Chat</span>
                 </div>
                 <button class="btn-close-chat" id="closeChat">✕</button>
             </div>
             <div class="chat-body" id="chatBody">
-                <div class="chat-message bot">
+                <div class="chat-message bot" id="chatWelcome">
                     👋 Halo! Selamat datang di Live Chat JDI KOSKITA.<br />
                     Ada yang bisa kami bantu?
-                    <span class="msg-time">Online</span>
+                    <span class="msg-time" id="chatOnline">Online</span>
                 </div>
             </div>
             <div class="chat-footer">
@@ -1242,25 +1294,316 @@
     ============================================================ -->
     <footer>
         <div class="footer-brand">JDI <span>KOSKITA</span></div>
-        <p>Smart Boarding House Management System</p>
+        <p id="footerTagline">Smart Boarding House Management System</p>
         <div class="footer-divider"></div>
-        <p>&copy; 2026 JDI KOSKITA. All Rights Reserved.</p>
+        <p id="footerCopyright">&copy; 2026 JDI KOSKITA. All Rights Reserved.</p>
         <div class="footer-links">
-            <a href="index.html">Beranda</a>
-            <a href="cek-in.html">Cek-in</a>
-            <a href="galeri.html">Galeri</a>
-            <a href="fasilitas.html">Fasilitas</a>
-            <a href="daftar-harga.html">Daftar Harga</a>
-            <a href="kontak.html">Kontak</a>
+            <a href="index.html" id="footerHome">Beranda</a>
+            <a href="cek-in.html" id="footerCheckin">Cek-in</a>
+            <a href="galeri.html" id="footerGallery">Galeri</a>
+            <a href="fasilitas.html" id="footerFacilities">Fasilitas</a>
+            <a href="daftar-harga.html" id="footerPricing">Daftar Harga</a>
+            <a href="kontak.html" id="footerContact">Kontak</a>
         </div>
     </footer>
 
     <!-- ============================================================
-    JAVASCRIPT - CMS READY
+    JAVASCRIPT - CMS READY + MULTI LANGUAGE
     ============================================================ -->
     <script>
         (function() {
             'use strict';
+
+            // ============================================================
+            // 🌐 LANGUAGE DATA
+            // ============================================================
+            const LANGUAGES = {
+                id: {
+                    code: 'id',
+                    name: 'Indonesia',
+                    flag: '🇮🇩',
+                    translations: {
+                        // Header
+                        'headerTagline': 'Smart Boarding House Management System',
+                        'menuHome': 'Beranda',
+                        'menuCheckin': 'Cek-in',
+                        'menuGallery': 'Galeri',
+                        'menuFacilities': 'Fasilitas',
+                        'menuPricing': 'Daftar Harga',
+                        'menuContact': 'Kontak',
+                        'menuGuestLogin': '👤 Login Tamu',
+                        'menuAdminLogin': '🔐 Login Admin',
+
+                        // Breadcrumb
+                        'breadcrumbTitle': '📞 <span>Kontak</span> JDI KOSKITA',
+                        'breadcrumbHome': 'Beranda',
+                        'breadcrumbCurrent': 'Kontak',
+
+                        // Contact Header
+                        'contactTitle': 'Hubungi <span>Kami</span>',
+                        'contactSubtitle': 'Kami siap membantu Anda 24/7 untuk informasi dan pendaftaran',
+
+                        // Admin Status
+                        'adminOnline': '● Admin Online',
+                        'adminOffline': '● Admin Offline',
+                        'adminOnlineMsg': 'Kami siap merespon pertanyaan Anda',
+                        'adminOfflineMsg': 'Kami akan merespon segera setelah online',
+                        'operationalHours': 'Senin - Minggu: 24 Jam',
+
+                        // Contact Cards
+                        'cardLiveChat': 'Live Chat',
+                        'cardLiveChatDesc': 'Chat langsung dengan admin kami secara real-time.',
+                        'cardLiveChatBtn': 'Mulai Chat',
+                        'cardWhatsApp': 'WhatsApp',
+                        'cardWhatsAppDesc': 'Chat cepat melalui WhatsApp dengan admin.',
+                        'cardWhatsAppBtn': 'Chat via WA',
+                        'cardEmail': 'Email',
+                        'cardEmailDesc': 'Kirim pesan langsung melalui form email di website.',
+                        'cardEmailBtn': 'Kirim Email',
+
+                        // Email Form
+                        'emailFormTitle': '✉️ Kirim Email',
+                        'labelFullName': 'Nama Lengkap <span class="required">*</span>',
+                        'labelEmail': 'Email <span class="required">*</span>',
+                        'labelSubject': 'Subjek <span class="required">*</span>',
+                        'optSubject': 'Pilih Subjek...',
+                        'optRentalInfo': 'Informasi Sewa',
+                        'optRegistration': 'Pendaftaran',
+                        'optFacilities': 'Fasilitas',
+                        'optComplaint': 'Keluhan',
+                        'optOther': 'Lainnya',
+                        'labelMessage': 'Pesan <span class="required">*</span>',
+                        'submitEmail': '📨 Kirim Email',
+                        'emailSuccess': '✅ Email berhasil terkirim! Kami akan merespon dalam 1x24 jam.',
+                        'emailPlaceholderName': 'Nama Anda',
+                        'emailPlaceholderEmail': 'email@example.com',
+                        'emailPlaceholderMessage': 'Tulis pesan Anda di sini...',
+
+                        // Location
+                        'locationTitle': '📍 <span>Lokasi</span> Kami',
+                        'infoTitle': '📋 <span>Informasi</span> Kontak',
+                        'labelPhone': 'Telepon',
+                        'labelEmailDetail': 'Email',
+                        'labelHours': 'Jam Operasional',
+                        'labelPhoneAlt': 'Telepon Alternatif',
+
+                        // Social
+                        'socialTitle': '🌐 <span>Ikuti</span> Kami',
+
+                        // Chat
+                        'chatTitle': '💬 Live Chat',
+                        'chatWelcome': '👋 Halo! Selamat datang di Live Chat JDI KOSKITA.<br />Ada yang bisa kami bantu?',
+                        'chatOnline': 'Online',
+                        'chatPlaceholder': 'Ketik pesan...',
+                        'chatSend': 'Kirim',
+
+                        // Footer
+                        'footerTagline': 'Smart Boarding House Management System',
+                        'footerCopyright': '© 2026 JDI KOSKITA. All Rights Reserved.',
+                        'footerHome': 'Beranda',
+                        'footerCheckin': 'Cek-in',
+                        'footerGallery': 'Galeri',
+                        'footerFacilities': 'Fasilitas',
+                        'footerPricing': 'Daftar Harga',
+                        'footerContact': 'Kontak',
+                    }
+                },
+                en: {
+                    code: 'en',
+                    name: 'English',
+                    flag: '🇬🇧',
+                    translations: {
+                        // Header
+                        'headerTagline': 'Smart Boarding House Management System',
+                        'menuHome': 'Home',
+                        'menuCheckin': 'Check-in',
+                        'menuGallery': 'Gallery',
+                        'menuFacilities': 'Facilities',
+                        'menuPricing': 'Pricing',
+                        'menuContact': 'Contact',
+                        'menuGuestLogin': '👤 Guest Login',
+                        'menuAdminLogin': '🔐 Admin Login',
+
+                        // Breadcrumb
+                        'breadcrumbTitle': '📞 <span>Contact</span> JDI KOSKITA',
+                        'breadcrumbHome': 'Home',
+                        'breadcrumbCurrent': 'Contact',
+
+                        // Contact Header
+                        'contactTitle': 'Contact <span>Us</span>',
+                        'contactSubtitle': 'We are ready to help you 24/7 for information and registration',
+
+                        // Admin Status
+                        'adminOnline': '● Admin Online',
+                        'adminOffline': '● Admin Offline',
+                        'adminOnlineMsg': 'We are ready to respond to your questions',
+                        'adminOfflineMsg': 'We will respond as soon as we are online',
+                        'operationalHours': 'Monday - Sunday: 24 Hours',
+
+                        // Contact Cards
+                        'cardLiveChat': 'Live Chat',
+                        'cardLiveChatDesc': 'Chat directly with our admin in real-time.',
+                        'cardLiveChatBtn': 'Start Chat',
+                        'cardWhatsApp': 'WhatsApp',
+                        'cardWhatsAppDesc': 'Quick chat via WhatsApp with admin.',
+                        'cardWhatsAppBtn': 'Chat via WA',
+                        'cardEmail': 'Email',
+                        'cardEmailDesc': 'Send a message directly through the email form on the website.',
+                        'cardEmailBtn': 'Send Email',
+
+                        // Email Form
+                        'emailFormTitle': '✉️ Send Email',
+                        'labelFullName': 'Full Name <span class="required">*</span>',
+                        'labelEmail': 'Email <span class="required">*</span>',
+                        'labelSubject': 'Subject <span class="required">*</span>',
+                        'optSubject': 'Select Subject...',
+                        'optRentalInfo': 'Rental Information',
+                        'optRegistration': 'Registration',
+                        'optFacilities': 'Facilities',
+                        'optComplaint': 'Complaint',
+                        'optOther': 'Other',
+                        'labelMessage': 'Message <span class="required">*</span>',
+                        'submitEmail': '📨 Send Email',
+                        'emailSuccess': '✅ Email sent successfully! We will respond within 24 hours.',
+                        'emailPlaceholderName': 'Your Name',
+                        'emailPlaceholderEmail': 'email@example.com',
+                        'emailPlaceholderMessage': 'Write your message here...',
+
+                        // Location
+                        'locationTitle': '📍 <span>Our</span> Location',
+                        'infoTitle': '📋 <span>Contact</span> Information',
+                        'labelPhone': 'Phone',
+                        'labelEmailDetail': 'Email',
+                        'labelHours': 'Operating Hours',
+                        'labelPhoneAlt': 'Alternate Phone',
+
+                        // Social
+                        'socialTitle': '🌐 <span>Follow</span> Us',
+
+                        // Chat
+                        'chatTitle': '💬 Live Chat',
+                        'chatWelcome': '👋 Hello! Welcome to JDI KOSKITA Live Chat.<br />How can we help you?',
+                        'chatOnline': 'Online',
+                        'chatPlaceholder': 'Type a message...',
+                        'chatSend': 'Send',
+
+                        // Footer
+                        'footerTagline': 'Smart Boarding House Management System',
+                        'footerCopyright': '© 2026 JDI KOSKITA. All Rights Reserved.',
+                        'footerHome': 'Home',
+                        'footerCheckin': 'Check-in',
+                        'footerGallery': 'Gallery',
+                        'footerFacilities': 'Facilities',
+                        'footerPricing': 'Pricing',
+                        'footerContact': 'Contact',
+                    }
+                }
+            };
+
+            // ============================================================
+            // STATE
+            // ============================================================
+            let currentLang = localStorage.getItem('jdi_lang') || 'id';
+
+            // ============================================================
+            // SWITCH LANGUAGE FUNCTION
+            // ============================================================
+            window.switchLanguage = function(langCode) {
+                if (langCode === currentLang) return;
+                currentLang = langCode;
+                localStorage.setItem('jdi_lang', langCode);
+                applyLanguage(langCode);
+                updateLangButtons(langCode);
+                // Re-render konten dinamis
+                renderContactCards();
+                renderInfoGrid();
+                renderSocial();
+                renderAdminStatus();
+            };
+
+            // ============================================================
+            // APPLY LANGUAGE
+            // ============================================================
+            function applyLanguage(langCode) {
+                const langData = LANGUAGES[langCode];
+                if (!langData) return;
+
+                const t = langData.translations;
+                document.documentElement.lang = langCode;
+
+                // Update semua elemen dengan ID
+                const idMap = {
+                    'headerTagline': 'headerTagline',
+                    'menuHome': 'menuHome',
+                    'menuCheckin': 'menuCheckin',
+                    'menuGallery': 'menuGallery',
+                    'menuFacilities': 'menuFacilities',
+                    'menuPricing': 'menuPricing',
+                    'menuContact': 'menuContact',
+                    'menuGuestLogin': 'menuGuestLogin',
+                    'menuAdminLogin': 'menuAdminLogin',
+                    'breadcrumbTitle': 'breadcrumbTitle',
+                    'breadcrumbHome': 'breadcrumbHome',
+                    'breadcrumbCurrent': 'breadcrumbCurrent',
+                    'contactTitle': 'contactTitle',
+                    'contactSubtitle': 'contactSubtitle',
+                    'emailFormTitle': 'emailFormTitle',
+                    'labelFullName': 'labelFullName',
+                    'labelEmail': 'labelEmail',
+                    'labelSubject': 'labelSubject',
+                    'optSubject': 'optSubject',
+                    'optRentalInfo': 'optRentalInfo',
+                    'optRegistration': 'optRegistration',
+                    'optFacilities': 'optFacilities',
+                    'optComplaint': 'optComplaint',
+                    'optOther': 'optOther',
+                    'labelMessage': 'labelMessage',
+                    'submitEmail': 'submitEmail',
+                    'emailSuccess': 'emailSuccess',
+                    'chatTitle': 'chatTitle',
+                    'chatWelcome': 'chatWelcome',
+                    'chatOnline': 'chatOnline',
+                    'chatPlaceholder': 'chatPlaceholder',
+                    'chatSend': 'chatSend',
+                    'footerTagline': 'footerTagline',
+                    'footerCopyright': 'footerCopyright',
+                    'footerHome': 'footerHome',
+                    'footerCheckin': 'footerCheckin',
+                    'footerGallery': 'footerGallery',
+                    'footerFacilities': 'footerFacilities',
+                    'footerPricing': 'footerPricing',
+                    'footerContact': 'footerContact',
+                };
+
+                Object.keys(idMap).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && t[idMap[id]] !== undefined) {
+                        el.innerHTML = t[idMap[id]];
+                    }
+                });
+
+                // Update placeholder
+                const emailName = document.getElementById('emailName');
+                const emailAddress = document.getElementById('emailAddress');
+                const emailMessage = document.getElementById('emailMessage');
+                const chatInput = document.getElementById('chatInput');
+
+                if (emailName) emailName.placeholder = t['emailPlaceholderName'] || 'Nama Anda';
+                if (emailAddress) emailAddress.placeholder = t['emailPlaceholderEmail'] || 'email@example.com';
+                if (emailMessage) emailMessage.placeholder = t['emailPlaceholderMessage'] || 'Tulis pesan Anda di sini...';
+                if (chatInput) chatInput.placeholder = t['chatPlaceholder'] || 'Ketik pesan...';
+
+                console.log('🌐 Language switched to:', langCode, '-', LANGUAGES[langCode].name);
+            }
+
+            // ============================================================
+            // UPDATE LANGUAGE BUTTONS
+            // ============================================================
+            function updateLangButtons(langCode) {
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === langCode);
+                });
+            }
 
             // ============================================================
             // 📊 KONTAK DATA (CMS Ready)
@@ -1280,25 +1623,25 @@
                 contactCards: [{
                     id: 'livechat',
                     icon: '💬',
-                    title: 'Live Chat',
-                    description: 'Chat langsung dengan admin kami secara real-time.',
-                    buttonText: 'Mulai Chat',
+                    titleKey: 'cardLiveChat',
+                    descriptionKey: 'cardLiveChatDesc',
+                    buttonTextKey: 'cardLiveChatBtn',
                     buttonClass: 'livechat',
                     action: 'chat'
                 }, {
                     id: 'whatsapp',
                     icon: '📱',
-                    title: 'WhatsApp',
-                    description: 'Chat cepat melalui WhatsApp dengan admin.',
-                    buttonText: 'Chat via WA',
+                    titleKey: 'cardWhatsApp',
+                    descriptionKey: 'cardWhatsAppDesc',
+                    buttonTextKey: 'cardWhatsAppBtn',
                     buttonClass: 'whatsapp',
                     action: 'whatsapp'
                 }, {
                     id: 'email',
                     icon: '✉️',
-                    title: 'Email',
-                    description: 'Kirim pesan langsung melalui form email di website.',
-                    buttonText: 'Kirim Email',
+                    titleKey: 'cardEmail',
+                    descriptionKey: 'cardEmailDesc',
+                    buttonTextKey: 'cardEmailBtn',
                     buttonClass: 'email',
                     action: 'email'
                 }],
@@ -1369,33 +1712,40 @@
                 const isOnline = status.online;
 
                 statusIndicator.className = 'status-indicator ' + (isOnline ? 'online' : 'offline');
+
+                const t = LANGUAGES[currentLang].translations;
                 statusText.innerHTML = isOnline ?
-                    '<span class="online-text">● Admin Online</span>' :
-                    '<span class="offline-text">● Admin Offline</span>';
-                statusMessage.textContent = status.message || (isOnline ? 'Kami siap merespon pertanyaan Anda' :
-                    'Kami akan merespon segera setelah online');
-                operationalHours.textContent = KONTAK_DATA.operationalHours.display || 'Senin - Minggu: 24 Jam';
+                    `<span class="online-text">${t['adminOnline'] || '● Admin Online'}</span>` :
+                    `<span class="offline-text">${t['adminOffline'] || '● Admin Offline'}</span>`;
+                statusMessage.textContent = status.message || (isOnline ?
+                    (t['adminOnlineMsg'] || 'Kami siap merespon pertanyaan Anda') :
+                    (t['adminOfflineMsg'] || 'Kami akan merespon segera setelah online'));
+                operationalHours.textContent = KONTAK_DATA.operationalHours.display || (t['operationalHours'] ||
+                    'Senin - Minggu: 24 Jam');
             }
 
             // Render Contact Cards
             function renderContactCards() {
                 const cards = KONTAK_DATA.contactCards;
+                const t = LANGUAGES[currentLang].translations;
                 contactCards.innerHTML = '';
 
                 cards.forEach(card => {
                     const div = document.createElement('div');
                     div.className = 'contact-card';
+                    const title = t[card.titleKey] || card.titleKey;
+                    const desc = t[card.descriptionKey] || card.descriptionKey;
+                    const btnText = t[card.buttonTextKey] || card.buttonTextKey;
                     div.innerHTML = `
                         <span class="card-icon">${card.icon}</span>
-                        <h4>${card.title}</h4>
-                        <p>${card.description}</p>
+                        <h4>${title}</h4>
+                        <p>${desc}</p>
                         <button class="btn-contact ${card.buttonClass}" data-action="${card.action}">
-                            ${card.buttonText}
+                            ${btnText}
                         </button>
                     `;
                     contactCards.appendChild(div);
 
-                    // Event listener untuk tombol
                     const btn = div.querySelector('.btn-contact');
                     btn.addEventListener('click', function() {
                         const action = this.dataset.action;
@@ -1447,7 +1797,8 @@
                 emailMessage.value = '';
                 emailSuccess.classList.remove('show');
                 submitEmail.disabled = false;
-                submitEmail.textContent = '📨 Kirim Email';
+                const t = LANGUAGES[currentLang].translations;
+                submitEmail.textContent = t['submitEmail'] || '📨 Kirim Email';
             }
 
             // Render Info Grid (Location & Contact Details)
@@ -1455,13 +1806,14 @@
                 const addr = KONTAK_DATA.address;
                 const phone = KONTAK_DATA.phone;
                 const email = KONTAK_DATA.email;
+                const t = LANGUAGES[currentLang].translations;
 
                 const mapsEmbedUrl =
                     `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${addr.gps.lat},${addr.gps.lng}&zoom=15`;
 
                 infoGrid.innerHTML = `
                     <div class="info-card">
-                        <div class="info-title">📍 <span>Lokasi</span> Kami</div>
+                        <div class="info-title">${t['locationTitle'] || '📍 <span>Lokasi</span> Kami'}</div>
                         <div class="info-address">${addr.full}</div>
                         <div class="map-wrapper">
                             <iframe 
@@ -1478,26 +1830,26 @@
                         </div>
                     </div>
                     <div class="info-card">
-                        <div class="info-title">📋 <span>Informasi</span> Kontak</div>
+                        <div class="info-title">${t['infoTitle'] || '📋 <span>Informasi</span> Kontak'}</div>
                         <div class="contact-details">
                             <div class="detail-item">
                                 <span class="detail-icon">📞</span>
                                 <div class="detail-info">
-                                    <div class="detail-label">Telepon</div>
+                                    <div class="detail-label">${t['labelPhone'] || 'Telepon'}</div>
                                     <div class="detail-value"><a href="tel:${phone.primary}">${phone.primary}</a></div>
                                 </div>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-icon">✉️</span>
                                 <div class="detail-info">
-                                    <div class="detail-label">Email</div>
+                                    <div class="detail-label">${t['labelEmailDetail'] || 'Email'}</div>
                                     <div class="detail-value"><a href="mailto:${email.address}">${email.address}</a></div>
                                 </div>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-icon">🕐</span>
                                 <div class="detail-info">
-                                    <div class="detail-label">Jam Operasional</div>
+                                    <div class="detail-label">${t['labelHours'] || 'Jam Operasional'}</div>
                                     <div class="detail-value">${KONTAK_DATA.operationalHours.display}</div>
                                 </div>
                             </div>
@@ -1505,7 +1857,7 @@
                             <div class="detail-item">
                                 <span class="detail-icon">📱</span>
                                 <div class="detail-info">
-                                    <div class="detail-label">Telepon Alternatif</div>
+                                    <div class="detail-label">${t['labelPhoneAlt'] || 'Telepon Alternatif'}</div>
                                     <div class="detail-value"><a href="tel:${phone.secondary}">${phone.secondary}</a></div>
                                 </div>
                             </div>
@@ -1518,6 +1870,7 @@
             // Render Social Media
             function renderSocial() {
                 const social = KONTAK_DATA.social;
+                const t = LANGUAGES[currentLang].translations;
                 const socialMap = {
                     instagram: { icon: '📷', label: 'Instagram' },
                     facebook: { icon: '👍', label: 'Facebook' },
@@ -1526,7 +1879,7 @@
                 };
 
                 let html = `
-                    <div class="social-title">🌐 <span>Ikuti</span> Kami</div>
+                    <div class="social-title">${t['socialTitle'] || '🌐 <span>Ikuti</span> Kami'}</div>
                     <div class="social-icons">
                 `;
 
@@ -1552,7 +1905,6 @@
                 chatModal.classList.add('show');
                 document.body.style.overflow = 'hidden';
                 chatInput.focus();
-                // Scroll ke bawah
                 chatBody.scrollTop = chatBody.scrollHeight;
             }
 
@@ -1565,7 +1917,6 @@
                 const message = chatInput.value.trim();
                 if (!message) return;
 
-                // Tampilkan pesan user
                 const userMsg = document.createElement('div');
                 userMsg.className = 'chat-message user';
                 const now = new Date();
@@ -1577,15 +1928,15 @@
                 chatInput.value = '';
                 chatBody.scrollTop = chatBody.scrollHeight;
 
-                // Simulasi balasan bot
                 setTimeout(() => {
                     const botMsg = document.createElement('div');
                     botMsg.className = 'chat-message bot';
+                    const t = LANGUAGES[currentLang].translations;
                     const botReplies = [
-                        'Terima kasih atas pesannya! Kami akan segera merespon.',
-                        'Baik, kami catat pertanyaan Anda. Admin akan menghubungi segera.',
-                        'Terima kasih sudah menghubungi JDI KOSKITA. Ada yang bisa kami bantu lagi?',
-                        'Pesan Anda sudah kami terima. Kami akan merespon dalam waktu dekat.'
+                        t['chatReply1'] || 'Terima kasih atas pesannya! Kami akan segera merespon.',
+                        t['chatReply2'] || 'Baik, kami catat pertanyaan Anda. Admin akan menghubungi segera.',
+                        t['chatReply3'] || 'Terima kasih sudah menghubungi JDI KOSKITA. Ada yang bisa kami bantu lagi?',
+                        t['chatReply4'] || 'Pesan Anda sudah kami terima. Kami akan merespon dalam waktu dekat.'
                     ];
                     const randomReply = botReplies[Math.floor(Math.random() * botReplies.length)];
                     const now2 = new Date();
@@ -1605,26 +1956,23 @@
             emailForm.addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                // Validasi sederhana
                 if (!emailName.value.trim() || !emailAddress.value.trim() || !emailSubject.value || !emailMessage.value
                     .trim()) {
                     alert('Mohon lengkapi semua field yang wajib diisi.');
                     return;
                 }
 
-                // Simulasi pengiriman
                 submitEmail.disabled = true;
+                const t = LANGUAGES[currentLang].translations;
                 submitEmail.textContent = '⏳ Mengirim...';
 
                 setTimeout(function() {
                     submitEmail.disabled = false;
-                    submitEmail.textContent = '✅ Terkirim!';
+                    submitEmail.textContent = t['submitEmail'] || '📨 Kirim Email';
                     emailSuccess.classList.add('show');
 
-                    // Reset form setelah 3 detik
                     setTimeout(function() {
                         resetEmailForm();
-                        submitEmail.textContent = '📨 Kirim Email';
                     }, 3000);
                 }, 1500);
             });
@@ -1728,15 +2076,16 @@
             // ============================================================
             // INIT
             // ============================================================
+            applyLanguage(currentLang);
+            updateLangButtons(currentLang);
             renderAdminStatus();
             renderContactCards();
             renderInfoGrid();
             renderSocial();
 
-            console.log('✅ JDI KOSKITA - Kontak CMS Ready');
+            console.log('✅ JDI KOSKITA - Kontak CMS Ready + Multi Language');
+            console.log('🌐 Bahasa saat ini:', LANGUAGES[currentLang].name);
             console.log('📞 Data kontak dapat diedit melalui window.KontakCMS');
-            console.log('   Contoh: window.KontakCMS.updateAdminStatus({ online: false })');
-            console.log('   Contoh: window.KontakCMS.updateWhatsApp({ number: "+6281234567899" })');
 
         })();
     </script>

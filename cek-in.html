@@ -25,7 +25,7 @@
         }
 
         /* ============================================================
-           HEADER & NAVIGATION (Sama seperti index)
+           HEADER & NAVIGATION
            ============================================================ */
         header {
             background: #0A2E6D;
@@ -130,6 +130,41 @@
             background: #fff;
             border-radius: 3px;
             transition: 0.3s;
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        .lang-switcher .lang-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .lang-switcher .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .lang-switcher .lang-btn.active {
+            background: #FF7A00;
+            color: #fff;
+            border-color: #FF7A00;
+        }
+
+        .lang-switcher .lang-btn .flag {
+            margin-right: 4px;
         }
 
         /* ============================================================
@@ -901,6 +936,10 @@
                 font-size: 13px;
             }
 
+            .lang-switcher {
+                margin-left: 0;
+            }
+
             .breadcrumb {
                 padding: 12px 20px;
             }
@@ -967,6 +1006,11 @@
                 text-align: center;
                 padding: 10px;
                 font-size: 14px;
+            }
+
+            .lang-switcher {
+                margin-top: 4px;
+                justify-content: center;
             }
 
             .breadcrumb-container {
@@ -1041,7 +1085,7 @@
 <body>
 
     <!-- ============================================================
-    HEADER - MENU UPLOAD PEMBAYARAN TELAH DIHAPUS
+    HEADER - DENGAN LANGUAGE SWITCHER
     ============================================================ -->
     <header>
         <div class="header-container">
@@ -1049,7 +1093,7 @@
                 <img src="assets/logo-jdi.png" alt="Logo JDI KOSKITA" />
                 <div>
                     <h2>JDI <span>KOSKITA</span></h2>
-                    <p>Smart Boarding House Management System</p>
+                    <p id="headerTagline">Smart Boarding House Management System</p>
                 </div>
             </div>
 
@@ -1059,16 +1103,25 @@
                 <span></span>
             </div>
 
-            <!-- ✅ MENU UPLOAD PEMBAYARAN DIHAPUS -->
             <nav class="nav-menu" id="navMenu">
-                <a href="index.html">Beranda</a>
-                <a href="cek-in.html" class="active">Cek-in</a>
-                <a href="galeri.html">Galeri</a>
-                <a href="fasilitas.html">Fasilitas</a>
-                <a href="#">Daftar Harga</a>
-                <a href="#">Kontak</a>
-                <a href="#" class="btn-login">Login Tamu</a>
-                <a href="#" class="btn-login">Login Admin</a>
+                <a href="index.html" id="menuHome">Beranda</a>
+                <a href="cek-in.html" class="active" id="menuCheckin">Cek-in</a>
+                <a href="galeri.html" id="menuGallery">Galeri</a>
+                <a href="fasilitas.html" id="menuFacilities">Fasilitas</a>
+                <a href="daftar-harga.html" id="menuPricing">Daftar Harga</a>
+                <a href="kontak.html" id="menuContact">Kontak</a>
+                <a href="#" class="btn-login" id="menuGuestLogin">👤 Login Tamu</a>
+                <a href="#" class="btn-login" id="menuAdminLogin">🔐 Login Admin</a>
+
+                <!-- Language Switcher -->
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="id" onclick="switchLanguage('id')">
+                        <span class="flag">🇮🇩</span> ID
+                    </button>
+                    <button class="lang-btn" data-lang="en" onclick="switchLanguage('en')">
+                        <span class="flag">🇬🇧</span> EN
+                    </button>
+                </div>
             </nav>
         </div>
     </header>
@@ -1078,9 +1131,9 @@
     ============================================================ -->
     <div class="breadcrumb">
         <div class="breadcrumb-container">
-            <h1>Cek-in <span>Penghuni</span></h1>
+            <h1 id="breadcrumbTitle">Cek-in <span>Penghuni</span></h1>
             <div class="breadcrumb-links">
-                <a href="index.html">Beranda</a> &gt; <span>Cek-in</span>
+                <a href="index.html" id="breadcrumbHome">Beranda</a> &gt; <span id="breadcrumbCurrent">Cek-in</span>
             </div>
         </div>
     </div>
@@ -1098,15 +1151,15 @@
                 <div class="progress-steps">
                     <div class="step active" data-step="1">
                         <div class="step-circle">1</div>
-                        <span class="step-label">Pilih Kamar</span>
+                        <span class="step-label" id="step1Label">Pilih Kamar</span>
                     </div>
                     <div class="step" data-step="2">
                         <div class="step-circle">2</div>
-                        <span class="step-label">Data Penghuni</span>
+                        <span class="step-label" id="step2Label">Data Penghuni</span>
                     </div>
                     <div class="step" data-step="3">
                         <div class="step-circle">3</div>
-                        <span class="step-label">Konfirmasi</span>
+                        <span class="step-label" id="step3Label">Konfirmasi</span>
                     </div>
                 </div>
                 <div class="progress-bar-bg">
@@ -1118,23 +1171,23 @@
             STEP 1: PILIH KAMAR
             ============================================ -->
             <div class="step-content active" id="step1">
-                <h2>🏠 Pilih Kamar</h2>
-                <p class="step-desc">Pilih kamar yang tersedia untuk penghuni baru.</p>
+                <h2 id="step1Title">🏠 Pilih Kamar</h2>
+                <p class="step-desc" id="step1Desc">Pilih kamar yang tersedia untuk penghuni baru.</p>
 
                 <!-- Filter -->
                 <div class="room-filter">
                     <input type="text" placeholder="🔍 Cari kamar..." id="roomSearch" />
                     <select id="floorFilter">
-                        <option value="all">Semua Lantai</option>
-                        <option value="1">Lantai 1</option>
-                        <option value="2">Lantai 2</option>
-                        <option value="3">Lantai 3</option>
+                        <option value="all" id="floorAll">Semua Lantai</option>
+                        <option value="1" id="floor1">Lantai 1</option>
+                        <option value="2" id="floor2">Lantai 2</option>
+                        <option value="3" id="floor3">Lantai 3</option>
                     </select>
                     <select id="typeFilter">
-                        <option value="all">Semua Tipe</option>
-                        <option value="Standard">Standard</option>
-                        <option value="Deluxe">Deluxe</option>
-                        <option value="VIP">VIP</option>
+                        <option value="all" id="typeAll">Semua Tipe</option>
+                        <option value="Standard" id="typeStandard">Standard</option>
+                        <option value="Deluxe" id="typeDeluxe">Deluxe</option>
+                        <option value="VIP" id="typeVIP">VIP</option>
                     </select>
                 </div>
 
@@ -1152,55 +1205,55 @@
             STEP 2: DATA PENGHUNI
             ============================================ -->
             <div class="step-content" id="step2">
-                <h2>👤 Data Penghuni</h2>
-                <p class="step-desc">Isi data lengkap penghuni yang akan melakukan cek-in.</p>
+                <h2 id="step2Title">👤 Data Penghuni</h2>
+                <p class="step-desc" id="step2Desc">Isi data lengkap penghuni yang akan melakukan cek-in.</p>
 
                 <form id="penghuniForm">
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Nama Lengkap <span class="required">*</span></label>
+                            <label id="labelFullName">Nama Lengkap <span class="required">*</span></label>
                             <input type="text" id="namaLengkap" placeholder="Contoh: Budi Santoso" required />
                         </div>
                         <div class="form-group">
-                            <label>NIK / KTP <span class="required">*</span></label>
+                            <label id="labelNik">NIK / KTP <span class="required">*</span></label>
                             <input type="text" id="nik" placeholder="16 digit NIK" maxlength="16" required />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Nomor HP <span class="required">*</span></label>
+                            <label id="labelPhone">Nomor HP <span class="required">*</span></label>
                             <input type="tel" id="noHp" placeholder="08xx-xxxx-xxxx" required />
                         </div>
                         <div class="form-group">
-                            <label>Email</label>
+                            <label id="labelEmail">Email</label>
                             <input type="email" id="email" placeholder="email@example.com" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Tanggal Masuk <span class="required">*</span></label>
+                            <label id="labelDate">Tanggal Masuk <span class="required">*</span></label>
                             <input type="date" id="tglMasuk" required />
                         </div>
                         <div class="form-group">
-                            <label>Lama Sewa <span class="required">*</span></label>
+                            <label id="labelDuration">Lama Sewa <span class="required">*</span></label>
                             <select id="durasiSewa" required>
-                                <option value="1">1 Bulan</option>
-                                <option value="3" selected>3 Bulan (Diskon 5%)</option>
-                                <option value="6">6 Bulan (Diskon 10%)</option>
-                                <option value="12">12 Bulan (Diskon 15%)</option>
+                                <option value="1" id="dur1Month">1 Bulan</option>
+                                <option value="3" selected id="dur3Month">3 Bulan (Diskon 5%)</option>
+                                <option value="6" id="dur6Month">6 Bulan (Diskon 10%)</option>
+                                <option value="12" id="dur12Month">12 Bulan (Diskon 15%)</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Alamat Asal</label>
+                        <label id="labelAddress">Alamat Asal</label>
                         <input type="text" id="alamatAsal" placeholder="Kota asal penghuni" />
                     </div>
 
                     <div class="form-group">
-                        <label>Catatan / Kebutuhan Khusus</label>
+                        <label id="labelNote">Catatan / Kebutuhan Khusus</label>
                         <textarea id="catatan" placeholder="Catatan tambahan (opsional)"></textarea>
                     </div>
                 </form>
@@ -1215,59 +1268,59 @@
             STEP 3: KONFIRMASI
             ============================================ -->
             <div class="step-content" id="step3">
-                <h2>✅ Konfirmasi & Pembayaran</h2>
-                <p class="step-desc">Periksa kembali data dan lakukan upload bukti pembayaran.</p>
+                <h2 id="step3Title">✅ Konfirmasi & Pembayaran</h2>
+                <p class="step-desc" id="step3Desc">Periksa kembali data dan lakukan upload bukti pembayaran.</p>
 
                 <!-- Summary -->
                 <div class="confirmation-summary" id="confirmationSummary">
                     <div class="summary-row">
-                        <span class="label">Kamar</span>
+                        <span class="label" id="confLabelRoom">Kamar</span>
                         <span class="value" id="confRoom">-</span>
                     </div>
                     <div class="summary-row">
-                        <span class="label">Penghuni</span>
+                        <span class="label" id="confLabelName">Penghuni</span>
                         <span class="value" id="confNama">-</span>
                     </div>
                     <div class="summary-row">
-                        <span class="label">Tanggal Masuk</span>
+                        <span class="label" id="confLabelDate">Tanggal Masuk</span>
                         <span class="value" id="confTgl">-</span>
                     </div>
                     <div class="summary-row">
-                        <span class="label">Durasi Sewa</span>
+                        <span class="label" id="confLabelDuration">Durasi Sewa</span>
                         <span class="value" id="confDurasi">-</span>
                     </div>
                     <div class="summary-row">
-                        <span class="label">Harga Kamar / Bulan</span>
+                        <span class="label" id="confLabelPrice">Harga Kamar / Bulan</span>
                         <span class="value" id="confHarga">Rp 0</span>
                     </div>
                     <div class="summary-row">
-                        <span class="label">Diskon</span>
+                        <span class="label" id="confLabelDiscount">Diskon</span>
                         <span class="value" id="confDiskon">Rp 0</span>
                     </div>
                     <div class="summary-row total">
-                        <span class="label">Total Bayar</span>
+                        <span class="label" id="confLabelTotal">Total Bayar</span>
                         <span class="value" id="confTotal">Rp 0</span>
                     </div>
                 </div>
 
                 <!-- Upload -->
                 <div class="form-group">
-                    <label>Upload Bukti Pembayaran <span class="required">*</span></label>
+                    <label id="labelUpload">Upload Bukti Pembayaran <span class="required">*</span></label>
                     <div class="upload-area" id="uploadArea">
                         <div class="upload-icon">📎</div>
-                        <p>Klik atau seret file untuk upload</p>
-                        <p style="font-size:12px;color:#aaa;">JPG, PNG, PDF (Max 2MB)</p>
+                        <p id="uploadText">Klik atau seret file untuk upload</p>
+                        <p style="font-size:12px;color:#aaa;" id="uploadFormat">JPG, PNG, PDF (Max 2MB)</p>
                         <div class="file-name" id="fileName"></div>
                         <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.pdf" />
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Metode Pembayaran</label>
+                    <label id="labelPaymentMethod">Metode Pembayaran</label>
                     <select id="metodeBayar">
-                        <option value="Transfer Bank">Transfer Bank</option>
-                        <option value="QRIS">QRIS</option>
-                        <option value="Cash">Cash (Offline)</option>
+                        <option value="Transfer Bank" id="payTransfer">Transfer Bank</option>
+                        <option value="QRIS" id="payQRIS">QRIS</option>
+                        <option value="Cash" id="payCash">Cash (Offline)</option>
                     </select>
                 </div>
 
@@ -1285,52 +1338,52 @@
 
             <!-- Quick Stats -->
             <div class="sidebar-card quick-summary">
-                <h3>📊 Status Kos</h3>
+                <h3 id="sidebarStatsTitle">📊 Status Kos</h3>
                 <div class="quick-stats">
                     <div class="stat-item">
                         <div class="stat-number green" id="statTersedia">12</div>
-                        <div class="stat-label">Tersedia</div>
+                        <div class="stat-label" id="statAvailableLabel">Tersedia</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number orange" id="statTerisi">8</div>
-                        <div class="stat-label">Terisi</div>
+                        <div class="stat-label" id="statOccupiedLabel">Terisi</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number red" id="statMaintenance">2</div>
-                        <div class="stat-label">Maintenance</div>
+                        <div class="stat-label" id="statMaintenanceLabel">Maintenance</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" id="statTotal">22</div>
-                        <div class="stat-label">Total Kamar</div>
+                        <div class="stat-label" id="statTotalLabel">Total Kamar</div>
                     </div>
                 </div>
             </div>
 
             <!-- Ringkasan Cepat -->
             <div class="sidebar-card">
-                <h3>📋 Ringkasan Cek-in</h3>
+                <h3 id="sidebarSummaryTitle">📋 Ringkasan Cek-in</h3>
                 <div class="sidebar-item">
-                    <span class="label">Kamar Dipilih</span>
+                    <span class="label" id="sidebarRoomLabel">Kamar Dipilih</span>
                     <span class="value" id="sidebarRoom">Belum dipilih</span>
                 </div>
                 <div class="sidebar-item">
-                    <span class="label">Harga</span>
+                    <span class="label" id="sidebarPriceLabel">Harga</span>
                     <span class="value" id="sidebarPrice">Rp 0</span>
                 </div>
                 <div class="sidebar-item">
-                    <span class="label">Durasi</span>
+                    <span class="label" id="sidebarDurationLabel">Durasi</span>
                     <span class="value" id="sidebarDurasi">-</span>
                 </div>
                 <div class="sidebar-item" style="border-top:2px solid #FF7A00;padding-top:12px;margin-top:4px;">
-                    <span class="label" style="font-weight:700;">Total</span>
+                    <span class="label" style="font-weight:700;" id="sidebarTotalLabel">Total</span>
                     <span class="value highlight" id="sidebarTotal">Rp 0</span>
                 </div>
             </div>
 
             <!-- Info -->
             <div class="sidebar-card" style="background:#fff8f0;border:1px solid #ffe0c0;">
-                <h3>💡 Informasi</h3>
-                <p style="font-size:13px;color:#666;line-height:1.6;">
+                <h3 id="sidebarInfoTitle">💡 Informasi</h3>
+                <p style="font-size:13px;color:#666;line-height:1.6;" id="sidebarInfoText">
                     • Deposit 1 bulan dikembalikan saat check-out.<br />
                     • Pembayaran dilakukan di awal masa sewa.<br />
                     • Diskon berlaku untuk sewa 3+ bulan.
@@ -1346,10 +1399,10 @@
     <div class="modal-overlay" id="successModal">
         <div class="modal-box">
             <div class="modal-icon">🎉</div>
-            <h2>Cek-in Berhasil!</h2>
-            <p>Penghuni baru berhasil di-check-in ke sistem.</p>
+            <h2 id="modalTitle">Cek-in Berhasil!</h2>
+            <p id="modalDesc">Penghuni baru berhasil di-check-in ke sistem.</p>
             <div class="invoice-number" id="invoiceNumber">INV-2026-0001</div>
-            <p style="font-size:13px;color:#888;">Nomor invoice ini digunakan untuk referensi pembayaran.</p>
+            <p style="font-size:13px;color:#888;" id="modalInvoiceNote">Nomor invoice ini digunakan untuk referensi pembayaran.</p>
             <div class="btn-group">
                 <button class="btn btn-secondary" id="modalPrint">🖨️ Cetak</button>
                 <button class="btn" id="modalDone">Selesai</button>
@@ -1358,34 +1411,372 @@
     </div>
 
     <!-- ============================================================
-    FOOTER - MENU UPLOAD PEMBAYARAN TELAH DIHAPUS
+    FOOTER
     ============================================================ -->
     <footer>
         <div class="footer-brand">JDI <span>KOSKITA</span></div>
-        <p>Smart Boarding House Management System</p>
+        <p id="footerTagline">Smart Boarding House Management System</p>
         <div class="footer-divider"></div>
-        <p>&copy; 2026 JDI KOSKITA. All Rights Reserved.</p>
-        <!-- ✅ MENU UPLOAD PEMBAYARAN DIHAPUS -->
+        <p id="footerCopyright">&copy; 2026 JDI KOSKITA. All Rights Reserved.</p>
         <div class="footer-links">
-            <a href="index.html">Beranda</a>
-            <a href="cek-in.html">Cek-in</a>
-            <a href="galeri.html">Galeri</a>
-            <a href="fasilitas.html">Fasilitas</a>
-            <a href="#">Daftar Harga</a>
-            <a href="#">Kontak</a>
+            <a href="index.html" id="footerHome">Beranda</a>
+            <a href="cek-in.html" id="footerCheckin">Cek-in</a>
+            <a href="galeri.html" id="footerGallery">Galeri</a>
+            <a href="fasilitas.html" id="footerFacilities">Fasilitas</a>
+            <a href="daftar-harga.html" id="footerPricing">Daftar Harga</a>
+            <a href="kontak.html" id="footerContact">Kontak</a>
         </div>
     </footer>
 
     <!-- ============================================================
-    JAVASCRIPT
+    JAVASCRIPT - CMS READY + MULTI LANGUAGE
     ============================================================ -->
     <script>
         (function() {
             'use strict';
 
-            // ============================================
+            // ============================================================
+            // 🌐 LANGUAGE DATA
+            // ============================================================
+            const LANGUAGES = {
+                id: {
+                    code: 'id',
+                    name: 'Indonesia',
+                    flag: '🇮🇩',
+                    translations: {
+                        'headerTagline': 'Smart Boarding House Management System',
+                        'menuHome': 'Beranda',
+                        'menuCheckin': 'Cek-in',
+                        'menuGallery': 'Galeri',
+                        'menuFacilities': 'Fasilitas',
+                        'menuPricing': 'Daftar Harga',
+                        'menuContact': 'Kontak',
+                        'menuGuestLogin': '👤 Login Tamu',
+                        'menuAdminLogin': '🔐 Login Admin',
+                        'breadcrumbTitle': 'Cek-in <span>Penghuni</span>',
+                        'breadcrumbHome': 'Beranda',
+                        'breadcrumbCurrent': 'Cek-in',
+                        'step1Label': 'Pilih Kamar',
+                        'step2Label': 'Data Penghuni',
+                        'step3Label': 'Konfirmasi',
+                        'step1Title': '🏠 Pilih Kamar',
+                        'step1Desc': 'Pilih kamar yang tersedia untuk penghuni baru.',
+                        'step2Title': '👤 Data Penghuni',
+                        'step2Desc': 'Isi data lengkap penghuni yang akan melakukan cek-in.',
+                        'step3Title': '✅ Konfirmasi & Pembayaran',
+                        'step3Desc': 'Periksa kembali data dan lakukan upload bukti pembayaran.',
+                        'floorAll': 'Semua Lantai',
+                        'floor1': 'Lantai 1',
+                        'floor2': 'Lantai 2',
+                        'floor3': 'Lantai 3',
+                        'typeAll': 'Semua Tipe',
+                        'typeStandard': 'Standard',
+                        'typeDeluxe': 'Deluxe',
+                        'typeVIP': 'VIP',
+                        'labelFullName': 'Nama Lengkap <span class="required">*</span>',
+                        'labelNik': 'NIK / KTP <span class="required">*</span>',
+                        'labelPhone': 'Nomor HP <span class="required">*</span>',
+                        'labelEmail': 'Email',
+                        'labelDate': 'Tanggal Masuk <span class="required">*</span>',
+                        'labelDuration': 'Lama Sewa <span class="required">*</span>',
+                        'labelAddress': 'Alamat Asal',
+                        'labelNote': 'Catatan / Kebutuhan Khusus',
+                        'dur1Month': '1 Bulan',
+                        'dur3Month': '3 Bulan (Diskon 5%)',
+                        'dur6Month': '6 Bulan (Diskon 10%)',
+                        'dur12Month': '12 Bulan (Diskon 15%)',
+                        'confLabelRoom': 'Kamar',
+                        'confLabelName': 'Penghuni',
+                        'confLabelDate': 'Tanggal Masuk',
+                        'confLabelDuration': 'Durasi Sewa',
+                        'confLabelPrice': 'Harga Kamar / Bulan',
+                        'confLabelDiscount': 'Diskon',
+                        'confLabelTotal': 'Total Bayar',
+                        'labelUpload': 'Upload Bukti Pembayaran <span class="required">*</span>',
+                        'uploadText': 'Klik atau seret file untuk upload',
+                        'uploadFormat': 'JPG, PNG, PDF (Max 2MB)',
+                        'labelPaymentMethod': 'Metode Pembayaran',
+                        'payTransfer': 'Transfer Bank',
+                        'payQRIS': 'QRIS',
+                        'payCash': 'Cash (Offline)',
+                        'sidebarStatsTitle': '📊 Status Kos',
+                        'statAvailableLabel': 'Tersedia',
+                        'statOccupiedLabel': 'Terisi',
+                        'statMaintenanceLabel': 'Maintenance',
+                        'statTotalLabel': 'Total Kamar',
+                        'sidebarSummaryTitle': '📋 Ringkasan Cek-in',
+                        'sidebarRoomLabel': 'Kamar Dipilih',
+                        'sidebarPriceLabel': 'Harga',
+                        'sidebarDurationLabel': 'Durasi',
+                        'sidebarTotalLabel': 'Total',
+                        'sidebarInfoTitle': '💡 Informasi',
+                        'sidebarInfoText': '• Deposit 1 bulan dikembalikan saat check-out.<br />• Pembayaran dilakukan di awal masa sewa.<br />• Diskon berlaku untuk sewa 3+ bulan.',
+                        'modalTitle': 'Cek-in Berhasil!',
+                        'modalDesc': 'Penghuni baru berhasil di-check-in ke sistem.',
+                        'modalInvoiceNote': 'Nomor invoice ini digunakan untuk referensi pembayaran.',
+                        'footerTagline': 'Smart Boarding House Management System',
+                        'footerCopyright': '© 2026 JDI KOSKITA. All Rights Reserved.',
+                        'footerHome': 'Beranda',
+                        'footerCheckin': 'Cek-in',
+                        'footerGallery': 'Galeri',
+                        'footerFacilities': 'Fasilitas',
+                        'footerPricing': 'Daftar Harga',
+                        'footerContact': 'Kontak',
+                    }
+                },
+                en: {
+                    code: 'en',
+                    name: 'English',
+                    flag: '🇬🇧',
+                    translations: {
+                        'headerTagline': 'Smart Boarding House Management System',
+                        'menuHome': 'Home',
+                        'menuCheckin': 'Check-in',
+                        'menuGallery': 'Gallery',
+                        'menuFacilities': 'Facilities',
+                        'menuPricing': 'Pricing',
+                        'menuContact': 'Contact',
+                        'menuGuestLogin': '👤 Guest Login',
+                        'menuAdminLogin': '🔐 Admin Login',
+                        'breadcrumbTitle': 'Check-in <span>Tenant</span>',
+                        'breadcrumbHome': 'Home',
+                        'breadcrumbCurrent': 'Check-in',
+                        'step1Label': 'Select Room',
+                        'step2Label': 'Tenant Data',
+                        'step3Label': 'Confirm',
+                        'step1Title': '🏠 Select Room',
+                        'step1Desc': 'Select an available room for the new tenant.',
+                        'step2Title': '👤 Tenant Data',
+                        'step2Desc': 'Fill in the complete data of the tenant.',
+                        'step3Title': '✅ Confirm & Payment',
+                        'step3Desc': 'Review the data and upload proof of payment.',
+                        'floorAll': 'All Floors',
+                        'floor1': 'Floor 1',
+                        'floor2': 'Floor 2',
+                        'floor3': 'Floor 3',
+                        'typeAll': 'All Types',
+                        'typeStandard': 'Standard',
+                        'typeDeluxe': 'Deluxe',
+                        'typeVIP': 'VIP',
+                        'labelFullName': 'Full Name <span class="required">*</span>',
+                        'labelNik': 'ID Number <span class="required">*</span>',
+                        'labelPhone': 'Phone Number <span class="required">*</span>',
+                        'labelEmail': 'Email',
+                        'labelDate': 'Check-in Date <span class="required">*</span>',
+                        'labelDuration': 'Rental Duration <span class="required">*</span>',
+                        'labelAddress': 'Home Address',
+                        'labelNote': 'Notes / Special Needs',
+                        'dur1Month': '1 Month',
+                        'dur3Month': '3 Months (5% Discount)',
+                        'dur6Month': '6 Months (10% Discount)',
+                        'dur12Month': '12 Months (15% Discount)',
+                        'confLabelRoom': 'Room',
+                        'confLabelName': 'Tenant',
+                        'confLabelDate': 'Check-in Date',
+                        'confLabelDuration': 'Rental Duration',
+                        'confLabelPrice': 'Room Price / Month',
+                        'confLabelDiscount': 'Discount',
+                        'confLabelTotal': 'Total Payment',
+                        'labelUpload': 'Upload Payment Proof <span class="required">*</span>',
+                        'uploadText': 'Click or drag file to upload',
+                        'uploadFormat': 'JPG, PNG, PDF (Max 2MB)',
+                        'labelPaymentMethod': 'Payment Method',
+                        'payTransfer': 'Bank Transfer',
+                        'payQRIS': 'QRIS',
+                        'payCash': 'Cash (Offline)',
+                        'sidebarStatsTitle': '📊 Boarding Status',
+                        'statAvailableLabel': 'Available',
+                        'statOccupiedLabel': 'Occupied',
+                        'statMaintenanceLabel': 'Maintenance',
+                        'statTotalLabel': 'Total Rooms',
+                        'sidebarSummaryTitle': '📋 Check-in Summary',
+                        'sidebarRoomLabel': 'Selected Room',
+                        'sidebarPriceLabel': 'Price',
+                        'sidebarDurationLabel': 'Duration',
+                        'sidebarTotalLabel': 'Total',
+                        'sidebarInfoTitle': '💡 Information',
+                        'sidebarInfoText': '• 1 month deposit returned at check-out.<br />• Payment is made at the beginning of the rental period.<br />• Discount applies for 3+ months rental.',
+                        'modalTitle': 'Check-in Successful!',
+                        'modalDesc': 'New tenant has been successfully checked-in.',
+                        'modalInvoiceNote': 'This invoice number is for payment reference.',
+                        'footerTagline': 'Smart Boarding House Management System',
+                        'footerCopyright': '© 2026 JDI KOSKITA. All Rights Reserved.',
+                        'footerHome': 'Home',
+                        'footerCheckin': 'Check-in',
+                        'footerGallery': 'Gallery',
+                        'footerFacilities': 'Facilities',
+                        'footerPricing': 'Pricing',
+                        'footerContact': 'Contact',
+                    }
+                }
+            };
+
+            // ============================================================
+            // STATE
+            // ============================================================
+            let currentLang = localStorage.getItem('jdi_lang') || 'id';
+
+            // ============================================================
+            // SWITCH LANGUAGE FUNCTION
+            // ============================================================
+            window.switchLanguage = function(langCode) {
+                if (langCode === currentLang) return;
+                currentLang = langCode;
+                localStorage.setItem('jdi_lang', langCode);
+                applyLanguage(langCode);
+                updateLangButtons(langCode);
+                // Re-render dinamis
+                renderRooms();
+                updateSidebar();
+                if (currentStep === 3) updateConfirmation();
+            };
+
+            // ============================================================
+            // APPLY LANGUAGE
+            // ============================================================
+            function applyLanguage(langCode) {
+                const langData = LANGUAGES[langCode];
+                if (!langData) return;
+
+                const t = langData.translations;
+                document.documentElement.lang = langCode;
+
+                const idMap = {
+                    'headerTagline': 'headerTagline',
+                    'menuHome': 'menuHome',
+                    'menuCheckin': 'menuCheckin',
+                    'menuGallery': 'menuGallery',
+                    'menuFacilities': 'menuFacilities',
+                    'menuPricing': 'menuPricing',
+                    'menuContact': 'menuContact',
+                    'menuGuestLogin': 'menuGuestLogin',
+                    'menuAdminLogin': 'menuAdminLogin',
+                    'breadcrumbTitle': 'breadcrumbTitle',
+                    'breadcrumbHome': 'breadcrumbHome',
+                    'breadcrumbCurrent': 'breadcrumbCurrent',
+                    'step1Label': 'step1Label',
+                    'step2Label': 'step2Label',
+                    'step3Label': 'step3Label',
+                    'step1Title': 'step1Title',
+                    'step1Desc': 'step1Desc',
+                    'step2Title': 'step2Title',
+                    'step2Desc': 'step2Desc',
+                    'step3Title': 'step3Title',
+                    'step3Desc': 'step3Desc',
+                    'floorAll': 'floorAll',
+                    'floor1': 'floor1',
+                    'floor2': 'floor2',
+                    'floor3': 'floor3',
+                    'typeAll': 'typeAll',
+                    'typeStandard': 'typeStandard',
+                    'typeDeluxe': 'typeDeluxe',
+                    'typeVIP': 'typeVIP',
+                    'labelFullName': 'labelFullName',
+                    'labelNik': 'labelNik',
+                    'labelPhone': 'labelPhone',
+                    'labelEmail': 'labelEmail',
+                    'labelDate': 'labelDate',
+                    'labelDuration': 'labelDuration',
+                    'labelAddress': 'labelAddress',
+                    'labelNote': 'labelNote',
+                    'dur1Month': 'dur1Month',
+                    'dur3Month': 'dur3Month',
+                    'dur6Month': 'dur6Month',
+                    'dur12Month': 'dur12Month',
+                    'confLabelRoom': 'confLabelRoom',
+                    'confLabelName': 'confLabelName',
+                    'confLabelDate': 'confLabelDate',
+                    'confLabelDuration': 'confLabelDuration',
+                    'confLabelPrice': 'confLabelPrice',
+                    'confLabelDiscount': 'confLabelDiscount',
+                    'confLabelTotal': 'confLabelTotal',
+                    'labelUpload': 'labelUpload',
+                    'uploadText': 'uploadText',
+                    'uploadFormat': 'uploadFormat',
+                    'labelPaymentMethod': 'labelPaymentMethod',
+                    'payTransfer': 'payTransfer',
+                    'payQRIS': 'payQRIS',
+                    'payCash': 'payCash',
+                    'sidebarStatsTitle': 'sidebarStatsTitle',
+                    'statAvailableLabel': 'statAvailableLabel',
+                    'statOccupiedLabel': 'statOccupiedLabel',
+                    'statMaintenanceLabel': 'statMaintenanceLabel',
+                    'statTotalLabel': 'statTotalLabel',
+                    'sidebarSummaryTitle': 'sidebarSummaryTitle',
+                    'sidebarRoomLabel': 'sidebarRoomLabel',
+                    'sidebarPriceLabel': 'sidebarPriceLabel',
+                    'sidebarDurationLabel': 'sidebarDurationLabel',
+                    'sidebarTotalLabel': 'sidebarTotalLabel',
+                    'sidebarInfoTitle': 'sidebarInfoTitle',
+                    'sidebarInfoText': 'sidebarInfoText',
+                    'modalTitle': 'modalTitle',
+                    'modalDesc': 'modalDesc',
+                    'modalInvoiceNote': 'modalInvoiceNote',
+                    'footerTagline': 'footerTagline',
+                    'footerCopyright': 'footerCopyright',
+                    'footerHome': 'footerHome',
+                    'footerCheckin': 'footerCheckin',
+                    'footerGallery': 'footerGallery',
+                    'footerFacilities': 'footerFacilities',
+                    'footerPricing': 'footerPricing',
+                    'footerContact': 'footerContact',
+                };
+
+                Object.keys(idMap).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && t[idMap[id]] !== undefined) {
+                        el.innerHTML = t[idMap[id]];
+                    }
+                });
+
+                // Update placeholder text for inputs
+                const placeholders = {
+                    'namaLengkap': 'Contoh: Budi Santoso',
+                    'nik': '16 digit NIK',
+                    'noHp': '08xx-xxxx-xxxx',
+                    'email': 'email@example.com',
+                    'alamatAsal': 'Kota asal penghuni',
+                    'catatan': 'Catatan tambahan (opsional)',
+                    'roomSearch': '🔍 Cari kamar...',
+                };
+
+                // For English placeholders
+                if (langCode === 'en') {
+                    const enPlaceholders = {
+                        'namaLengkap': 'e.g. John Doe',
+                        'nik': '16 digit ID number',
+                        'noHp': '08xx-xxxx-xxxx',
+                        'email': 'email@example.com',
+                        'alamatAsal': 'City of origin',
+                        'catatan': 'Additional notes (optional)',
+                        'roomSearch': '🔍 Search room...',
+                    };
+                    Object.keys(enPlaceholders).forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.placeholder = enPlaceholders[id];
+                    });
+                } else {
+                    Object.keys(placeholders).forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.placeholder = placeholders[id];
+                    });
+                }
+
+                console.log('🌐 Language switched to:', langCode, '-', LANGUAGES[langCode].name);
+            }
+
+            // ============================================================
+            // UPDATE LANGUAGE BUTTONS
+            // ============================================================
+            function updateLangButtons(langCode) {
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === langCode);
+                });
+            }
+
+            // ============================================================
             // DATA KAMAR
-            // ============================================
+            // ============================================================
             const roomsData = [
                 { id: 'A1', number: 'A1', type: 'Standard', floor: 1, price: 500000, status: 'available' },
                 { id: 'A2', number: 'A2', type: 'Standard', floor: 1, price: 500000, status: 'occupied' },
@@ -1407,9 +1798,9 @@
                 maintenance: { label: 'Maintenance', class: 'maintenance' },
             };
 
-            // ============================================
+            // ============================================================
             // DOM REFS
-            // ============================================
+            // ============================================================
             const roomGrid = document.getElementById('roomGrid');
             const roomSearch = document.getElementById('roomSearch');
             const floorFilter = document.getElementById('floorFilter');
@@ -1462,17 +1853,17 @@
             const modalPrint = document.getElementById('modalPrint');
             const invoiceNumber = document.getElementById('invoiceNumber');
 
-            // ============================================
+            // ============================================================
             // STATE
-            // ============================================
+            // ============================================================
             let selectedRoom = null;
             let currentStep = 1;
             let uploadedFile = null;
             let invoiceCounter = 1;
 
-            // ============================================
+            // ============================================================
             // RENDER ROOMS
-            // ============================================
+            // ============================================================
             function renderRooms() {
                 const floor = floorFilter.value;
                 const type = typeFilter.value;
@@ -1486,6 +1877,13 @@
                     return matchSearch && matchFloor && matchType;
                 });
 
+                const t = LANGUAGES[currentLang].translations;
+                const statusMapLocal = {
+                    available: { label: t['statAvailableLabel'] || 'Tersedia', class: 'available' },
+                    occupied: { label: t['statOccupiedLabel'] || 'Terisi', class: 'occupied' },
+                    maintenance: { label: t['statMaintenanceLabel'] || 'Maintenance', class: 'maintenance' },
+                };
+
                 roomGrid.innerHTML = '';
                 filtered.forEach(r => {
                     const card = document.createElement('div');
@@ -1493,7 +1891,7 @@
                     if (r.status !== 'available') card.classList.add('disabled');
                     if (selectedRoom && selectedRoom.id === r.id) card.classList.add('selected');
 
-                    const status = statusMap[r.status] || statusMap.available;
+                    const status = statusMapLocal[r.status] || statusMapLocal.available;
                     const diskon = r.status === 'available' ? 15 : 0;
 
                     card.innerHTML = `
@@ -1538,9 +1936,9 @@
                 statTotal.textContent = total;
             }
 
-            // ============================================
+            // ============================================================
             // UPDATE SIDEBAR
-            // ============================================
+            // ============================================================
             function updateSidebar() {
                 if (selectedRoom) {
                     sidebarRoom.textContent = selectedRoom.number;
@@ -1569,9 +1967,9 @@
                 toStep2Btn.disabled = !selectedRoom;
             }
 
-            // ============================================
+            // ============================================================
             // STEP NAVIGATION
-            // ============================================
+            // ============================================================
             function goToStep(step) {
                 currentStep = step;
 
@@ -1593,9 +1991,9 @@
                 document.querySelector('.checkin-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
 
-            // ============================================
+            // ============================================================
             // UPDATE CONFIRMATION
-            // ============================================
+            // ============================================================
             function updateConfirmation() {
                 if (!selectedRoom) return;
 
@@ -1625,9 +2023,9 @@
                 invoiceNumber.textContent = 'INV-' + year + '-' + String(invoiceCounter).padStart(4, '0');
             }
 
-            // ============================================
+            // ============================================================
             // EVENT LISTENERS
-            // ============================================
+            // ============================================================
             toStep2Btn.addEventListener('click', () => {
                 if (selectedRoom) goToStep(2);
             });
@@ -1669,6 +2067,7 @@
 
             submitBtn.addEventListener('click', () => {
                 if (!fileInput.files[0]) {
+                    const t = LANGUAGES[currentLang].translations;
                     alert('Mohon upload bukti pembayaran.');
                     return;
                 }
@@ -1752,9 +2151,9 @@
                 if (currentStep === 3) updateConfirmation();
             });
 
-            // ============================================
+            // ============================================================
             // RESET FORM
-            // ============================================
+            // ============================================================
             function resetForm() {
                 selectedRoom = null;
                 uploadedFile = null;
@@ -1774,9 +2173,9 @@
                 updateStep1Button();
             }
 
-            // ============================================
+            // ============================================================
             // HAMBURGER MENU
-            // ============================================
+            // ============================================================
             const hamburger = document.getElementById('hamburger');
             const navMenu = document.getElementById('navMenu');
 
@@ -1794,18 +2193,23 @@
                 });
             }
 
-            // ============================================
+            // ============================================================
             // SET DEFAULT DATE
-            // ============================================
+            // ============================================================
             const today = new Date().toISOString().split('T')[0];
             tglMasuk.value = today;
 
-            // ============================================
+            // ============================================================
             // INIT
-            // ============================================
+            // ============================================================
+            applyLanguage(currentLang);
+            updateLangButtons(currentLang);
             renderRooms();
             updateSidebar();
             updateStep1Button();
+
+            console.log('✅ JDI KOSKITA - Cek-in CMS Ready + Multi Language');
+            console.log('🌐 Bahasa saat ini:', LANGUAGES[currentLang].name);
 
         })();
     </script>
