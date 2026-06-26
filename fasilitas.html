@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JDI KOSKITA - Fasilitas</title>
+    <style>
+        /* ============================================================
+           RESET & BASE
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #f0f4f9;
+            color: #333;
+        }
+
+        /* ============================================================
+           HEADER & NAVIGATION
+           ============================================================ */
+        header {
+            background: #0A2E6D;
+            color: #fff;
+            padding: 12px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            max-width: 1300px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            border-radius: 50%;
+            object-fit: contain;
+            padding: 4px;
+        }
+
+        .logo h2 {
+            font-size: 26px;
+            margin-bottom: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .logo h2 span {
+            color: #FF7A00;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: 0.8;
+            letter-spacing: 0.3px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            transition: 0.3s;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .nav-menu a:hover {
+            background: #FF7A00;
+            color: #fff;
+        }
+
+        .nav-menu .btn-login {
+            background: #FF7A00;
+            color: #fff;
+            border-radius: 6px;
+            padding: 8px 18px;
+            font-weight: 600;
+        }
+
+        .nav-menu .btn-login:hover {
+            background: #fff;
+            color: #0A2E6D;
+        }
+
+        .nav-menu .active {
+            background: #FF7A00;
+            color: #fff;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: #fff;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        /* ============================================================
+           BREADCRUMB
+           ============================================================ */
+        .breadcrumb {
+            background: #fff;
+            padding: 14px 40px;
+            border-bottom: 1px solid #e9edf2;
+        }
+
+        .breadcrumb-container {
+            max-width: 1300px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .breadcrumb-container h1 {
+            font-size: 24px;
+            color: #0A2E6D;
+        }
+
+        .breadcrumb-container h1 span {
+            color: #FF7A00;
+        }
+
+        .breadcrumb-container .breadcrumb-links {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .breadcrumb-container .breadcrumb-links a {
+            color: #0A2E6D;
+            text-decoration: none;
+        }
+
+        .breadcrumb-container .breadcrumb-links a:hover {
+            color: #FF7A00;
+        }
+
+        /* ============================================================
+           MAIN CONTENT
+           ============================================================ */
+        .facilities-section {
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 0 40px;
+        }
+
+        /* ---- Header ---- */
+        .facilities-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .facilities-header h2 {
+            font-size: 32px;
+            color: #0A2E6D;
+            margin-bottom: 8px;
+        }
+
+        .facilities-header h2 span {
+            color: #FF7A00;
+        }
+
+        .facilities-header p {
+            color: #888;
+            font-size: 16px;
+        }
+
+        /* ---- Quick Summary ---- */
+        .quick-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .quick-summary .summary-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .quick-summary .summary-item .summary-icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .quick-summary .summary-item .summary-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0A2E6D;
+        }
+
+        .quick-summary .summary-item .summary-label {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* ---- Section Title ---- */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 35px 0 20px;
+        }
+
+        .section-title .title-icon {
+            font-size: 28px;
+        }
+
+        .section-title h3 {
+            font-size: 22px;
+            color: #0A2E6D;
+        }
+
+        .section-title h3 span {
+            color: #FF7A00;
+        }
+
+        .section-title .title-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, #FF7A00, transparent);
+        }
+
+        /* ---- Room Types (Fasilitas Kamar) ---- */
+        .room-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 10px;
+        }
+
+        .room-type-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e9edf2;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .room-type-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+            border-color: #FF7A00;
+        }
+
+        .room-type-card .room-type-icon {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .room-type-card .room-type-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0A2E6D;
+        }
+
+        .room-type-card .room-type-price {
+            font-size: 16px;
+            color: #FF7A00;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .room-type-card .room-type-price .original {
+            font-size: 13px;
+            color: #999;
+            text-decoration: line-through;
+            font-weight: 400;
+            margin-left: 6px;
+        }
+
+        .room-type-card .facility-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .room-type-card .facility-list .facility-tag {
+            background: #f0f4f9;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #0A2E6D;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .room-type-card .facility-list .facility-tag .tag-icon {
+            font-size: 14px;
+        }
+
+        .room-type-card .badge-populer {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #FF7A00;
+            color: #fff;
+            padding: 2px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .room-type-card .room-image {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            background: #e9edf2;
+        }
+
+        /* ---- Property Facilities ---- */
+        .property-facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .property-facility-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px 16px;
+            text-align: center;
+            border: 1px solid #e9edf2;
+            transition: 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .property-facility-item:hover {
+            border-color: #FF7A00;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .property-facility-item .pf-icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .property-facility-item .pf-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0A2E6D;
+        }
+
+        .property-facility-item .pf-desc {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .property-facility-item .pf-status {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .property-facility-item .pf-status.available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .property-facility-item .pf-status.coming {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* ---- Nearby Facilities ---- */
+        .nearby-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .nearby-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid #e9edf2;
+            transition: 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .nearby-item:hover {
+            border-color: #FF7A00;
+            transform: translateX(4px);
+            box-shadow: 0 4px 15px rgba(255, 122, 0, 0.08);
+        }
+
+        .nearby-item .nearby-icon {
+            font-size: 28px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .nearby-item .nearby-info {
+            flex: 1;
+        }
+
+        .nearby-item .nearby-info .nearby-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0A2E6D;
+        }
+
+        .nearby-item .nearby-info .nearby-distance {
+            font-size: 13px;
+            color: #FF7A00;
+            font-weight: 600;
+        }
+
+        .nearby-item .nearby-info .nearby-address {
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* ---- Transportation ---- */
+        .transport-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .transport-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid #e9edf2;
+            transition: 0.3s;
+        }
+
+        .transport-item:hover {
+            border-color: #FF7A00;
+            transform: translateY(-3px);
+        }
+
+        .transport-item .transport-icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .transport-item .transport-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0A2E6D;
+        }
+
+        .transport-item .transport-info {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .transport-item .transport-info .available {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .transport-item .transport-info .unavailable {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        /* ---- Location Map ---- */
+        .location-map-container {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 20px 0 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e9edf2;
+        }
+
+        .location-map-container .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .location-map-container .map-header .map-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0A2E6D;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .location-map-container .map-header .map-title span {
+            color: #FF7A00;
+        }
+
+        .location-map-container .map-header .map-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .location-map-container .map-header .map-actions .btn-map {
+            padding: 6px 18px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .location-map-container .map-header .map-actions .btn-map.google {
+            background: #0A2E6D;
+            color: #fff;
+        }
+
+        .location-map-container .map-header .map-actions .btn-map.google:hover {
+            background: #1a4a8a;
+        }
+
+        .location-map-container .map-header .map-actions .btn-map.waze {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .location-map-container .map-header .map-actions .btn-map.waze:hover {
+            background: #2a2a4e;
+        }
+
+        .location-map-container .map-wrapper {
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 250px;
+            background: #e9edf2;
+        }
+
+        .location-map-container .map-wrapper iframe {
+            width: 100%;
+            height: 250px;
+            border: none;
+        }
+
+        /* ---- Testimonials ---- */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .testimonial-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px;
+            border: 1px solid #e9edf2;
+            transition: 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .testimonial-card:hover {
+            border-color: #FF7A00;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .testimonial-card .testimonial-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .testimonial-card .testimonial-header .testi-name {
+            font-weight: 600;
+            color: #0A2E6D;
+            font-size: 15px;
+        }
+
+        .testimonial-card .testimonial-header .testi-room {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .testimonial-card .testimonial-stars {
+            color: #FF7A00;
+            font-size: 16px;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+
+        .testimonial-card .testimonial-message {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .testimonial-card .testimonial-date {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 8px;
+            display: block;
+        }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        footer {
+            background: #1a1a2e;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            padding: 40px 30px 35px;
+            border-top: 4px solid #FF7A00;
+            margin-top: 40px;
+        }
+
+        footer .footer-brand {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        footer .footer-brand span {
+            color: #FF7A00;
+        }
+
+        footer p {
+            margin: 6px 0;
+            font-size: 14px;
+        }
+
+        footer .footer-divider {
+            width: 60px;
+            height: 3px;
+            background: #FF7A00;
+            margin: 14px auto;
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            margin-top: 16px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            margin: 0 14px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #FF7A00;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 1024px) {
+            .room-types-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 991px) {
+            .header-container {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .nav-menu {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                padding-top: 8px;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+            }
+            .nav-menu a {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            .breadcrumb {
+                padding: 12px 20px;
+            }
+            .facilities-section {
+                padding: 0 20px;
+            }
+            .facilities-header h2 {
+                font-size: 28px;
+            }
+            .quick-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .room-types-grid {
+                grid-template-columns: 1fr;
+            }
+            .property-facilities-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            .nearby-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+            .location-map-container .map-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                padding: 10px 16px;
+            }
+            .logo img {
+                width: 48px;
+                height: 48px;
+            }
+            .logo h2 {
+                font-size: 20px;
+            }
+            .logo p {
+                font-size: 10px;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+                padding-top: 12px;
+                gap: 4px;
+            }
+            .nav-menu.open {
+                display: flex;
+            }
+            .nav-menu a {
+                width: 100%;
+                text-align: center;
+                padding: 10px;
+                font-size: 14px;
+            }
+            .breadcrumb-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .breadcrumb-container h1 {
+                font-size: 20px;
+            }
+            .facilities-section {
+                padding: 0 12px;
+                margin-top: 16px;
+            }
+            .facilities-header h2 {
+                font-size: 24px;
+            }
+            .quick-summary {
+                grid-template-columns: 1fr 1fr;
+                padding: 16px;
+                gap: 8px;
+            }
+            .quick-summary .summary-item .summary-number {
+                font-size: 20px;
+            }
+            .section-title h3 {
+                font-size: 18px;
+            }
+            .room-type-card {
+                padding: 18px;
+            }
+            .room-type-card .room-image {
+                height: 120px;
+            }
+            .property-facilities-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .property-facility-item {
+                padding: 14px 10px;
+            }
+            .nearby-grid {
+                grid-template-columns: 1fr;
+            }
+            .nearby-item {
+                padding: 12px 14px;
+            }
+            .transport-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .location-map-container {
+                padding: 16px;
+            }
+            .location-map-container .map-wrapper {
+                min-height: 180px;
+            }
+            .location-map-container .map-wrapper iframe {
+                height: 180px;
+            }
+            .footer-links a {
+                display: inline-block;
+                margin: 4px 10px;
+                font-size: 13px;
+            }
+        }
+
+        @media (min-width: 577px) {
+            .nav-menu {
+                display: flex !important;
+            }
+            .hamburger {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    HEADER
+    ============================================================ -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="assets/logo-jdi.png" alt="Logo JDI KOSKITA" />
+                <div>
+                    <h2>JDI <span>KOSKITA</span></h2>
+                    <p>Smart Boarding House Management System</p>
+                </div>
+            </div>
+
+            <div class="hamburger" id="hamburger" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <nav class="nav-menu" id="navMenu">
+                <a href="index.html">Beranda</a>
+                <a href="cek-in.html">Cek-in</a>
+                <a href="galeri.html">Galeri</a>
+                <a href="fasilitas.html" class="active">Fasilitas</a>
+                <a href="#">Daftar Harga</a>
+                <a href="#">Upload Pembayaran</a>
+                <a href="#">Kontak</a>
+                <a href="#" class="btn-login">Login Tamu</a>
+                <a href="#" class="btn-login">Login Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ============================================================
+    BREADCRUMB
+    ============================================================ -->
+    <div class="breadcrumb">
+        <div class="breadcrumb-container">
+            <h1>🏠 <span>Fasilitas</span> JDI KOSKITA</h1>
+            <div class="breadcrumb-links">
+                <a href="index.html">Beranda</a> &gt; <span>Fasilitas</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <section class="facilities-section">
+
+        <!-- Header -->
+        <div class="facilities-header">
+            <h2>Kenyamanan & <span>Kemudahan</span> untuk Penghuni</h2>
+            <p>Semua fasilitas terbaik untuk pengalaman tinggal yang nyaman</p>
+        </div>
+
+        <!-- ============================================================
+        QUICK SUMMARY
+        ============================================================ -->
+        <div class="quick-summary" id="quickSummary">
+            <!-- Akan di-generate oleh JavaScript -->
+        </div>
+
+        <!-- ============================================================
+        FASILITAS KAMAR (Room Types)
+        ============================================================ -->
+        <div class="section-title">
+            <span class="title-icon">🛏️</span>
+            <h3>Fasilitas <span>Kamar</span></h3>
+            <span class="title-line"></span>
+        </div>
+
+        <div class="room-types-grid" id="roomTypesGrid">
+            <!-- Akan di-generate oleh JavaScript -->
+        </div>
+
+        <!-- ============================================================
+        FASILITAS PROPERTI
+        ============================================================ -->
+        <div class="section-title">
+            <span class="title-icon">🏢</span>
+            <h3>Fasilitas <span>Properti</span></h3>
+            <span class="title-line"></span>
+        </div>
+
+        <div class="property-facilities-grid" id="propertyFacilitiesGrid">
+            <!-- Akan di-generate oleh JavaScript -->
+        </div>
+
+        <!-- ============================================================
+        AKSES FASILITAS UMUM
+        ============================================================ -->
+        <div class="section-title">
+            <span class="title-icon">📍</span>
+            <h3>Akses ke <span>Fasilitas Umum</span></h3>
+            <span class="title-line"></span>
+        </div>
+
+        <div class="nearby-grid" id="nearbyGrid">
+            <!-- Akan di-generate oleh JavaScript -->
+        </div>
+
+        <!-- ============================================================
+        TRANSPORTASI
+        ============================================================ -->
+        <div class="section-title">
+            <span class="title-icon">🚗</span>
+            <h3>Transportasi & <span>Online Services</span></h3>
+            <span class="title-line"></span>
+        </div>
+
+        <div class="transport-grid" id="transportGrid">
+            <!-- Akan di-generate oleh JavaScript -->
+        </div>
+
+        <!-- ============================================================
+        LOKASI MAP
+        ============================================================ -->
+        <div class="location-map-container" id="locationMapContainer">
+            <div class="map-header">
+                <div class="map-title">
+                    📍 <span>Lokasi</span> JDI KOSKITA
+                </div>
+                <div class="map-actions">
+                    <a href="#" target="_blank" class="btn-map google" id="btnGoogleMaps">🗺️ Google Maps</a>
+                    <a href="#" target="_blank" class="btn-map waze" id="btnWaze">🧭 Waze</a>
+                </div>
+            </div>
+            <div class="map-wrapper" id="mapWrapper">
+                <!-- Akan di-generate oleh JavaScript -->
+            </div>
+        </div>
+
+        <!-- ============================================================
+        TESTIMONI
+        ============================================================ -->
+        <div class="section-title">
+            <span class="title-icon">💬</span>
+            <h3>Testimoni <span>Penghuni</span></h3>
+            <span class="title-line"></span>
+        </div>
+
+        <div class="testimonials-grid" id="testimonialsGrid">
+            <!-- Akan di-generate oleh JavaScript -->
+        </div>
+
+    </section>
+
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+    <footer>
+        <div class="footer-brand">JDI <span>KOSKITA</span></div>
+        <p>Smart Boarding House Management System</p>
+        <div class="footer-divider"></div>
+        <p>&copy; 2026 JDI KOSKITA. All Rights Reserved.</p>
+        <div class="footer-links">
+            <a href="index.html">Beranda</a>
+            <a href="cek-in.html">Cek-in</a>
+            <a href="galeri.html">Galeri</a>
+            <a href="fasilitas.html">Fasilitas</a>
+            <a href="#">Daftar Harga</a>
+            <a href="#">Upload Pembayaran</a>
+            <a href="#">Kontak</a>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+    JAVASCRIPT - CMS READY
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ============================================================
+            // 📊 FASILITAS DATA (CMS Ready)
+            // ============================================================
+            const FASILITAS_DATA = {
+                // Ringkasan Cepat
+                summary: {
+                    totalRooms: 22,
+                    totalBathrooms: 12,
+                    wifiSpeed: '100 Mbps',
+                    parkingCapacity: 20,
+                    cctv: '24 Jam'
+                },
+
+                // Tipe Kamar
+                roomTypes: [{
+                    id: 'standard',
+                    name: 'Standard',
+                    price: 500000,
+                    icon: '🛏️',
+                    image: 'assets/img/room-standard.jpg',
+                    facilities: [
+                        { icon: '❄️', name: 'AC' },
+                        { icon: '🪑', name: 'Meja Belajar' },
+                        { icon: '🗄️', name: 'Lemari Pakaian' },
+                        { icon: '🚿', name: 'Kamar Mandi Dalam' },
+                        { icon: '💡', name: 'Lampu Baca' }
+                    ],
+                    popular: false,
+                    description: 'Kamar standar nyaman dengan fasilitas dasar.'
+                }, {
+                    id: 'deluxe',
+                    name: 'Deluxe',
+                    price: 650000,
+                    icon: '🛋️',
+                    image: 'assets/img/room-deluxe.jpg',
+                    facilities: [
+                        { icon: '❄️', name: 'AC' },
+                        { icon: '📺', name: 'TV 32"' },
+                        { icon: '🌅', name: 'Balkon' },
+                        { icon: '🚿', name: 'Kamar Mandi Dalam' },
+                        { icon: '🪑', name: 'Meja Belajar' },
+                        { icon: '🗄️', name: 'Lemari Pakaian' }
+                    ],
+                    popular: true,
+                    description: 'Kamar deluxe dengan balkon dan TV untuk kenyamanan ekstra.'
+                }, {
+                    id: 'vip',
+                    name: 'VIP',
+                    price: 850000,
+                    icon: '👑',
+                    image: 'assets/img/room-vip.jpg',
+                    facilities: [
+                        { icon: '❄️', name: 'AC' },
+                        { icon: '📺', name: 'TV 42"' },
+                        { icon: '🧊', name: 'Kulkas' },
+                        { icon: '🌅', name: 'Balkon' },
+                        { icon: '🌆', name: 'View Kota' },
+                        { icon: '🚿', name: 'Kamar Mandi Dalam' },
+                        { icon: '🪑', name: 'Meja Belajar' },
+                        { icon: '🗄️', name: 'Lemari Pakaian' }
+                    ],
+                    popular: false,
+                    description: 'Kamar VIP premium dengan fasilitas terbaik dan view kota.'
+                }],
+
+                // Fasilitas Properti
+                propertyFacilities: [{
+                    id: 'ruang-tamu',
+                    name: 'Ruang Tamu',
+                    icon: '🛋️',
+                    description: 'Ruang tamu luas dengan sofa dan TV',
+                    available: true
+                }, {
+                    id: 'dapur',
+                    name: 'Dapur Bersama',
+                    icon: '🍽️',
+                    description: 'Dapur dengan peralatan lengkap',
+                    available: true
+                }, {
+                    id: 'laundry',
+                    name: 'Laundry Service',
+                    icon: '🧺',
+                    description: 'Mesin cuci dan pengering',
+                    available: true
+                }, {
+                    id: 'parkir',
+                    name: 'Parkir Luas',
+                    icon: '🅿️',
+                    description: 'Area parkir yang aman',
+                    available: true
+                }, {
+                    id: 'cctv',
+                    name: 'CCTV 24 Jam',
+                    icon: '🔒',
+                    description: 'Keamanan 24 jam dengan CCTV',
+                    available: true
+                }, {
+                    id: 'wifi',
+                    name: 'WiFi Cepat',
+                    icon: '📶',
+                    description: 'WiFi 100 Mbps untuk semua penghuni',
+                    available: true
+                }, {
+                    id: 'gym',
+                    name: 'Gym / Fitness',
+                    icon: '🏋️',
+                    description: 'Peralatan gym lengkap',
+                    available: false
+                }, {
+                    id: 'taman',
+                    name: 'Taman',
+                    icon: '🌳',
+                    description: 'Taman hijau untuk relaksasi',
+                    available: true
+                }],
+
+                // Fasilitas Umum Terdekat
+                nearbyFacilities: [{
+                    id: 'rs',
+                    name: 'Rumah Sakit',
+                    icon: '🏥',
+                    distance: '5 menit',
+                    address: 'RS. Hasan Sadikin'
+                }, {
+                    id: 'supermarket',
+                    name: 'Supermarket',
+                    icon: '🛒',
+                    distance: '10 menit',
+                    address: 'Indomaret / Alfamart'
+                }, {
+                    id: 'kampus',
+                    name: 'Kampus',
+                    icon: '🎓',
+                    distance: '15 menit',
+                    address: 'UNPAD / ITB'
+                }, {
+                    id: 'halte',
+                    name: 'Halte Bus',
+                    icon: '🚌',
+                    distance: '5 menit',
+                    address: 'Halte Cisitu'
+                }, {
+                    id: 'stasiun',
+                    name: 'Stasiun Kereta',
+                    icon: '🚆',
+                    distance: '20 menit',
+                    address: 'Stasiun Bandung'
+                }, {
+                    id: 'warung',
+                    name: 'Warung Makan',
+                    icon: '🍜',
+                    distance: '2 menit',
+                    address: 'Warung Sunda'
+                }, {
+                    id: 'atm',
+                    name: 'ATM Center',
+                    icon: '🏧',
+                    distance: '3 menit',
+                    address: 'Bank BRI / BCA'
+                }, {
+                    id: 'spbu',
+                    name: 'SPBU',
+                    icon: '⛽',
+                    distance: '8 menit',
+                    address: 'SPBU Setiabudi'
+                }],
+
+                // Transportasi
+                transportation: [{
+                    id: 'gojek',
+                    name: 'Gojek',
+                    icon: '🛵',
+                    available: true,
+                    info: 'Estimasi 5 menit'
+                }, {
+                    id: 'grab',
+                    name: 'Grab',
+                    icon: '🚗',
+                    available: true,
+                    info: 'Estimasi 5 menit'
+                }, {
+                    id: 'taxi',
+                    name: 'Blue Bird Taxi',
+                    icon: '🚕',
+                    available: true,
+                    info: 'Estimasi 10 menit'
+                }, {
+                    id: 'bus',
+                    name: 'Bus Kota',
+                    icon: '🚌',
+                    available: true,
+                    info: 'Halte 5 menit'
+                }],
+
+                // Lokasi
+                location: {
+                    name: 'JDI KOSKITA',
+                    address: 'Jl. Merdeka No. 123, Kelurahan Sukajadi, Kecamatan Sukajadi, Kota Bandung, Jawa Barat 40162',
+                    gps: {
+                        lat: -6.9175,
+                        lng: 107.6191
+                    },
+                    googleMapsUrl: 'https://maps.google.com/maps?q=-6.9175,107.6191',
+                    wazeUrl: 'https://waze.com/ul?ll=-6.9175,107.6191&navigate=yes'
+                },
+
+                // Testimoni
+                testimonials: [{
+                    id: 1,
+                    name: 'Budi Santoso',
+                    room: 'A1',
+                    message: 'Fasilitas lengkap, AC dingin, WiFi cepat. Dekat ke kampus dan super market. Sangat recomended!',
+                    rating: 5,
+                    date: '2026-06-01'
+                }, {
+                    id: 2,
+                    name: 'Siti Rahayu',
+                    room: 'B3',
+                    message: 'Kamar nyaman, parkir luas, dan lingkungannya bersih. Owner ramah dan responsif.',
+                    rating: 5,
+                    date: '2026-06-15'
+                }, {
+                    id: 3,
+                    name: 'Andi Wijaya',
+                    room: 'C2',
+                    message: 'Lokasi strategis, dekat ke mana-mana. Fasilitas dapur dan laundry sangat membantu.',
+                    rating: 4,
+                    date: '2026-06-20'
+                }]
+            };
+
+            // ============================================================
+            // DOM REFS
+            // ============================================================
+            const quickSummary = document.getElementById('quickSummary');
+            const roomTypesGrid = document.getElementById('roomTypesGrid');
+            const propertyFacilitiesGrid = document.getElementById('propertyFacilitiesGrid');
+            const nearbyGrid = document.getElementById('nearbyGrid');
+            const transportGrid = document.getElementById('transportGrid');
+            const testimonialsGrid = document.getElementById('testimonialsGrid');
+            const mapWrapper = document.getElementById('mapWrapper');
+            const btnGoogleMaps = document.getElementById('btnGoogleMaps');
+            const btnWaze = document.getElementById('btnWaze');
+
+            // ============================================================
+            // RENDER QUICK SUMMARY
+            // ============================================================
+            function renderQuickSummary() {
+                const s = FASILITAS_DATA.summary;
+                quickSummary.innerHTML = `
+                    <div class="summary-item">
+                        <span class="summary-icon">🏠</span>
+                        <div class="summary-number">${s.totalRooms}</div>
+                        <div class="summary-label">Total Kamar</div>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-icon">🚿</span>
+                        <div class="summary-number">${s.totalBathrooms}</div>
+                        <div class="summary-label">Kamar Mandi</div>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-icon">📶</span>
+                        <div class="summary-number">${s.wifiSpeed}</div>
+                        <div class="summary-label">WiFi Speed</div>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-icon">🅿️</span>
+                        <div class="summary-number">${s.parkingCapacity}</div>
+                        <div class="summary-label">Kapasitas Parkir</div>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-icon">🔒</span>
+                        <div class="summary-number">${s.cctv}</div>
+                        <div class="summary-label">Keamanan</div>
+                    </div>
+                `;
+            }
+
+            // ============================================================
+            // RENDER ROOM TYPES
+            // ============================================================
+            function renderRoomTypes() {
+                const rooms = FASILITAS_DATA.roomTypes;
+                roomTypesGrid.innerHTML = '';
+
+                rooms.forEach(room => {
+                    const card = document.createElement('div');
+                    card.className = 'room-type-card';
+
+                    let facilitiesHTML = '';
+                    room.facilities.forEach(f => {
+                        facilitiesHTML += `
+                            <span class="facility-tag">
+                                <span class="tag-icon">${f.icon}</span> ${f.name}
+                            </span>
+                        `;
+                    });
+
+                    card.innerHTML = `
+                        ${room.popular ? '<span class="badge-populer">⭐ Populer</span>' : ''}
+                        <span class="room-type-icon">${room.icon}</span>
+                        <div class="room-type-name">${room.name}</div>
+                        <div class="room-type-price">
+                            Rp ${room.price.toLocaleString('id-ID')} / bulan
+                        </div>
+                        <div class="facility-list">${facilitiesHTML}</div>
+                        <p style="font-size:13px;color:#888;margin-top:10px;">${room.description}</p>
+                    `;
+
+                    // Coba load gambar jika ada
+                    if (room.image) {
+                        const img = document.createElement('img');
+                        img.src = room.image;
+                        img.className = 'room-image';
+                        img.alt = room.name;
+                        img.onerror = function() { this.style.display = 'none'; };
+                        card.prepend(img);
+                    }
+
+                    roomTypesGrid.appendChild(card);
+                });
+            }
+
+            // ============================================================
+            // RENDER PROPERTY FACILITIES
+            // ============================================================
+            function renderPropertyFacilities() {
+                const facilities = FASILITAS_DATA.propertyFacilities;
+                propertyFacilitiesGrid.innerHTML = '';
+
+                facilities.forEach(f => {
+                    const item = document.createElement('div');
+                    item.className = 'property-facility-item';
+                    item.innerHTML = `
+                        <span class="pf-icon">${f.icon}</span>
+                        <div class="pf-name">${f.name}</div>
+                        <div class="pf-desc">${f.description}</div>
+                        <span class="pf-status ${f.available ? 'available' : 'coming'}">
+                            ${f.available ? '✅ Tersedia' : '⏳ Coming Soon'}
+                        </span>
+                    `;
+                    propertyFacilitiesGrid.appendChild(item);
+                });
+            }
+
+            // ============================================================
+            // RENDER NEARBY FACILITIES
+            // ============================================================
+            function renderNearby() {
+                const nearby = FASILITAS_DATA.nearbyFacilities;
+                nearbyGrid.innerHTML = '';
+
+                nearby.forEach(n => {
+                    const item = document.createElement('div');
+                    item.className = 'nearby-item';
+                    item.innerHTML = `
+                        <span class="nearby-icon">${n.icon}</span>
+                        <div class="nearby-info">
+                            <div class="nearby-name">${n.name}</div>
+                            <div class="nearby-distance">⏱️ ${n.distance}</div>
+                            <div class="nearby-address">📍 ${n.address}</div>
+                        </div>
+                    `;
+                    nearbyGrid.appendChild(item);
+                });
+            }
+
+            // ============================================================
+            // RENDER TRANSPORTATION
+            // ============================================================
+            function renderTransportation() {
+                const transports = FASILITAS_DATA.transportation;
+                transportGrid.innerHTML = '';
+
+                transports.forEach(t => {
+                    const item = document.createElement('div');
+                    item.className = 'transport-item';
+                    item.innerHTML = `
+                        <span class="transport-icon">${t.icon}</span>
+                        <div class="transport-name">${t.name}</div>
+                        <div class="transport-info">
+                            <span class="${t.available ? 'available' : 'unavailable'}">
+                                ${t.available ? '✅ Tersedia' : '❌ Tidak Tersedia'}
+                            </span>
+                            <br />${t.info || ''}
+                        </div>
+                    `;
+                    transportGrid.appendChild(item);
+                });
+            }
+
+            // ============================================================
+            // RENDER MAP
+            // ============================================================
+            function renderMap() {
+                const loc = FASILITAS_DATA.location;
+                const mapsEmbedUrl =
+                    `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${loc.gps.lat},${loc.gps.lng}&zoom=15`;
+
+                mapWrapper.innerHTML = `
+                    <iframe 
+                        src="${mapsEmbedUrl}" 
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Peta Lokasi JDI KOSKITA"
+                    ></iframe>
+                `;
+
+                // Update tombol navigasi
+                btnGoogleMaps.href = loc.googleMapsUrl;
+                btnWaze.href = loc.wazeUrl;
+            }
+
+            // ============================================================
+            // RENDER TESTIMONIALS
+            // ============================================================
+            function renderTestimonials() {
+                const testimonials = FASILITAS_DATA.testimonials;
+                testimonialsGrid.innerHTML = '';
+
+                testimonials.forEach(t => {
+                    const card = document.createElement('div');
+                    card.className = 'testimonial-card';
+
+                    // Render stars
+                    let stars = '';
+                    for (let i = 0; i < 5; i++) {
+                        stars += i < t.rating ? '⭐' : '☆';
+                    }
+
+                    card.innerHTML = `
+                        <div class="testimonial-header">
+                            <span class="testi-name">${t.name}</span>
+                            <span class="testi-room">Kamar ${t.room}</span>
+                        </div>
+                        <div class="testimonial-stars">${stars}</div>
+                        <p class="testimonial-message">"${t.message}"</p>
+                        <span class="testimonial-date">📅 ${new Date(t.date).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'})}</span>
+                    `;
+                    testimonialsGrid.appendChild(card);
+                });
+            }
+
+            // ============================================================
+            // HAMBURGER MENU
+            // ============================================================
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('navMenu');
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', () => {
+                    navMenu.classList.toggle('open');
+                });
+
+                navMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth <= 576) {
+                            navMenu.classList.remove('open');
+                        }
+                    });
+                });
+            }
+
+            // ============================================================
+            // EXPOSE FOR CMS
+            // ============================================================
+            window.FasilitasCMS = {
+                data: FASILITAS_DATA,
+                renderAll: function() {
+                    renderQuickSummary();
+                    renderRoomTypes();
+                    renderPropertyFacilities();
+                    renderNearby();
+                    renderTransportation();
+                    renderMap();
+                    renderTestimonials();
+                },
+                updateSummary: function(newSummary) {
+                    Object.assign(FASILITAS_DATA.summary, newSummary);
+                    renderQuickSummary();
+                },
+                updateRoomTypes: function(newRooms) {
+                    FASILITAS_DATA.roomTypes = newRooms;
+                    renderRoomTypes();
+                },
+                updatePropertyFacilities: function(newFacilities) {
+                    FASILITAS_DATA.propertyFacilities = newFacilities;
+                    renderPropertyFacilities();
+                },
+                updateNearby: function(newNearby) {
+                    FASILITAS_DATA.nearbyFacilities = newNearby;
+                    renderNearby();
+                },
+                updateTransportation: function(newTransport) {
+                    FASILITAS_DATA.transportation = newTransport;
+                    renderTransportation();
+                },
+                updateTestimonials: function(newTestimonials) {
+                    FASILITAS_DATA.testimonials = newTestimonials;
+                    renderTestimonials();
+                },
+                updateLocation: function(newLocation) {
+                    Object.assign(FASILITAS_DATA.location, newLocation);
+                    renderMap();
+                }
+            };
+
+            // ============================================================
+            // INIT
+            // ============================================================
+            renderQuickSummary();
+            renderRoomTypes();
+            renderPropertyFacilities();
+            renderNearby();
+            renderTransportation();
+            renderMap();
+            renderTestimonials();
+
+            console.log('✅ JDI KOSKITA - Fasilitas CMS Ready');
+            console.log('📊 Data fasilitas dapat diedit melalui window.FasilitasCMS');
+            console.log('   Contoh: window.FasilitasCMS.updateSummary({ totalRooms: 25 })');
+            console.log('   Contoh: window.FasilitasCMS.updateTestimonials([...])');
+
+        })();
+    </script>
+
+</body>
+</html>
