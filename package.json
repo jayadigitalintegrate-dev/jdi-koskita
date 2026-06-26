@@ -1,0 +1,13 @@
+{
+  "name": "jdi-koskita",
+  "version": "1.0.0",
+  "description": "Smart Boarding House Management System",
+  "author": "Jaya Digital Integrate (JDI)",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "echo \"Starting JDI KOSKITA\"",
+    "dev": "echo \"Development Mode\"",
+    "build": "echo \"Build Project\""
+  }
+}
