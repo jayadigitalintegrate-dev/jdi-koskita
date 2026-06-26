@@ -130,7 +130,7 @@
         }
 
         /* ============================================================
-                   HERO SECTION
+                   HERO SECTION - SLIDER DENGAN 6 GAMBAR
                    ============================================================ */
         .hero {
             min-height: 92vh;
@@ -141,7 +141,7 @@
             overflow: hidden;
         }
 
-        /* Background Slider */
+        /* Background Slider - 6 Gambar */
         .hero-slider {
             position: absolute;
             inset: 0;
@@ -154,24 +154,34 @@
             background-size: cover;
             background-position: center;
             opacity: 0;
-            animation: slideAnimation 20s infinite;
+            animation: slideAnimation 30s infinite;
+            transition: opacity 1.5s ease;
         }
 
+        /* 6 Gambar dengan delay berbeda - PATH DIPERBAIKI */
         .hero-slider .slide:nth-child(1) {
-            background-image: url('assets/img/kos1.jpg');
+            background-image: url('assets/kost1.jpg');
             animation-delay: 0s;
         }
         .hero-slider .slide:nth-child(2) {
-            background-image: url('assets/img/kos2.jpg');
+            background-image: url('assets/kost2.jpg');
             animation-delay: 5s;
         }
         .hero-slider .slide:nth-child(3) {
-            background-image: url('assets/img/kost3.jpg');
+            background-image: url('assets/kost3.jpg');
             animation-delay: 10s;
         }
         .hero-slider .slide:nth-child(4) {
-            background-image: url('assets/img/kost4.jpg');
+            background-image: url('assets/kost4.jpg');
             animation-delay: 15s;
+        }
+        .hero-slider .slide:nth-child(5) {
+            background-image: url('assets/kost5.jpg');
+            animation-delay: 20s;
+        }
+        .hero-slider .slide:nth-child(6) {
+            background-image: url('assets/kost6.jpg');
+            animation-delay: 25s;
         }
 
         @keyframes slideAnimation {
@@ -179,15 +189,15 @@
                 opacity: 0;
                 transform: scale(1.05);
             }
-            8% {
+            6% {
                 opacity: 1;
                 transform: scale(1);
             }
-            22% {
+            20% {
                 opacity: 1;
                 transform: scale(1);
             }
-            30% {
+            26% {
                 opacity: 0;
                 transform: scale(1.03);
             }
@@ -402,7 +412,7 @@
         }
 
         /* ============================================================
-                   SLIDER INDICATOR DOTS
+                   SLIDER INDICATOR DOTS (6 Dots)
                    ============================================================ */
         .slider-dots {
             position: absolute;
@@ -704,6 +714,54 @@
             }
         }
 
+        @media (max-width: 768px) {
+            .hero-slider .slide {
+                animation: slideAnimationMobile 24s infinite;
+            }
+
+            @keyframes slideAnimationMobile {
+                0% {
+                    opacity: 0;
+                    transform: scale(1.05);
+                }
+                5% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                18% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                23% {
+                    opacity: 0;
+                    transform: scale(1.03);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(1.03);
+                }
+            }
+
+            .hero-slider .slide:nth-child(1) {
+                animation-delay: 0s;
+            }
+            .hero-slider .slide:nth-child(2) {
+                animation-delay: 4s;
+            }
+            .hero-slider .slide:nth-child(3) {
+                animation-delay: 8s;
+            }
+            .hero-slider .slide:nth-child(4) {
+                animation-delay: 12s;
+            }
+            .hero-slider .slide:nth-child(5) {
+                animation-delay: 16s;
+            }
+            .hero-slider .slide:nth-child(6) {
+                animation-delay: 20s;
+            }
+        }
+
         @media (max-width: 576px) {
             header {
                 padding: 10px 16px;
@@ -825,8 +883,9 @@
     ============================================================ -->
     <header>
         <div class="header-container">
+            <!-- LOGO KIRI - PATH DIPERBAIKI -->
             <div class="logo">
-                <img src="assets/img/logo-jdi.png" alt="Logo JDI KOSKITA" />
+                <img src="assets/logo-jdi.png" alt="Logo JDI KOSKITA" />
                 <div>
                     <h2>JDI <span>KOSKITA</span></h2>
                     <p>Smart Boarding House Management System</p>
@@ -840,27 +899,29 @@
                 <span></span>
             </div>
 
-            <!-- Navigation - SEMUA LINK SUDAH DI PERBAIKI -->
+            <!-- Navigation -->
             <nav class="nav-menu" id="navMenu">
-    <a href="./index.html">Beranda</a>
-    <a href="./cek-in.html">Cek-in</a>
-    <a href="./galeri.html">Galeri</a>
-    <a href="#">Fasilitas</a>
-    <a href="#">Daftar Harga</a>
-    <a href="#">Upload Pembayaran</a>
-    <a href="#">Kontak</a>
-    <a href="#" class="btn-login">Login Tamu</a>
-    <a href="#" class="btn-login">Login Admin</a>
-</nav>
+                <a href="index.html">Beranda</a>
+                <a href="cek-in.html">Cek-in</a>
+                <a href="galeri.html">Galeri</a>
+                <a href="#">Fasilitas</a>
+                <a href="#">Daftar Harga</a>
+                <a href="#">Upload Pembayaran</a>
+                <a href="#">Kontak</a>
+                <a href="#" class="btn-login">Login Tamu</a>
+                <a href="#" class="btn-login">Login Admin</a>
+            </nav>
         </div>
     </header>
 
     <!-- ============================================================
-    HERO SECTION
+    HERO SECTION - SLIDER DENGAN 6 GAMBAR
     ============================================================ -->
     <section class="hero">
-        <!-- Background Slider -->
+        <!-- Background Slider - 6 Gambar -->
         <div class="hero-slider">
+            <div class="slide"></div>
+            <div class="slide"></div>
             <div class="slide"></div>
             <div class="slide"></div>
             <div class="slide"></div>
@@ -874,9 +935,11 @@
             <div class="shape"></div>
         </div>
 
-        <!-- Slider Dots -->
+        <!-- Slider Dots - 6 Dots -->
         <div class="slider-dots">
             <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
             <span class="dot"></span>
             <span class="dot"></span>
             <span class="dot"></span>
@@ -900,7 +963,7 @@
 
             <div class="hero-video">
                 <div class="video-wrapper">
-                    <video controls poster="assets/img/kos1.jpg">
+                    <video controls poster="assets/kost1.jpg">
                         <source src="assets/video/jdiiklan.mp4" type="video/mp4" />
                         Browser Anda tidak mendukung video.
                     </video>
@@ -991,18 +1054,31 @@
             'use strict';
 
             // ============================================
-            // 1. SLIDER DOTS
+            // 1. SLIDER DOTS - 6 DOTS
             // ============================================
             const dots = document.querySelectorAll('.dot');
             let currentDot = 0;
+            const totalDots = dots.length;
 
+            // Auto rotate dots every 5 seconds
             setInterval(function() {
                 dots.forEach(function(d) {
                     d.classList.remove('active');
                 });
-                currentDot = (currentDot + 1) % dots.length;
+                currentDot = (currentDot + 1) % totalDots;
                 dots[currentDot].classList.add('active');
             }, 5000);
+
+            // Klik dot untuk pindah slide
+            dots.forEach(function(dot, index) {
+                dot.addEventListener('click', function() {
+                    dots.forEach(function(d) {
+                        d.classList.remove('active');
+                    });
+                    dot.classList.add('active');
+                    currentDot = index;
+                });
+            });
 
             // ============================================
             // 2. VIDEO PLAY BUTTON
@@ -1054,6 +1130,26 @@
                     });
                 });
             }
+
+            // ============================================
+            // 4. PRELOAD GAMBAR AGAR SLIDER SMOOTH
+            // ============================================
+            const images = [
+                'assets/kost1.jpg',
+                'assets/kost2.jpg',
+                'assets/kost3.jpg',
+                'assets/kost4.jpg',
+                'assets/kost5.jpg',
+                'assets/kost6.jpg'
+            ];
+
+            images.forEach(function(src) {
+                const img = new Image();
+                img.src = src;
+            });
+
+            console.log('✅ JDI KOSKITA - Slider dengan 6 gambar siap!');
+            console.log('📸 Gambar: kost1.jpg - kost6.jpg');
 
         })();
     </script>
