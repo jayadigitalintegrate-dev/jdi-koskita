@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - JDI KOSKITA</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js">
+    </script>
     <style>
         /* ============================================================
            RESET & BASE
@@ -26,31 +31,53 @@
         }
 
         /* ============================================================
-           SIDEBAR
+           SIDEBAR - DENGAN SCROLLBAR
            ============================================================ */
         .sidebar {
             width: 260px;
             background: #0A2E6D;
             color: #fff;
             min-height: 100vh;
+            height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
             z-index: 1000;
             transition: 0.3s;
             overflow-y: auto;
+            overflow-x: hidden;
             padding-bottom: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* Scrollbar - Webkit (Chrome, Safari, Edge) */
         .sidebar::-webkit-scrollbar {
-            width: 4px;
+            width: 6px;
+            height: 6px;
         }
         .sidebar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
         }
         .sidebar::-webkit-scrollbar-thumb {
             background: #FF7A00;
-            border-radius: 4px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #e06a00;
+        }
+
+        /* Scrollbar - Firefox */
+        .sidebar {
+            scrollbar-width: thin;
+            scrollbar-color: #FF7A00 rgba(255, 255, 255, 0.08);
+        }
+
+        /* Scrollbar - IE/Edge */
+        .sidebar {
+            -ms-overflow-style: -ms-autohiding-scrollbar;
         }
 
         .sidebar-brand {
@@ -59,6 +86,11 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            background: #0A2E6D;
+            z-index: 10;
         }
 
         .sidebar-brand .brand-icon {
@@ -79,7 +111,9 @@
 
         .sidebar-menu {
             padding: 12px 0;
+            flex: 1;
         }
+
         .sidebar-menu .menu-label {
             padding: 12px 24px 6px;
             font-size: 11px;
@@ -89,7 +123,6 @@
             font-weight: 600;
         }
 
-        /* Dropdown Menu */
         .menu-group {
             overflow: hidden;
         }
@@ -109,6 +142,7 @@
             background: none;
             border: none;
             text-align: left;
+            font-family: inherit;
         }
 
         .menu-group .menu-toggle:hover {
@@ -149,7 +183,7 @@
         }
 
         .menu-group .sub-menu.open {
-            max-height: 600px;
+            max-height: 800px;
             opacity: 1;
         }
 
@@ -164,6 +198,11 @@
             cursor: pointer;
             font-size: 13px;
             border-left: 3px solid transparent;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
         }
 
         .menu-group .sub-menu .menu-item:hover {
@@ -190,6 +229,73 @@
             padding: 1px 10px;
             border-radius: 12px;
             font-weight: 600;
+        }
+
+        .sidebar-menu>.menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: 0.3s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .sidebar-menu>.menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .sidebar-menu>.menu-item.active {
+            background: rgba(255, 122, 0, 0.15);
+            color: #FF7A00;
+            border-left-color: #FF7A00;
+        }
+
+        .sidebar-menu>.menu-item .icon {
+            font-size: 18px;
+            min-width: 24px;
+        }
+
+        /* Scroll Indicator */
+        .sidebar-scroll-indicator {
+            display: none;
+            text-align: center;
+            padding: 8px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            flex-shrink: 0;
+            background: #0A2E6D;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .sidebar-scroll-indicator.show {
+            display: block;
+        }
+
+        .sidebar-scroll-indicator .scroll-arrow {
+            animation: bounceArrow 2s infinite;
+            display: inline-block;
+        }
+
+        @keyframes bounceArrow {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(4px);
+            }
         }
 
         /* ============================================================
@@ -339,6 +445,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            font-size: 14px;
         }
         .content-section .section-header .btn-add:hover {
             background: #e06a00;
@@ -541,7 +648,7 @@
         }
 
         /* ============================================================
-           MODAL - TAMBAH ADMIN
+           MODAL - DENGAN UPLOAD
            ============================================================ */
         .modal-overlay {
             display: none;
@@ -560,13 +667,25 @@
         .modal-box {
             background: #fff;
             border-radius: 16px;
-            max-width: 520px;
+            max-width: 600px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
             padding: 30px;
             animation: modalFadeIn 0.3s ease;
             box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-box::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal-box::-webkit-scrollbar-track {
+            background: #f0f4f9;
+            border-radius: 10px;
+        }
+        .modal-box::-webkit-scrollbar-thumb {
+            background: #FF7A00;
+            border-radius: 10px;
         }
 
         @keyframes modalFadeIn {
@@ -634,6 +753,136 @@
             box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.1);
         }
 
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            background: #fafcff;
+            position: relative;
+        }
+        .upload-area:hover {
+            border-color: #FF7A00;
+            background: #fff8f0;
+        }
+        .upload-area.dragover {
+            border-color: #FF7A00;
+            background: #fff0e0;
+        }
+        .upload-area .upload-icon {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .upload-area .upload-text {
+            color: #888;
+            font-size: 14px;
+        }
+        .upload-area .upload-text strong {
+            color: #FF7A00;
+        }
+        .upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-preview {
+            margin-top: 12px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: #f0f4f9;
+            border-radius: 8px;
+        }
+        .upload-preview.show {
+            display: flex;
+        }
+        .upload-preview .preview-thumb {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            object-fit: cover;
+            background: #ddd;
+        }
+        .upload-preview .preview-info {
+            flex: 1;
+            font-size: 13px;
+            color: #555;
+        }
+        .upload-preview .preview-info .filename {
+            font-weight: 600;
+            color: #0A2E6D;
+        }
+        .upload-preview .btn-remove-file {
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .upload-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .upload-options .option-btn {
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 2px solid #ddd;
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+            color: #555;
+        }
+        .upload-options .option-btn:hover {
+            border-color: #FF7A00;
+            color: #FF7A00;
+        }
+        .upload-options .option-btn.active {
+            border-color: #FF7A00;
+            background: #FF7A00;
+            color: #fff;
+        }
+
+        .upload-progress {
+            display: none;
+            margin-top: 8px;
+        }
+        .upload-progress.show {
+            display: block;
+        }
+        .upload-progress .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9edf2;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .upload-progress .progress-bar .progress-fill {
+            height: 100%;
+            background: #FF7A00;
+            border-radius: 4px;
+            transition: 0.3s;
+            width: 0%;
+        }
+        .upload-progress .progress-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
         .modal-box .level-info {
             font-size: 13px;
             color: #666;
@@ -676,6 +925,11 @@
             background: #e06a00;
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(255, 122, 0, 0.3);
+        }
+        .modal-box .form-actions .btn-save:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         /* Sidebar Overlay */
@@ -757,12 +1011,48 @@
             }
             .modal-box {
                 padding: 20px;
+                max-width: 95%;
             }
         }
 
         @media (min-width: 993px) {
             .sidebar {
                 transform: translateX(0) !important;
+            }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 14px 24px;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 600;
+            z-index: 99999;
+            animation: slideUp 0.4s ease;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+        }
+        .toast.success {
+            background: #28a745;
+        }
+        .toast.error {
+            background: #dc3545;
+        }
+        .toast.info {
+            background: #17a2b8;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
     </style>
@@ -773,13 +1063,230 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- ============================================================
+    MODAL TAMBAH BANNER (DENGAN UPLOAD)
+    ============================================================ -->
+    <div class="modal-overlay" id="modalBanner">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>🖼️ Tambah Banner</h3>
+                <button class="modal-close" onclick="closeModal('modalBanner')">✕</button>
+            </div>
+            <form id="formBanner" onsubmit="saveBanner(event)">
+                <div class="form-group">
+                    <label>Judul Banner <span class="required">*</span></label>
+                    <input type="text" id="bannerTitle" placeholder="Masukkan judul banner" required />
+                </div>
+
+                <!-- Upload Area -->
+                <div class="form-group">
+                    <label>Upload Gambar <span class="required">*</span></label>
+                    <div class="upload-area" id="bannerUploadArea">
+                        <span class="upload-icon">🖼️</span>
+                        <div class="upload-text">
+                            <strong>Klik atau drag & drop</strong> untuk upload gambar<br />
+                            <span style="font-size:12px;color:#aaa;">Format: JPG, PNG, WEBP (Max 5MB)</span>
+                        </div>
+                        <input type="file" id="bannerFile" accept="image/*" onchange="handleFileUpload(this, 'banner')" />
+                    </div>
+                    <div class="upload-preview" id="bannerPreview">
+                        <img class="preview-thumb" id="bannerPreviewImg" src="" alt="Preview" />
+                        <div class="preview-info">
+                            <div class="filename" id="bannerPreviewName">file.jpg</div>
+                            <span style="font-size:12px;color:#999;" id="bannerPreviewSize">0 KB</span>
+                        </div>
+                        <button type="button" class="btn-remove-file" onclick="removeFile('banner')">✕</button>
+                    </div>
+
+                    <div class="upload-options">
+                        <button type="button" class="option-btn active" onclick="setUploadType('banner', 'upload')">📤 Upload File</button>
+                        <button type="button" class="option-btn" onclick="setUploadType('banner', 'external')">🔗 Link External</button>
+                    </div>
+
+                    <div id="bannerExternalInput" style="display:none;margin-top:8px;">
+                        <input type="text" id="bannerExternalUrl" placeholder="https://example.com/gambar.jpg" />
+                        <small style="color:#888;font-size:12px;">Masukkan URL gambar dari hosting eksternal</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Link URL (opsional)</label>
+                    <input type="text" id="bannerLink" placeholder="https://example.com/halaman" />
+                    <small style="color:#888;font-size:12px;">URL tujuan saat banner diklik</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="bannerStatus">
+                        <option value="active">✅ Aktif (Tampil di Website)</option>
+                        <option value="draft">📝 Draft (Tidak Tampil)</option>
+                    </select>
+                </div>
+
+                <div class="upload-progress" id="bannerProgress">
+                    <div class="progress-bar"><div class="progress-fill" id="bannerProgressFill"></div></div>
+                    <div class="progress-text" id="bannerProgressText">Mengupload 0%</div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modalBanner')">Batal</button>
+                    <button type="submit" class="btn-save" id="bannerSaveBtn">💾 Simpan Banner</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    MODAL TAMBAH GALERI (DENGAN UPLOAD)
+    ============================================================ -->
+    <div class="modal-overlay" id="modalGaleri">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>📸 Tambah Foto Galeri</h3>
+                <button class="modal-close" onclick="closeModal('modalGaleri')">✕</button>
+            </div>
+            <form id="formGaleri" onsubmit="saveGaleri(event)">
+                <div class="form-group">
+                    <label>Judul Foto <span class="required">*</span></label>
+                    <input type="text" id="galeriTitle" placeholder="Masukkan judul foto" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Foto</label>
+                    <div class="upload-area" id="galeriUploadArea">
+                        <span class="upload-icon">📸</span>
+                        <div class="upload-text">
+                            <strong>Klik atau drag & drop</strong> untuk upload foto<br />
+                            <span style="font-size:12px;color:#aaa;">Format: JPG, PNG, WEBP (Max 5MB)</span>
+                        </div>
+                        <input type="file" id="galeriFile" accept="image/*" onchange="handleFileUpload(this, 'galeri')" />
+                    </div>
+                    <div class="upload-preview" id="galeriPreview">
+                        <img class="preview-thumb" id="galeriPreviewImg" src="" alt="Preview" />
+                        <div class="preview-info">
+                            <div class="filename" id="galeriPreviewName">file.jpg</div>
+                            <span style="font-size:12px;color:#999;" id="galeriPreviewSize">0 KB</span>
+                        </div>
+                        <button type="button" class="btn-remove-file" onclick="removeFile('galeri')">✕</button>
+                    </div>
+
+                    <div class="upload-options">
+                        <button type="button" class="option-btn active" onclick="setUploadType('galeri', 'upload')">📤 Upload File</button>
+                        <button type="button" class="option-btn" onclick="setUploadType('galeri', 'external')">🔗 Link External</button>
+                    </div>
+
+                    <div id="galeriExternalInput" style="display:none;margin-top:8px;">
+                        <input type="text" id="galeriExternalUrl" placeholder="https://example.com/foto.jpg" />
+                        <small style="color:#888;font-size:12px;">Masukkan URL gambar dari hosting eksternal</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="galeriKategori">
+                        <option value="kamar">🏠 Kamar</option>
+                        <option value="fasilitas">⭐ Fasilitas</option>
+                        <option value="lingkungan">🌳 Lingkungan</option>
+                        <option value="event">🎉 Event</option>
+                        <option value="lainnya">📁 Lainnya</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Deskripsi</label>
+                    <textarea id="galeriDescription" placeholder="Deskripsi foto (opsional)" rows="2"></textarea>
+                </div>
+
+                <div class="upload-progress" id="galeriProgress">
+                    <div class="progress-bar"><div class="progress-fill" id="galeriProgressFill"></div></div>
+                    <div class="progress-text" id="galeriProgressText">Mengupload 0%</div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modalGaleri')">Batal</button>
+                    <button type="submit" class="btn-save" id="galeriSaveBtn">💾 Simpan Foto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    MODAL TAMBAH VIDEO (DENGAN UPLOAD)
+    ============================================================ -->
+    <div class="modal-overlay" id="modalVideo">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>🎬 Tambah Video</h3>
+                <button class="modal-close" onclick="closeModal('modalVideo')">✕</button>
+            </div>
+            <form id="formVideo" onsubmit="saveVideo(event)">
+                <div class="form-group">
+                    <label>Judul Video <span class="required">*</span></label>
+                    <input type="text" id="videoTitle" placeholder="Masukkan judul video" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Video</label>
+                    <div class="upload-area" id="videoUploadArea">
+                        <span class="upload-icon">🎬</span>
+                        <div class="upload-text">
+                            <strong>Klik atau drag & drop</strong> untuk upload video<br />
+                            <span style="font-size:12px;color:#aaa;">Format: MP4, WEBM (Max 50MB)</span>
+                        </div>
+                        <input type="file" id="videoFile" accept="video/*" onchange="handleFileUpload(this, 'video')" />
+                    </div>
+                    <div class="upload-preview" id="videoPreview">
+                        <div class="preview-info">
+                            <div class="filename" id="videoPreviewName">file.mp4</div>
+                            <span style="font-size:12px;color:#999;" id="videoPreviewSize">0 KB</span>
+                        </div>
+                        <button type="button" class="btn-remove-file" onclick="removeFile('video')">✕</button>
+                    </div>
+
+                    <div class="upload-options">
+                        <button type="button" class="option-btn active" onclick="setUploadType('video', 'upload')">📤 Upload File</button>
+                        <button type="button" class="option-btn" onclick="setUploadType('video', 'external')">🔗 Link External</button>
+                    </div>
+
+                    <div id="videoExternalInput" style="display:none;margin-top:8px;">
+                        <input type="text" id="videoExternalUrl" placeholder="https://www.youtube.com/embed/xxx" />
+                        <small style="color:#888;font-size:12px;">URL YouTube embed atau link video eksternal</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Deskripsi</label>
+                    <textarea id="videoDescription" placeholder="Deskripsi video (opsional)" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="videoStatus">
+                        <option value="active">✅ Aktif (Tampil di Website)</option>
+                        <option value="draft">📝 Draft (Tidak Tampil)</option>
+                    </select>
+                </div>
+
+                <div class="upload-progress" id="videoProgress">
+                    <div class="progress-bar"><div class="progress-fill" id="videoProgressFill"></div></div>
+                    <div class="progress-text" id="videoProgressText">Mengupload 0%</div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modalVideo')">Batal</button>
+                    <button type="submit" class="btn-save" id="videoSaveBtn">💾 Simpan Video</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
     MODAL TAMBAH ADMIN
     ============================================================ -->
     <div class="modal-overlay" id="modalAdmin">
         <div class="modal-box">
             <div class="modal-header">
                 <h3>➕ Tambah Admin Baru</h3>
-                <button class="modal-close" onclick="closeModalAdmin()">✕</button>
+                <button class="modal-close" onclick="closeModal('modalAdmin')">✕</button>
             </div>
             <form id="formAdmin" onsubmit="saveAdmin(event)">
                 <div class="form-group">
@@ -819,7 +1326,7 @@
                     <span id="levelDescription">Pilih level akses untuk melihat deskripsi</span>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn-cancel" onclick="closeModalAdmin()">Batal</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal('modalAdmin')">Batal</button>
                     <button type="submit" class="btn-save">💾 Simpan Admin</button>
                 </div>
             </form>
@@ -827,45 +1334,7 @@
     </div>
 
     <!-- ============================================================
-    MODAL TAMBAH VIDEO
-    ============================================================ -->
-    <div class="modal-overlay" id="modalVideo">
-        <div class="modal-box">
-            <div class="modal-header">
-                <h3>🎬 Tambah Video Baru</h3>
-                <button class="modal-close" onclick="closeModalVideo()">✕</button>
-            </div>
-            <form id="formVideo" onsubmit="saveVideo(event)">
-                <div class="form-group">
-                    <label>Judul Video <span class="required">*</span></label>
-                    <input type="text" id="videoTitle" placeholder="Masukkan judul video" required />
-                </div>
-                <div class="form-group">
-                    <label>URL Video <span class="required">*</span></label>
-                    <input type="text" id="videoUrl" placeholder="assets/video/nama_file.mp4 atau URL YouTube" required />
-                    <small style="color:#888;font-size:12px;">Contoh: assets/video/jdiiklan.mp4 atau https://www.youtube.com/embed/xxx</small>
-                </div>
-                <div class="form-group">
-                    <label>Deskripsi</label>
-                    <textarea id="videoDescription" placeholder="Deskripsi video (opsional)" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Status</label>
-                    <select id="videoStatus">
-                        <option value="active">✅ Aktif (Tampil di Website)</option>
-                        <option value="draft">📝 Draft (Tidak Tampil)</option>
-                    </select>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn-cancel" onclick="closeModalVideo()">Batal</button>
-                    <button type="submit" class="btn-save">💾 Simpan Video</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ============================================================
-    SIDEBAR - DROPDOWN MENU
+    SIDEBAR
     ============================================================ -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
@@ -877,31 +1346,24 @@
         </div>
 
         <nav class="sidebar-menu" id="sidebarMenu">
-            <!-- Main -->
             <div class="menu-label">Main</div>
-            <a class="menu-item" data-section="dashboard" style="display:flex;align-items:center;gap:12px;padding:10px 20px;color:rgba(255,255,255,0.7);text-decoration:none;cursor:pointer;border-left:3px solid transparent;font-size:14px;">
+            <button class="menu-item active" data-section="dashboard">
                 <span class="icon">📊</span> Dashboard
-            </a>
+            </button>
 
-            <!-- Manajemen Kamar - Dropdown -->
             <div class="menu-label">Manajemen Kamar</div>
             <div class="menu-group">
                 <button class="menu-toggle" onclick="toggleMenu(this)">
                     <span class="icon">🏠</span> Manajemen Kamar
                     <span class="arrow">▶</span>
-                    <span class="badge">12</span>
+                    <span class="badge" id="roomBadge">12</span>
                 </button>
                 <div class="sub-menu">
-                    <a class="menu-item" data-section="visual-kamar">
-                        <span class="icon">📊</span> Visual Kamar
-                    </a>
-                    <a class="menu-item" data-section="kamar">
-                        <span class="icon">📋</span> Data Kamar
-                    </a>
+                    <button class="menu-item" data-section="visual-kamar"><span class="icon">📊</span> Visual Kamar</button>
+                    <button class="menu-item" data-section="kamar"><span class="icon">📋</span> Data Kamar</button>
                 </div>
             </div>
 
-            <!-- Master Data - Dropdown -->
             <div class="menu-label">Master Data</div>
             <div class="menu-group">
                 <button class="menu-toggle" onclick="toggleMenu(this)">
@@ -909,24 +1371,13 @@
                     <span class="arrow">▶</span>
                 </button>
                 <div class="sub-menu">
-                    <a class="menu-item" data-section="penghuni">
-                        <span class="icon">👤</span> Penghuni
-                        <span class="badge">8</span>
-                    </a>
-                    <a class="menu-item" data-section="fasilitas">
-                        <span class="icon">⭐</span> Fasilitas
-                    </a>
-                    <a class="menu-item" data-section="harga">
-                        <span class="icon">💰</span> Harga
-                    </a>
-                    <a class="menu-item" data-section="booking">
-                        <span class="icon">📅</span> Booking
-                        <span class="badge">3</span>
-                    </a>
+                    <button class="menu-item" data-section="penghuni"><span class="icon">👤</span> Penghuni <span class="badge" id="tenantBadge">8</span></button>
+                    <button class="menu-item" data-section="fasilitas"><span class="icon">⭐</span> Fasilitas</button>
+                    <button class="menu-item" data-section="harga"><span class="icon">💰</span> Harga</button>
+                    <button class="menu-item" data-section="booking"><span class="icon">📅</span> Booking <span class="badge">3</span></button>
                 </div>
             </div>
 
-            <!-- Transaksi - Dropdown -->
             <div class="menu-label">Transaksi</div>
             <div class="menu-group">
                 <button class="menu-toggle" onclick="toggleMenu(this)">
@@ -934,25 +1385,14 @@
                     <span class="arrow">▶</span>
                 </button>
                 <div class="sub-menu">
-                    <a class="menu-item" data-section="checkin">
-                        <span class="icon">✅</span> Check In
-                    </a>
-                    <a class="menu-item" data-section="checkout">
-                        <span class="icon">🚪</span> Check Out
-                    </a>
-                    <a class="menu-item" data-section="pembayaran">
-                        <span class="icon">💳</span> Pembayaran
-                    </a>
-                    <a class="menu-item" data-section="tagihan">
-                        <span class="icon">📄</span> Tagihan
-                    </a>
-                    <a class="menu-item" data-section="deposit">
-                        <span class="icon">🏦</span> Deposit
-                    </a>
+                    <button class="menu-item" data-section="checkin"><span class="icon">✅</span> Check In</button>
+                    <button class="menu-item" data-section="checkout"><span class="icon">🚪</span> Check Out</button>
+                    <button class="menu-item" data-section="pembayaran"><span class="icon">💳</span> Pembayaran</button>
+                    <button class="menu-item" data-section="tagihan"><span class="icon">📄</span> Tagihan</button>
+                    <button class="menu-item" data-section="deposit"><span class="icon">🏦</span> Deposit</button>
                 </div>
             </div>
 
-            <!-- Akuntansi & Keuangan - Dropdown -->
             <div class="menu-label">Akuntansi & Keuangan</div>
             <div class="menu-group">
                 <button class="menu-toggle" onclick="toggleMenu(this)">
@@ -960,28 +1400,15 @@
                     <span class="arrow">▶</span>
                 </button>
                 <div class="sub-menu">
-                    <a class="menu-item" data-section="kas-besar">
-                        <span class="icon">🏛️</span> Kas Besar
-                    </a>
-                    <a class="menu-item" data-section="kas-kecil">
-                        <span class="icon">💰</span> Kas Kecil
-                    </a>
-                    <a class="menu-item" data-section="pemasukan">
-                        <span class="icon">📈</span> Pemasukan
-                    </a>
-                    <a class="menu-item" data-section="pengeluaran">
-                        <span class="icon">📉</span> Pengeluaran
-                    </a>
-                    <a class="menu-item" data-section="neraca-laba">
-                        <span class="icon">📊</span> Neraca Laba
-                    </a>
-                    <a class="menu-item" data-section="laporan-statistik">
-                        <span class="icon">📋</span> Laporan Statistik
-                    </a>
+                    <button class="menu-item" data-section="kas-besar"><span class="icon">🏛️</span> Kas Besar</button>
+                    <button class="menu-item" data-section="kas-kecil"><span class="icon">💰</span> Kas Kecil</button>
+                    <button class="menu-item" data-section="pemasukan"><span class="icon">📈</span> Pemasukan</button>
+                    <button class="menu-item" data-section="pengeluaran"><span class="icon">📉</span> Pengeluaran</button>
+                    <button class="menu-item" data-section="neraca-laba"><span class="icon">📊</span> Neraca Laba</button>
+                    <button class="menu-item" data-section="laporan-statistik"><span class="icon">📋</span> Laporan Statistik</button>
                 </div>
             </div>
 
-            <!-- CMS Website - Dropdown -->
             <div class="menu-label">CMS Website</div>
             <div class="menu-group">
                 <button class="menu-toggle" onclick="toggleMenu(this)">
@@ -989,38 +1416,18 @@
                     <span class="arrow">▶</span>
                 </button>
                 <div class="sub-menu">
-                    <a class="menu-item" data-section="homepage">
-                        <span class="icon">🏠</span> Homepage
-                    </a>
-                    <a class="menu-item" data-section="banner">
-                        <span class="icon">🖼️</span> Banner
-                    </a>
-                    <a class="menu-item" data-section="galeri-cms">
-                        <span class="icon">📸</span> Galeri
-                    </a>
-                    <a class="menu-item" data-section="video-cms">
-                        <span class="icon">🎬</span> Video
-                        <span class="badge" id="videoBadge">3</span>
-                    </a>
-                    <a class="menu-item" data-section="daftar-harga-cms">
-                        <span class="icon">💰</span> Daftar Harga
-                    </a>
-                    <a class="menu-item" data-section="kontak-cms">
-                        <span class="icon">📞</span> Kontak
-                    </a>
-                    <a class="menu-item" data-section="testimoni">
-                        <span class="icon">💬</span> Testimoni
-                    </a>
-                    <a class="menu-item" data-section="faq">
-                        <span class="icon">❓</span> FAQ
-                    </a>
-                    <a class="menu-item" data-section="pengumuman">
-                        <span class="icon">📢</span> Pengumuman
-                    </a>
+                    <button class="menu-item" data-section="homepage"><span class="icon">🏠</span> Homepage</button>
+                    <button class="menu-item" data-section="banner"><span class="icon">🖼️</span> Banner <span class="badge" id="bannerBadge">0</span></button>
+                    <button class="menu-item" data-section="galeri-cms"><span class="icon">📸</span> Galeri <span class="badge" id="galeriBadge">0</span></button>
+                    <button class="menu-item" data-section="video-cms"><span class="icon">🎬</span> Video <span class="badge" id="videoBadge">2</span></button>
+                    <button class="menu-item" data-section="daftar-harga-cms"><span class="icon">💰</span> Daftar Harga</button>
+                    <button class="menu-item" data-section="kontak-cms"><span class="icon">📞</span> Kontak</button>
+                    <button class="menu-item" data-section="testimoni"><span class="icon">💬</span> Testimoni</button>
+                    <button class="menu-item" data-section="faq"><span class="icon">❓</span> FAQ</button>
+                    <button class="menu-item" data-section="pengumuman"><span class="icon">📢</span> Pengumuman</button>
                 </div>
             </div>
 
-            <!-- Marketing - Dropdown -->
             <div class="menu-label">Marketing</div>
             <div class="menu-group">
                 <button class="menu-toggle" onclick="toggleMenu(this)">
@@ -1028,20 +1435,12 @@
                     <span class="arrow">▶</span>
                 </button>
                 <div class="sub-menu">
-                    <a class="menu-item" data-section="promo">
-                        <span class="icon">🏷️</span> Promo
-                    </a>
-                    <a class="menu-item" data-section="voucher">
-                        <span class="icon">🎫</span> Voucher
-                    </a>
-                    <a class="menu-item" data-section="pesan-pengunjung">
-                        <span class="icon">📩</span> Pesan Pengunjung
-                        <span class="badge">5</span>
-                    </a>
+                    <button class="menu-item" data-section="promo"><span class="icon">🏷️</span> Promo</button>
+                    <button class="menu-item" data-section="voucher"><span class="icon">🎫</span> Voucher</button>
+                    <button class="menu-item" data-section="pesan-pengunjung"><span class="icon">📩</span> Pesan Pengunjung <span class="badge">5</span></button>
                 </div>
             </div>
 
-            <!-- User Management - Dropdown -->
             <div class="menu-label">User Management</div>
             <div class="menu-group">
                 <button class="menu-toggle" onclick="toggleMenu(this)">
@@ -1049,17 +1448,11 @@
                     <span class="arrow">▶</span>
                 </button>
                 <div class="sub-menu">
-                    <a class="menu-item" data-section="admin-user">
-                        <span class="icon">👨‍💼</span> Admin
-                        <span class="badge" id="adminBadge">3</span>
-                    </a>
-                    <a class="menu-item" data-section="role">
-                        <span class="icon">🔑</span> Role & Hak Akses
-                    </a>
+                    <button class="menu-item" data-section="admin-user"><span class="icon">👨‍💼</span> Admin <span class="badge" id="adminBadge">3</span></button>
+                    <button class="menu-item" data-section="role"><span class="icon">🔑</span> Role & Hak Akses</button>
                 </div>
             </div>
 
-            <!-- System - Dropdown -->
             <div class="menu-label">System</div>
             <div class="menu-group">
                 <button class="menu-toggle" onclick="toggleMenu(this)">
@@ -1067,28 +1460,23 @@
                     <span class="arrow">▶</span>
                 </button>
                 <div class="sub-menu">
-                    <a class="menu-item" data-section="ai-assistant">
-                        <span class="icon">🤖</span> AI Assistant
-                    </a>
-                    <a class="menu-item" data-section="pengaturan">
-                        <span class="icon">⚙️</span> Pengaturan
-                    </a>
-                    <a class="menu-item" data-section="backup">
-                        <span class="icon">💾</span> Backup & Security
-                    </a>
-                    <a class="menu-item" data-section="log-aktivitas">
-                        <span class="icon">📋</span> Log Aktivitas
-                    </a>
+                    <button class="menu-item" data-section="ai-assistant"><span class="icon">🤖</span> AI Assistant</button>
+                    <button class="menu-item" data-section="pengaturan"><span class="icon">⚙️</span> Pengaturan</button>
+                    <button class="menu-item" data-section="backup"><span class="icon">💾</span> Backup & Security</button>
+                    <button class="menu-item" data-section="log-aktivitas"><span class="icon">📋</span> Log Aktivitas</button>
                 </div>
             </div>
         </nav>
+
+        <div class="sidebar-scroll-indicator" id="scrollIndicator">
+            <span class="scroll-arrow">⬇</span> Scroll untuk melihat menu lainnya
+        </div>
     </aside>
 
     <!-- ============================================================
     MAIN CONTENT
     ============================================================ -->
     <main class="main-content">
-
         <!-- Top Bar -->
         <div class="topbar">
             <div class="page-title">
@@ -1097,9 +1485,7 @@
             </div>
             <div class="topbar-right">
                 <button class="hamburger" id="mobileToggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span></span><span></span><span></span>
                 </button>
                 <div class="admin-info">
                     <div class="avatar" id="adminAvatar">A</div>
@@ -1146,240 +1532,109 @@
         </div>
 
         <!-- ============================================================
-        VISUAL KAMAR
+        BANNER CMS
         ============================================================ -->
-        <div class="content-section" id="section-visual-kamar">
-            <div class="section-header"><h3>🏠 Visual <span>Kamar</span></h3><button class="btn-add" onclick="alert('Fitur tambah kamar akan segera hadir!')">➕ Tambah Kamar</button></div>
-            <div class="room-grid-visual" id="roomVisualGrid"></div>
-            <div style="margin-top:16px;display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
-                <span><span style="display:inline-block;width:14px;height:14px;border-radius:4px;background:#28a745;vertical-align:middle;"></span> Kosong</span>
-                <span><span style="display:inline-block;width:14px;height:14px;border-radius:4px;background:#dc3545;vertical-align:middle;"></span> Terisi</span>
-                <span><span style="display:inline-block;width:14px;height:14px;border-radius:4px;background:#ffc107;vertical-align:middle;"></span> Maintenance</span>
+        <div class="content-section" id="section-banner">
+            <div class="section-header">
+                <h3>🖼️ Kelola <span>Banner</span></h3>
+                <button class="btn-add" onclick="openModal('modalBanner')">➕ Tambah Banner</button>
             </div>
-        </div>
-
-        <!-- ============================================================
-        KAMAR (Table)
-        ============================================================ -->
-        <div class="content-section" id="section-kamar">
-            <div class="section-header"><h3>📋 Data <span>Kamar</span></h3><button class="btn-add">➕ Tambah Kamar</button></div>
             <div class="table-wrapper">
                 <table>
-                    <thead><tr><th>No. Kamar</th><th>Tipe</th><th>Lantai</th><th>Harga</th><th>Penghuni</th><th>Status</th><th>Aksi</th></tr></thead>
-                    <tbody id="kamarTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ============================================================
-        PENGHUNI
-        ============================================================ -->
-        <div class="content-section" id="section-penghuni">
-            <div class="section-header"><h3>👤 Data <span>Penghuni</span></h3><button class="btn-add">➕ Tambah Penghuni</button></div>
-            <div class="table-wrapper">
-                <table>
-                    <thead><tr><th>Nama</th><th>Kamar</th><th>No. HP</th><th>Status</th><th>Aksi</th></tr></thead>
-                    <tbody>
-                        <tr><td><strong>Budi Santoso</strong></td><td>A1</td><td>0812-3456-7890</td><td><span class="status-badge active">Aktif</span></td><td><button class="btn-action edit">Edit</button><button class="btn-action delete">Hapus</button></td></tr>
-                        <tr><td><strong>Siti Rahayu</strong></td><td>B3</td><td>0812-3456-7891</td><td><span class="status-badge active">Aktif</span></td><td><button class="btn-action edit">Edit</button><button class="btn-action delete">Hapus</button></td></tr>
+                    <thead><tr><th>#</th><th>Gambar</th><th>Judul</th><th>Link</th><th>Status</th><th>Aksi</th></tr></thead>
+                    <tbody id="bannerTableBody">
+                        <tr><td colspan="6" style="text-align:center;color:#888;">Belum ada data banner</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
         <!-- ============================================================
-        PEMBAYARAN
+        GALERI CMS
         ============================================================ -->
-        <div class="content-section" id="section-pembayaran">
-            <div class="section-header"><h3>💳 Data <span>Pembayaran</span></h3><button class="btn-add">➕ Tambah Pembayaran</button></div>
+        <div class="content-section" id="section-galeri-cms">
+            <div class="section-header">
+                <h3>📸 Kelola <span>Galeri</span></h3>
+                <button class="btn-add" onclick="openModal('modalGaleri')">➕ Tambah Foto</button>
+            </div>
             <div class="table-wrapper">
                 <table>
-                    <thead><tr><th>Invoice</th><th>Penghuni</th><th>Kamar</th><th>Jumlah</th><th>Status</th><th>Aksi</th></tr></thead>
-                    <tbody>
-                        <tr><td><strong>INV-2026-0001</strong></td><td>Budi Santoso</td><td>A1</td><td>Rp 500.000</td><td><span class="status-badge active">Lunas</span></td><td><button class="btn-action edit">Detail</button></td></tr>
-                        <tr><td><strong>INV-2026-0002</strong></td><td>Siti Rahayu</td><td>B3</td><td>Rp 850.000</td><td><span class="status-badge pending">Pending</span></td><td><button class="btn-action edit">Detail</button></td></tr>
+                    <thead><tr><th>#</th><th>Foto</th><th>Judul</th><th>Kategori</th><th>Aksi</th></tr></thead>
+                    <tbody id="galeriTableBody">
+                        <tr><td colspan="5" style="text-align:center;color:#888;">Belum ada data galeri</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
         <!-- ============================================================
-        KAS BESAR
-        ============================================================ -->
-        <div class="content-section" id="section-kas-besar">
-            <div class="section-header"><h3>🏛️ Kas <span>Besar</span></h3><button class="btn-add">➕ Tambah Transaksi</button></div>
-            <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));">
-                <div class="stat-card"><div class="stat-number" style="font-size:24px;">Rp 25.000.000</div><div class="stat-label">Saldo Kas Besar</div></div>
-                <div class="stat-card"><div class="stat-number" style="font-size:24px;color:#28a745;">Rp 5.200.000</div><div class="stat-label">Pemasukan Bulan Ini</div></div>
-                <div class="stat-card"><div class="stat-number" style="font-size:24px;color:#dc3545;">Rp 2.800.000</div><div class="stat-label">Pengeluaran Bulan Ini</div></div>
-            </div>
-            <div class="table-wrapper">
-                <table>
-                    <thead><tr><th>Tanggal</th><th>Keterangan</th><th>Masuk</th><th>Keluar</th><th>Saldo</th><th>Aksi</th></tr></thead>
-                    <tbody>
-                        <tr><td>26/06/2026</td><td>Pembayaran Sewa - Budi</td><td style="color:#28a745;">Rp 500.000</td><td>-</td><td>Rp 25.000.000</td><td><button class="btn-action edit">Edit</button></td></tr>
-                        <tr><td>25/06/2026</td><td>Biaya Listrik</td><td>-</td><td style="color:#dc3545;">Rp 350.000</td><td>Rp 24.500.000</td><td><button class="btn-action edit">Edit</button></td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ============================================================
-        KAS KECIL
-        ============================================================ -->
-        <div class="content-section" id="section-kas-kecil">
-            <div class="section-header"><h3>💰 Kas <span>Kecil</span></h3><button class="btn-add">➕ Tambah Transaksi</button></div>
-            <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));">
-                <div class="stat-card"><div class="stat-number" style="font-size:24px;">Rp 5.000.000</div><div class="stat-label">Saldo Kas Kecil</div></div>
-                <div class="stat-card"><div class="stat-number" style="font-size:24px;color:#28a745;">Rp 1.200.000</div><div class="stat-label">Pemasukan Bulan Ini</div></div>
-                <div class="stat-card"><div class="stat-number" style="font-size:24px;color:#dc3545;">Rp 800.000</div><div class="stat-label">Pengeluaran Bulan Ini</div></div>
-            </div>
-            <div class="table-wrapper">
-                <table>
-                    <thead><tr><th>Tanggal</th><th>Keterangan</th><th>Masuk</th><th>Keluar</th><th>Saldo</th><th>Aksi</th></tr></thead>
-                    <tbody>
-                        <tr><td>26/06/2026</td><td>Pembelian ATK</td><td>-</td><td style="color:#dc3545;">Rp 150.000</td><td>Rp 4.850.000</td><td><button class="btn-action edit">Edit</button></td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ============================================================
-        NERACA LABA
-        ============================================================ -->
-        <div class="content-section" id="section-neraca-laba">
-            <div class="section-header"><h3>📊 <span>Neraca Laba</span> Rugi</h3></div>
-            <div class="table-wrapper">
-                <table>
-                    <thead><tr><th>Keterangan</th><th>Bulan Ini</th><th>Bulan Lalu</th><th>Perubahan</th></tr></thead>
-                    <tbody>
-                        <tr><td><strong>Pemasukan</strong></td><td style="color:#28a745;">Rp 4.200.000</td><td style="color:#28a745;">Rp 3.800.000</td><td style="color:#28a745;">↑ 10.5%</td></tr>
-                        <tr><td><strong>Pengeluaran</strong></td><td style="color:#dc3545;">Rp 1.800.000</td><td style="color:#dc3545;">Rp 1.500.000</td><td style="color:#dc3545;">↑ 20%</td></tr>
-                        <tr style="font-weight:700;background:#f8faff;"><td><strong>Laba Bersih</strong></td><td style="color:#28a745;">Rp 2.400.000</td><td style="color:#28a745;">Rp 2.300.000</td><td style="color:#28a745;">↑ 4.3%</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ============================================================
-        LAPORAN STATISTIK
-        ============================================================ -->
-        <div class="content-section" id="section-laporan-statistik">
-            <div class="section-header"><h3>📋 Laporan <span>Statistik</span></h3></div>
-            <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
-                <div class="stat-card"><div class="stat-number" style="font-size:20px;">36.4%</div><div class="stat-label">Okupansi Kamar</div></div>
-                <div class="stat-card"><div class="stat-number" style="font-size:20px;">Rp 4.2Jt</div><div class="stat-label">Pemasukan Bulan Ini</div></div>
-                <div class="stat-card"><div class="stat-number" style="font-size:20px;">8</div><div class="stat-label">Total Penghuni</div></div>
-                <div class="stat-card"><div class="stat-number" style="font-size:20px;">3</div><div class="stat-label">Booking Bulan Ini</div></div>
-            </div>
-            <div class="table-wrapper">
-                <h4 style="margin-bottom:12px;color:#0A2E6D;">📊 Data Bulanan</h4>
-                <table>
-                    <thead><tr><th>Bulan</th><th>Pemasukan</th><th>Pengeluaran</th><th>Laba</th><th>Okupansi</th></tr></thead>
-                    <tbody>
-                        <tr><td>Januari 2026</td><td style="color:#28a745;">Rp 3.800.000</td><td style="color:#dc3545;">Rp 1.500.000</td><td style="color:#28a745;">Rp 2.300.000</td><td>32%</td></tr>
-                        <tr><td>Februari 2026</td><td style="color:#28a745;">Rp 4.000.000</td><td style="color:#dc3545;">Rp 1.600.000</td><td style="color:#28a745;">Rp 2.400.000</td><td>36%</td></tr>
-                        <tr><td>Maret 2026</td><td style="color:#28a745;">Rp 4.200.000</td><td style="color:#dc3545;">Rp 1.800.000</td><td style="color:#28a745;">Rp 2.400.000</td><td>36.4%</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ============================================================
-        VIDEO CMS - LENGKAP
+        VIDEO CMS
         ============================================================ -->
         <div class="content-section" id="section-video-cms">
             <div class="section-header">
-                <h3>🎬 Kelola <span>Video</span> Website</h3>
-                <button class="btn-add" onclick="openModalVideo()">➕ Tambah Video</button>
+                <h3>🎬 Kelola <span>Video</span></h3>
+                <button class="btn-add" onclick="openModal('modalVideo')">➕ Tambah Video</button>
             </div>
-
-            <div style="background:#fff8f0;border-radius:12px;padding:16px 20px;margin-bottom:16px;border:1px solid #ffe0c0;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-                <span style="font-size:24px;">ℹ️</span>
-                <div>
-                    <strong style="color:#0A2E6D;">Video yang tampil di Beranda:</strong>
-                    <span id="homepageVideoInfo" style="color:#FF7A00;font-weight:600;">Video Profil JDI KOSKITA</span>
-                    <span style="font-size:12px;color:#888;display:block;">Video dengan status "Aktif" akan tampil di halaman utama website.</span>
-                </div>
+            <div style="background:#fff8f0;border-radius:12px;padding:16px 20px;margin-bottom:16px;border:1px solid #ffe0c0;">
+                <strong style="color:#0A2E6D;">📌 Video yang tampil di Beranda:</strong>
+                <span id="homepageVideoInfo" style="color:#FF7A00;font-weight:600;">Video Profil JDI KOSKITA</span>
             </div>
-
             <div class="table-wrapper">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Judul</th>
-                            <th>URL Video</th>
-                            <th>Deskripsi</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="videoTableBody">
-                        <!-- Akan di-generate oleh JavaScript -->
-                    </tbody>
+                    <thead><tr><th>#</th><th>Judul</th><th>URL/File</th><th>Status</th><th>Aksi</th></tr></thead>
+                    <tbody id="videoTableBody"></tbody>
                 </table>
             </div>
         </div>
 
         <!-- ============================================================
-        USER MANAGEMENT - ADMIN (DENGAN TOMBOL TAMBAH ADMIN)
+        SECTION LAINNYA (SINGKAT)
         ============================================================ -->
+        <div class="content-section" id="section-visual-kamar">
+            <div class="section-header"><h3>🏠 Visual <span>Kamar</span></h3></div>
+            <div class="room-grid-visual" id="roomVisualGrid"></div>
+            <div style="margin-top:16px;display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
+                <span><span style="display:inline-block;width:14px;height:14px;border-radius:4px;background:#28a745;"></span> Kosong</span>
+                <span><span style="display:inline-block;width:14px;height:14px;border-radius:4px;background:#dc3545;"></span> Terisi</span>
+                <span><span style="display:inline-block;width:14px;height:14px;border-radius:4px;background:#ffc107;"></span> Maintenance</span>
+            </div>
+        </div>
+
+        <div class="content-section" id="section-kamar">
+            <div class="section-header"><h3>📋 Data <span>Kamar</span></h3></div>
+            <div class="table-wrapper">
+                <table><thead><tr><th>No. Kamar</th><th>Tipe</th><th>Lantai</th><th>Harga</th><th>Penghuni</th><th>Status</th><th>Aksi</th></tr></thead>
+                    <tbody id="kamarTableBody"></tbody></table>
+            </div>
+        </div>
+
+        <div class="content-section" id="section-penghuni">
+            <div class="section-header"><h3>👤 Data <span>Penghuni</span></h3></div>
+            <div class="table-wrapper">
+                <table><thead><tr><th>Nama</th><th>Kamar</th><th>No. HP</th><th>Status</th><th>Aksi</th></tr></thead>
+                    <tbody id="penghuniTableBody"></tbody></table>
+            </div>
+        </div>
+
+        <div class="content-section" id="section-pembayaran">
+            <div class="section-header"><h3>💳 Data <span>Pembayaran</span></h3></div>
+            <div class="table-wrapper">
+                <table><thead><tr><th>Invoice</th><th>Penghuni</th><th>Kamar</th><th>Jumlah</th><th>Status</th><th>Aksi</th></tr></thead>
+                    <tbody id="pembayaranTableBody"></tbody></table>
+            </div>
+        </div>
+
         <div class="content-section" id="section-admin-user">
-            <div class="section-header">
-                <h3>👨‍💼 Manajemen <span>Admin</span></h3>
-                <button class="btn-add" onclick="openModalAdmin()">➕ Tambah Admin</button>
-            </div>
+            <div class="section-header"><h3>👨‍💼 Manajemen <span>Admin</span></h3>
+                <button class="btn-add" onclick="openModal('modalAdmin')">➕ Tambah Admin</button></div>
             <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Nama</th>
-                            <th>Level</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminTableBody">
-                        <!-- Akan di-generate oleh JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-            <div style="margin-top:16px;background:#fff;border-radius:14px;padding:20px;border:1px solid #e9edf2;">
-                <h4 style="color:#0A2E6D;margin-bottom:12px;">🔑 Level Admin & Hak Akses</h4>
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;">
-                    <div style="background:#f8faff;padding:16px;border-radius:10px;border-left:4px solid #FF7A00;">
-                        <strong style="color:#0A2E6D;">Super Admin</strong>
-                        <p style="font-size:13px;color:#888;margin-top:4px;">Akses penuh ke semua menu. Dapat mengelola user dan pengaturan sistem.</p>
-                    </div>
-                    <div style="background:#f8faff;padding:16px;border-radius:10px;border-left:4px solid #17a2b8;">
-                        <strong style="color:#0A2E6D;">Admin Advance</strong>
-                        <p style="font-size:13px;color:#888;margin-top:4px;">Akses ke semua data kecuali User Management dan Pengaturan Sistem.</p>
-                    </div>
-                    <div style="background:#f8faff;padding:16px;border-radius:10px;border-left:4px solid #6c757d;">
-                        <strong style="color:#0A2E6D;">Admin Biasa</strong>
-                        <p style="font-size:13px;color:#888;margin-top:4px;">Akses terbatas: hanya bisa melihat data, tidak bisa mengedit atau menghapus.</p>
-                    </div>
-                </div>
+                <table><thead><tr><th>Username</th><th>Nama</th><th>Level</th><th>Status</th><th>Aksi</th></tr></thead>
+                    <tbody id="adminTableBody"></tbody></table>
             </div>
         </div>
 
-        <!-- ============================================================
-        PLACEHOLDER UNTUK MENU LAINNYA
-        ============================================================ -->
-        <div class="content-section" id="section-checkin"><div class="empty-state"><span class="empty-icon">✅</span><h4>Check In</h4><p>Kelola proses check in penghuni baru di sini.</p></div></div>
-        <div class="content-section" id="section-checkout"><div class="empty-state"><span class="empty-icon">🚪</span><h4>Check Out</h4><p>Kelola proses check out penghuni di sini.</p></div></div>
-        <div class="content-section" id="section-tagihan"><div class="empty-state"><span class="empty-icon">📄</span><h4>Tagihan</h4><p>Kelola tagihan penghuni di sini.</p></div></div>
-        <div class="content-section" id="section-deposit"><div class="empty-state"><span class="empty-icon">🏦</span><h4>Deposit</h4><p>Kelola deposit penghuni di sini.</p></div></div>
-        <div class="content-section" id="section-pengeluaran"><div class="empty-state"><span class="empty-icon">📉</span><h4>Pengeluaran</h4><p>Kelola pengeluaran kos di sini.</p></div></div>
-        <div class="content-section" id="section-pemasukan"><div class="empty-state"><span class="empty-icon">📈</span><h4>Pemasukan</h4><p>Kelola pemasukan kos di sini.</p></div></div>
-        <div class="content-section" id="section-fasilitas"><div class="empty-state"><span class="empty-icon">⭐</span><h4>Fasilitas</h4><p>Kelola data fasilitas di sini.</p></div></div>
-        <div class="content-section" id="section-harga"><div class="empty-state"><span class="empty-icon">💰</span><h4>Harga</h4><p>Kelola data harga di sini.</p></div></div>
-        <div class="content-section" id="section-booking"><div class="empty-state"><span class="empty-icon">📅</span><h4>Booking</h4><p>Kelola data booking di sini.</p></div></div>
+        <!-- Placeholder untuk menu lain -->
         <div class="content-section" id="section-homepage"><div class="empty-state"><span class="empty-icon">🏠</span><h4>CMS Homepage</h4><p>Kelola konten homepage di sini.</p></div></div>
-        <div class="content-section" id="section-banner"><div class="empty-state"><span class="empty-icon">🖼️</span><h4>CMS Banner</h4><p>Kelola banner website di sini.</p></div></div>
-        <div class="content-section" id="section-galeri-cms"><div class="empty-state"><span class="empty-icon">📸</span><h4>CMS Galeri</h4><p>Kelola galeri foto di sini.</p></div></div>
         <div class="content-section" id="section-daftar-harga-cms"><div class="empty-state"><span class="empty-icon">💰</span><h4>CMS Daftar Harga</h4><p>Kelola daftar harga di sini.</p></div></div>
         <div class="content-section" id="section-kontak-cms"><div class="empty-state"><span class="empty-icon">📞</span><h4>CMS Kontak</h4><p>Kelola informasi kontak di sini.</p></div></div>
         <div class="content-section" id="section-testimoni"><div class="empty-state"><span class="empty-icon">💬</span><h4>CMS Testimoni</h4><p>Kelola testimoni penghuni di sini.</p></div></div>
@@ -1388,6 +1643,19 @@
         <div class="content-section" id="section-promo"><div class="empty-state"><span class="empty-icon">🏷️</span><h4>Promo</h4><p>Kelola promo di sini.</p></div></div>
         <div class="content-section" id="section-voucher"><div class="empty-state"><span class="empty-icon">🎫</span><h4>Voucher</h4><p>Kelola voucher di sini.</p></div></div>
         <div class="content-section" id="section-pesan-pengunjung"><div class="empty-state"><span class="empty-icon">📩</span><h4>Pesan Pengunjung</h4><p>Kelola pesan pengunjung di sini.</p></div></div>
+        <div class="content-section" id="section-fasilitas"><div class="empty-state"><span class="empty-icon">⭐</span><h4>Fasilitas</h4><p>Kelola data fasilitas di sini.</p></div></div>
+        <div class="content-section" id="section-harga"><div class="empty-state"><span class="empty-icon">💰</span><h4>Harga</h4><p>Kelola data harga di sini.</p></div></div>
+        <div class="content-section" id="section-booking"><div class="empty-state"><span class="empty-icon">📅</span><h4>Booking</h4><p>Kelola data booking di sini.</p></div></div>
+        <div class="content-section" id="section-checkin"><div class="empty-state"><span class="empty-icon">✅</span><h4>Check In</h4><p>Kelola proses check in penghuni baru di sini.</p></div></div>
+        <div class="content-section" id="section-checkout"><div class="empty-state"><span class="empty-icon">🚪</span><h4>Check Out</h4><p>Kelola proses check out penghuni di sini.</p></div></div>
+        <div class="content-section" id="section-tagihan"><div class="empty-state"><span class="empty-icon">📄</span><h4>Tagihan</h4><p>Kelola tagihan penghuni di sini.</p></div></div>
+        <div class="content-section" id="section-deposit"><div class="empty-state"><span class="empty-icon">🏦</span><h4>Deposit</h4><p>Kelola deposit penghuni di sini.</p></div></div>
+        <div class="content-section" id="section-pengeluaran"><div class="empty-state"><span class="empty-icon">📉</span><h4>Pengeluaran</h4><p>Kelola pengeluaran kos di sini.</p></div></div>
+        <div class="content-section" id="section-pemasukan"><div class="empty-state"><span class="empty-icon">📈</span><h4>Pemasukan</h4><p>Kelola pemasukan kos di sini.</p></div></div>
+        <div class="content-section" id="section-kas-besar"><div class="empty-state"><span class="empty-icon">🏛️</span><h4>Kas Besar</h4><p>Kelola kas besar di sini.</p></div></div>
+        <div class="content-section" id="section-kas-kecil"><div class="empty-state"><span class="empty-icon">💰</span><h4>Kas Kecil</h4><p>Kelola kas kecil di sini.</p></div></div>
+        <div class="content-section" id="section-neraca-laba"><div class="empty-state"><span class="empty-icon">📊</span><h4>Neraca Laba</h4><p>Lihat neraca laba rugi di sini.</p></div></div>
+        <div class="content-section" id="section-laporan-statistik"><div class="empty-state"><span class="empty-icon">📋</span><h4>Laporan Statistik</h4><p>Lihat laporan statistik di sini.</p></div></div>
         <div class="content-section" id="section-role"><div class="empty-state"><span class="empty-icon">🔑</span><h4>Role & Hak Akses</h4><p>Kelola role dan hak akses user di sini.</p></div></div>
         <div class="content-section" id="section-ai-assistant"><div class="empty-state"><span class="empty-icon">🤖</span><h4>AI Assistant</h4><p>Asisten AI untuk membantu analisis data.</p></div></div>
         <div class="content-section" id="section-pengaturan"><div class="empty-state"><span class="empty-icon">⚙️</span><h4>Pengaturan</h4><p>Kelola pengaturan sistem di sini.</p></div></div>
@@ -1404,52 +1672,245 @@
             'use strict';
 
             // ============================================
-            // CHECK LOGIN
+            // FIREBASE CONFIG - GANTI DENGAN KONFIGURASI ANDA
             // ============================================
-            const SESSION_KEY = 'admin_logged_in';
-            const USER_KEY = 'admin_username';
-            const ROLE_KEY = 'admin_role';
-
-            function checkAuth() {
-                if (sessionStorage.getItem(SESSION_KEY) !== 'true') {
-                    window.location.href = 'admin-login.html';
-                }
-            }
-            checkAuth();
-
-            // Set admin info
-            const adminName = sessionStorage.getItem(USER_KEY) || 'Admin';
-            const adminRole = sessionStorage.getItem(ROLE_KEY) || 'Super Administrator';
-            document.getElementById('adminName').textContent = adminName;
-            document.getElementById('adminRole').textContent = adminRole;
-            document.getElementById('adminAvatar').textContent = adminName.charAt(0).toUpperCase();
-
-            // ============================================
-            // TOGGLE DROPDOWN MENU
-            // ============================================
-            window.toggleMenu = function(button) {
-                const subMenu = button.nextElementSibling;
-                const arrow = button.querySelector('.arrow');
-                subMenu.classList.toggle('open');
-                arrow.classList.toggle('open');
-
-                // Tutup menu lain yang terbuka
-                const allGroups = document.querySelectorAll('.menu-group');
-                allGroups.forEach(group => {
-                    const toggle = group.querySelector('.menu-toggle');
-                    const sub = group.querySelector('.sub-menu');
-                    const arr = group.querySelector('.arrow');
-                    if (sub !== subMenu && sub.classList.contains('open')) {
-                        sub.classList.remove('open');
-                        if (arr) arr.classList.remove('open');
-                    }
-                });
+            var firebaseConfig = {
+                apiKey: "YOUR_API_KEY",
+                authDomain: "YOUR_PROJECT.firebaseapp.com",
+                projectId: "YOUR_PROJECT_ID",
+                storageBucket: "YOUR_PROJECT.appspot.com",
+                messagingSenderId: "YOUR_SENDER_ID",
+                appId: "YOUR_APP_ID"
             };
 
+            var useFirebase = false; // Set ke true jika menggunakan Firebase
+
+            // Inisialisasi Firebase jika dikonfigurasi
+            if (useFirebase && firebaseConfig.apiKey !== "YOUR_API_KEY") {
+                try {
+                    firebase.initializeApp(firebaseConfig);
+                    console.log('✅ Firebase initialized successfully!');
+                } catch (e) {
+                    console.warn('⚠️ Firebase initialization failed:', e);
+                    useFirebase = false;
+                }
+            }
+
             // ============================================
-            // DATA KAMAR
+            // STORAGE HELPER - Upload ke Firebase atau Cloudinary
             // ============================================
-            const roomsData = [
+            var uploadConfig = {
+                provider: 'firebase', // 'firebase' atau 'cloudinary'
+                cloudinary: {
+                    uploadPreset: 'YOUR_UPLOAD_PRESET',
+                    cloudName: 'YOUR_CLOUD_NAME',
+                    apiKey: 'YOUR_API_KEY'
+                }
+            };
+
+            function uploadFileToStorage(file, progressCallback) {
+                return new Promise(function(resolve, reject) {
+                    if (uploadConfig.provider === 'firebase' && useFirebase) {
+                        // Upload ke Firebase Storage
+                        var storageRef = firebase.storage().ref();
+                        var fileRef = storageRef.child('uploads/' + Date.now() + '_' + file.name);
+                        var uploadTask = fileRef.put(file);
+
+                        uploadTask.on('state_changed',
+                            function(snapshot) {
+                                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                if (progressCallback) progressCallback(progress);
+                            },
+                            function(error) {
+                                reject(error);
+                            },
+                            function() {
+                                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                                    resolve(downloadURL);
+                                });
+                            }
+                        );
+                    } else if (uploadConfig.provider === 'cloudinary') {
+                        // Upload ke Cloudinary
+                        var formData = new FormData();
+                        formData.append('file', file);
+                        formData.append('upload_preset', uploadConfig.cloudinary.uploadPreset);
+
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + uploadConfig.cloudinary
+                            .cloudName + '/upload');
+
+                        xhr.upload.onprogress = function(e) {
+                            if (e.lengthComputable && progressCallback) {
+                                var progress = (e.loaded / e.total) * 100;
+                                progressCallback(progress);
+                            }
+                        };
+
+                        xhr.onload = function() {
+                            if (xhr.status === 200) {
+                                var response = JSON.parse(xhr.responseText);
+                                resolve(response.secure_url);
+                            } else {
+                                reject(new Error('Cloudinary upload failed'));
+                            }
+                        };
+
+                        xhr.onerror = function() {
+                            reject(new Error('Cloudinary upload failed'));
+                        };
+
+                        xhr.send(formData);
+                    } else {
+                        // Fallback: gunakan URL.createObjectURL (local preview saja)
+                        var localUrl = URL.createObjectURL(file);
+                        resolve(localUrl);
+                    }
+                });
+            }
+
+            // ============================================
+            // FILE UPLOAD HANDLER
+            // ============================================
+            var fileStates = {};
+
+            function handleFileUpload(input, type) {
+                var file = input.files[0];
+                if (!file) return;
+
+                var maxSize = type === 'video' ? 50 * 1024 * 1024 : 5 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    showToast('File terlalu besar! Maksimal ' + (type === 'video' ? '50MB' : '5MB'), 'error');
+                    input.value = '';
+                    return;
+                }
+
+                fileStates[type] = {
+                    file: file,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type
+                };
+
+                // Preview
+                var previewEl = document.getElementById(type + 'Preview');
+                var previewImg = document.getElementById(type + 'PreviewImg');
+                var previewName = document.getElementById(type + 'PreviewName');
+                var previewSize = document.getElementById(type + 'PreviewSize');
+
+                if (previewEl) previewEl.classList.add('show');
+
+                if (type === 'video') {
+                    if (previewName) previewName.textContent = file.name;
+                    if (previewSize) previewSize.textContent = (file.size / 1024).toFixed(1) + ' KB';
+                } else {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (previewImg) previewImg.src = e.target.result;
+                        if (previewName) previewName.textContent = file.name;
+                        if (previewSize) previewSize.textContent = (file.size / 1024).toFixed(1) + ' KB';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            function removeFile(type) {
+                fileStates[type] = null;
+                var previewEl = document.getElementById(type + 'Preview');
+                var previewImg = document.getElementById(type + 'PreviewImg');
+                var fileInput = document.getElementById(type + 'File');
+                var externalInput = document.getElementById(type + 'ExternalInput');
+
+                if (previewEl) previewEl.classList.remove('show');
+                if (previewImg) previewImg.src = '';
+                if (fileInput) fileInput.value = '';
+
+                // Reset external input
+                if (externalInput) {
+                    var urlInput = document.getElementById(type + 'ExternalUrl');
+                    if (urlInput) urlInput.value = '';
+                }
+
+                // Reset upload type ke upload
+                setUploadType(type, 'upload');
+            }
+
+            function setUploadType(type, method) {
+                var uploadArea = document.getElementById(type + 'UploadArea');
+                var externalInput = document.getElementById(type + 'ExternalInput');
+                var fileInput = document.getElementById(type + 'File');
+                var options = document.querySelectorAll('#' + type + 'UploadArea .option-btn');
+
+                options.forEach(function(btn) {
+                    btn.classList.remove('active');
+                });
+
+                if (method === 'upload') {
+                    if (uploadArea) uploadArea.style.display = 'block';
+                    if (externalInput) externalInput.style.display = 'none';
+                    if (fileInput) fileInput.required = true;
+                    // Find and activate upload button
+                    options.forEach(function(btn) {
+                        if (btn.textContent.includes('Upload File')) btn.classList.add('active');
+                    });
+                } else {
+                    if (uploadArea) uploadArea.style.display = 'none';
+                    if (externalInput) externalInput.style.display = 'block';
+                    if (fileInput) fileInput.required = false;
+                    // Find and activate external button
+                    options.forEach(function(btn) {
+                        if (btn.textContent.includes('Link External')) btn.classList.add('active');
+                    });
+                }
+            }
+
+            // ============================================
+            // TOAST NOTIFICATION
+            // ============================================
+            function showToast(message, type) {
+                type = type || 'info';
+                var toast = document.createElement('div');
+                toast.className = 'toast ' + type;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                setTimeout(function() {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(20px)';
+                    setTimeout(function() {
+                        toast.remove();
+                    }, 400);
+                }, 3000);
+            }
+
+            // ============================================
+            // MODAL FUNCTIONS
+            // ============================================
+            function openModal(id) {
+                document.getElementById(id).classList.add('show');
+                document.body.style.overflow = 'hidden';
+                // Reset form
+                var form = document.querySelector('#' + id + ' form');
+                if (form) form.reset();
+                // Reset file states
+                var type = id.replace('modal', '').toLowerCase();
+                removeFile(type);
+            }
+
+            function closeModal(id) {
+                document.getElementById(id).classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            window.openModal = openModal;
+            window.closeModal = closeModal;
+            window.handleFileUpload = handleFileUpload;
+            window.removeFile = removeFile;
+            window.setUploadType = setUploadType;
+
+            // ============================================
+            // DATA STORE
+            // ============================================
+            var roomsData = [
                 { id: 'A1', type: 'Standard', floor: 1, price: 500000, status: 'occupied', tenant: 'Budi Santoso',
                     date: '2026-06-01' },
                 { id: 'A2', type: 'Standard', floor: 1, price: 500000, status: 'empty', tenant: '-', date: '-' },
@@ -1468,260 +1929,517 @@
                 { id: 'E1', type: 'VIP', floor: 3, price: 850000, status: 'empty', tenant: '-', date: '-' },
             ];
 
-            // ============================================
-            // DATA VIDEO
-            // ============================================
-            let videoData = [
-                { id: 1, title: 'Video Profil JDI KOSKITA', url: 'assets/video/jdiiklan.mp4', description: 'Video profil dan tour virtual kos',
-                    status: 'active' },
-                { id: 2, title: 'Tour Virtual Kamar', url: 'https://www.youtube.com/embed/xxx', description: 'Tour virtual kamar tipe Standard dan Deluxe',
-                    status: 'draft' },
+            var penghuniData = [
+                { name: 'Budi Santoso', room: 'A1', phone: '0812-3456-7890', status: 'active' },
+                { name: 'Siti Rahayu', room: 'B2', phone: '0812-3456-7891', status: 'active' },
+                { name: 'Andi Wijaya', room: 'B3', phone: '0812-3456-7892', status: 'active' },
+                { name: 'Rina Wijaya', room: 'D1', phone: '0812-3456-7893', status: 'active' },
             ];
-            let videoCounter = 3;
 
-            // ============================================
-            // DATA ADMIN
-            // ============================================
-            let adminData = [
+            var pembayaranData = [
+                { invoice: 'INV-2026-0001', tenant: 'Budi Santoso', room: 'A1', amount: 500000, status: 'paid' },
+                { invoice: 'INV-2026-0002', tenant: 'Siti Rahayu', room: 'B2', amount: 650000, status: 'pending' },
+                { invoice: 'INV-2026-0003', tenant: 'Andi Wijaya', room: 'B3', amount: 850000, status: 'paid' },
+            ];
+
+            var videoData = [
+                { id: 1, title: 'Video Profil JDI KOSKITA', url: 'assets/video/jdiiklan.mp4', status: 'active' },
+                { id: 2, title: 'Tour Virtual Kamar', url: 'https://www.youtube.com/embed/xxx', status: 'draft' },
+            ];
+            var videoCounter = 3;
+
+            var bannerData = [];
+            var bannerCounter = 1;
+
+            var galeriData = [];
+            var galeriCounter = 1;
+
+            var adminData = [
                 { username: 'superadmin', name: 'Admin Utama', level: 'superadmin', status: 'active' },
                 { username: 'adminadv', name: 'Admin Lanjutan', level: 'adminadv', status: 'active' },
                 { username: 'adminreg', name: 'Admin Reguler', level: 'adminreg', status: 'active' },
             ];
 
             // ============================================
-            // RENDER FUNCTIONS
+            // SAVE FUNCTIONS
             // ============================================
+            window.saveBanner = async function(e) {
+                e.preventDefault();
+                var title = document.getElementById('bannerTitle').value.trim();
+                var link = document.getElementById('bannerLink').value.trim();
+                var status = document.getElementById('bannerStatus').value;
+                var file = fileStates['banner'];
+                var externalUrl = document.getElementById('bannerExternalUrl').value.trim();
 
-            // Render Visual Kamar
-            function renderVisualRooms() {
-                const grid = document.getElementById('roomVisualGrid');
-                grid.innerHTML = '';
-                roomsData.forEach(room => {
-                    const box = document.createElement('div');
-                    box.className = 'room-box';
-                    const statusMap = {
-                        occupied: { label: 'Terisi', class: 'occupied' },
-                        empty: { label: 'Kosong', class: 'empty' },
-                        maintenance: { label: 'Maintenance', class: 'maintenance' }
-                    };
-                    const status = statusMap[room.status] || statusMap.empty;
-                    box.innerHTML = `
-                        <div class="room-number">${room.id}</div>
-                        <div class="room-type">${room.type} • Lantai ${room.floor}</div>
-                        <div class="room-status-box ${status.class}">${status.label}</div>
-                        ${room.status === 'occupied' ? `<div class="room-tenant">👤 ${room.tenant}</div>` : ''}
-                        ${room.status === 'occupied' ? `<div class="room-date">📅 ${room.date}</div>` : ''}
-                    `;
-                    grid.appendChild(box);
-                });
-            }
-
-            // Render Table Kamar
-            function renderTableRooms() {
-                const tbody = document.getElementById('kamarTableBody');
-                tbody.innerHTML = '';
-                roomsData.forEach(room => {
-                    const statusMap = {
-                        occupied: { label: 'Terisi', class: 'occupied' },
-                        empty: { label: 'Kosong', class: 'empty' },
-                        maintenance: { label: 'Maintenance', class: 'maintenance' }
-                    };
-                    const status = statusMap[room.status] || statusMap.empty;
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td><strong>${room.id}</strong></td>
-                        <td>${room.type}</td>
-                        <td>${room.floor}</td>
-                        <td>Rp ${room.price.toLocaleString('id-ID')}</td>
-                        <td>${room.tenant || '-'}</td>
-                        <td><span class="status-badge ${status.class}" style="${room.status === 'occupied' ? 'background:#dc3545;color:#fff;' : room.status === 'empty' ? 'background:#28a745;color:#fff;' : 'background:#ffc107;color:#333;'}">${status.label}</span></td>
-                        <td><button class="btn-action edit">Edit</button><button class="btn-action delete">Hapus</button></td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            }
-
-            // Render Video
-            function renderVideos() {
-                const tbody = document.getElementById('videoTableBody');
-                tbody.innerHTML = '';
-                videoData.forEach((video, index) => {
-                    const row = document.createElement('tr');
-                    const statusMap = {
-                        active: { label: '✅ Aktif', class: 'active' },
-                        draft: { label: '📝 Draft', class: 'pending' }
-                    };
-                    const status = statusMap[video.status] || statusMap.draft;
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td><strong>${video.title}</strong></td>
-                        <td><code style="font-size:12px;background:#f0f4f9;padding:2px 8px;border-radius:4px;word-break:break-all;">${video.url}</code></td>
-                        <td style="font-size:13px;color:#555;">${video.description || '-'}</td>
-                        <td><span class="status-badge ${status.class}">${status.label}</span></td>
-                        <td>
-                            <button class="btn-action edit" onclick="editVideo(${video.id})">Edit</button>
-                            <button class="btn-action delete" onclick="deleteVideo(${video.id})">Hapus</button>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
-                });
-
-                // Update homepage video info
-                const activeVideo = videoData.find(v => v.status === 'active');
-                const infoEl = document.getElementById('homepageVideoInfo');
-                if (infoEl) {
-                    infoEl.textContent = activeVideo ? activeVideo.title : 'Tidak ada video aktif';
-                    infoEl.style.color = activeVideo ? '#28a745' : '#dc3545';
+                if (!title) {
+                    showToast('⚠️ Judul banner wajib diisi!', 'error');
+                    return;
                 }
 
-                // Update badge
-                const badge = document.getElementById('videoBadge');
-                if (badge) badge.textContent = videoData.length;
-            }
+                var imageUrl = '';
+                var saveBtn = document.getElementById('bannerSaveBtn');
+                var progressEl = document.getElementById('bannerProgress');
+                var progressFill = document.getElementById('bannerProgressFill');
+                var progressText = document.getElementById('bannerProgressText');
 
-            // Render Admin
-            function renderAdmins() {
-                const tbody = document.getElementById('adminTableBody');
-                tbody.innerHTML = '';
-                const levelLabels = {
-                    superadmin: '<span class="status-badge active">Super Admin</span>',
-                    adminadv: '<span class="status-badge" style="background:#17a2b8;color:#fff;">Admin Advance</span>',
-                    adminreg: '<span class="status-badge" style="background:#6c757d;color:#fff;">Admin Biasa</span>'
-                };
-                const statusLabels = {
-                    active: '<span class="status-badge active">Aktif</span>',
-                    inactive: '<span class="status-badge inactive">Tidak Aktif</span>'
-                };
-                adminData.forEach(admin => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td><strong>${admin.username}</strong></td>
-                        <td>${admin.name}</td>
-                        <td>${levelLabels[admin.level] || admin.level}</td>
-                        <td>${statusLabels[admin.status] || admin.status}</td>
-                        <td>
-                            <button class="btn-action edit">Edit</button>
-                            <button class="btn-action delete">Hapus</button>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
+                // Check upload method
+                var isExternal = document.getElementById('bannerExternalInput').style.display !== 'none';
+
+                if (isExternal) {
+                    if (!externalUrl) {
+                        showToast('⚠️ URL gambar eksternal wajib diisi!', 'error');
+                        return;
+                    }
+                    imageUrl = externalUrl;
+                } else if (file && file.file) {
+                    // Upload file
+                    saveBtn.disabled = true;
+                    progressEl.classList.add('show');
+
+                    try {
+                        imageUrl = await uploadFileToStorage(file.file, function(progress) {
+                            progressFill.style.width = progress + '%';
+                            progressText.textContent = 'Mengupload ' + Math.round(progress) + '%';
+                        });
+                    } catch (error) {
+                        console.error('Upload error:', error);
+                        showToast('⚠️ Gagal upload file: ' + error.message, 'error');
+                        saveBtn.disabled = false;
+                        progressEl.classList.remove('show');
+                        return;
+                    }
+                } else {
+                    showToast('⚠️ Silakan upload gambar atau masukkan URL eksternal!', 'error');
+                    return;
+                }
+
+                bannerData.push({
+                    id: bannerCounter++,
+                    title: title,
+                    image: imageUrl,
+                    link: link || '#',
+                    status: status
                 });
 
-                // Update badge
-                const badge = document.getElementById('adminBadge');
-                if (badge) badge.textContent = adminData.length;
-            }
+                saveBtn.disabled = false;
+                progressEl.classList.remove('show');
+                renderBanners();
+                closeModal('modalBanner');
+                showToast('✅ Banner "' + title + '" berhasil ditambahkan!', 'success');
+            };
 
-            // ============================================
-            // VIDEO MANAGEMENT
-            // ============================================
-            function openModalVideo() {
-                document.getElementById('modalVideo').classList.add('show');
-                document.body.style.overflow = 'hidden';
-                document.getElementById('formVideo').reset();
-            }
-
-            function closeModalVideo() {
-                document.getElementById('modalVideo').classList.remove('show');
-                document.body.style.overflow = '';
-            }
-
-            function saveVideo(e) {
+            window.saveGaleri = async function(e) {
                 e.preventDefault();
-                const title = document.getElementById('videoTitle').value.trim();
-                const url = document.getElementById('videoUrl').value.trim();
-                const description = document.getElementById('videoDescription').value.trim();
-                const status = document.getElementById('videoStatus').value;
+                var title = document.getElementById('galeriTitle').value.trim();
+                var kategori = document.getElementById('galeriKategori').value;
+                var description = document.getElementById('galeriDescription').value.trim();
+                var file = fileStates['galeri'];
+                var externalUrl = document.getElementById('galeriExternalUrl').value.trim();
 
-                if (!title || !url) {
-                    alert('⚠️ Judul dan URL video wajib diisi!');
+                if (!title) {
+                    showToast('⚠️ Judul foto wajib diisi!', 'error');
+                    return;
+                }
+
+                var imageUrl = '';
+                var saveBtn = document.getElementById('galeriSaveBtn');
+                var progressEl = document.getElementById('galeriProgress');
+                var progressFill = document.getElementById('galeriProgressFill');
+                var progressText = document.getElementById('galeriProgressText');
+
+                var isExternal = document.getElementById('galeriExternalInput').style.display !== 'none';
+
+                if (isExternal) {
+                    if (!externalUrl) {
+                        showToast('⚠️ URL foto eksternal wajib diisi!', 'error');
+                        return;
+                    }
+                    imageUrl = externalUrl;
+                } else if (file && file.file) {
+                    saveBtn.disabled = true;
+                    progressEl.classList.add('show');
+
+                    try {
+                        imageUrl = await uploadFileToStorage(file.file, function(progress) {
+                            progressFill.style.width = progress + '%';
+                            progressText.textContent = 'Mengupload ' + Math.round(progress) + '%';
+                        });
+                    } catch (error) {
+                        console.error('Upload error:', error);
+                        showToast('⚠️ Gagal upload file: ' + error.message, 'error');
+                        saveBtn.disabled = false;
+                        progressEl.classList.remove('show');
+                        return;
+                    }
+                } else {
+                    showToast('⚠️ Silakan upload foto atau masukkan URL eksternal!', 'error');
+                    return;
+                }
+
+                galeriData.push({
+                    id: galeriCounter++,
+                    title: title,
+                    image: imageUrl,
+                    kategori: kategori,
+                    description: description
+                });
+
+                saveBtn.disabled = false;
+                progressEl.classList.remove('show');
+                renderGaleri();
+                closeModal('modalGaleri');
+                showToast('✅ Foto "' + title + '" berhasil ditambahkan!', 'success');
+            };
+
+            window.saveVideo = async function(e) {
+                e.preventDefault();
+                var title = document.getElementById('videoTitle').value.trim();
+                var description = document.getElementById('videoDescription').value.trim();
+                var status = document.getElementById('videoStatus').value;
+                var file = fileStates['video'];
+                var externalUrl = document.getElementById('videoExternalUrl').value.trim();
+
+                if (!title) {
+                    showToast('⚠️ Judul video wajib diisi!', 'error');
+                    return;
+                }
+
+                var videoUrl = '';
+                var saveBtn = document.getElementById('videoSaveBtn');
+                var progressEl = document.getElementById('videoProgress');
+                var progressFill = document.getElementById('videoProgressFill');
+                var progressText = document.getElementById('videoProgressText');
+
+                var isExternal = document.getElementById('videoExternalInput').style.display !== 'none';
+
+                if (isExternal) {
+                    if (!externalUrl) {
+                        showToast('⚠️ URL video eksternal wajib diisi!', 'error');
+                        return;
+                    }
+                    videoUrl = externalUrl;
+                } else if (file && file.file) {
+                    saveBtn.disabled = true;
+                    progressEl.classList.add('show');
+
+                    try {
+                        videoUrl = await uploadFileToStorage(file.file, function(progress) {
+                            progressFill.style.width = progress + '%';
+                            progressText.textContent = 'Mengupload ' + Math.round(progress) + '%';
+                        });
+                    } catch (error) {
+                        console.error('Upload error:', error);
+                        showToast('⚠️ Gagal upload file: ' + error.message, 'error');
+                        saveBtn.disabled = false;
+                        progressEl.classList.remove('show');
+                        return;
+                    }
+                } else {
+                    showToast('⚠️ Silakan upload video atau masukkan URL eksternal!', 'error');
                     return;
                 }
 
                 videoData.push({
                     id: videoCounter++,
                     title: title,
-                    url: url,
+                    url: videoUrl,
                     description: description,
                     status: status
                 });
 
+                saveBtn.disabled = false;
+                progressEl.classList.remove('show');
                 renderVideos();
-                closeModalVideo();
-                alert('✅ Video "' + title + '" berhasil ditambahkan!');
+                closeModal('modalVideo');
+                showToast('✅ Video "' + title + '" berhasil ditambahkan!', 'success');
+            };
+
+            window.saveAdmin = function(e) {
+                e.preventDefault();
+                var username = document.getElementById('adminUsername').value.trim();
+                var fullname = document.getElementById('adminFullname').value.trim();
+                var email = document.getElementById('adminEmail').value.trim();
+                var password = document.getElementById('adminPassword').value;
+                var level = document.getElementById('adminLevel').value;
+                var status = document.getElementById('adminStatus').value;
+
+                if (!username || !fullname || !email || !password || !level) {
+                    showToast('⚠️ Semua field wajib diisi!', 'error');
+                    return;
+                }
+
+                adminData.push({ username: username, name: fullname, level: level, status: status });
+                renderAdmins();
+                closeModal('modalAdmin');
+                showToast('✅ Admin ' + fullname + ' berhasil ditambahkan!', 'success');
+            };
+
+            // ============================================
+            // RENDER FUNCTIONS
+            // ============================================
+            function renderBanners() {
+                var tbody = document.getElementById('bannerTableBody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                if (bannerData.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;">Belum ada data banner</td></tr>';
+                    return;
+                }
+                for (var i = 0; i < bannerData.length; i++) {
+                    var b = bannerData[i];
+                    var row = document.createElement('tr');
+                    var statusLabel = b.status === 'active' ? '✅ Aktif' : '📝 Draft';
+                    var statusClass = b.status === 'active' ? 'active' : 'pending';
+                    row.innerHTML = `
+                        <td>${i + 1}</td>
+                        <td><img src="${b.image}" style="width:60px;height:40px;object-fit:cover;border-radius:6px;" onerror="this.src='https://via.placeholder.com/60x40/ccc?text=No+Image'" /></td>
+                        <td><strong>${b.title}</strong></td>
+                        <td><a href="${b.link}" target="_blank" style="color:#0A2E6D;font-size:12px;">${b.link}</a></td>
+                        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                        <td><button class="btn-action edit" onclick="showToast('Fitur edit banner segera hadir!','info')">Edit</button>
+                        <button class="btn-action delete" onclick="bannerData.splice(${i},1);renderBanners();showToast('Banner dihapus!','success')">Hapus</button></td>
+                    `;
+                    tbody.appendChild(row);
+                }
+                document.getElementById('bannerBadge').textContent = bannerData.length;
+            }
+
+            function renderGaleri() {
+                var tbody = document.getElementById('galeriTableBody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                if (galeriData.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;">Belum ada data galeri</td></tr>';
+                    return;
+                }
+                var kategoriLabels = {
+                    kamar: '🏠 Kamar',
+                    fasilitas: '⭐ Fasilitas',
+                    lingkungan: '🌳 Lingkungan',
+                    event: '🎉 Event',
+                    lainnya: '📁 Lainnya'
+                };
+                for (var i = 0; i < galeriData.length; i++) {
+                    var g = galeriData[i];
+                    var row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${i + 1}</td>
+                        <td><img src="${g.image}" style="width:60px;height:40px;object-fit:cover;border-radius:6px;" onerror="this.src='https://via.placeholder.com/60x40/ccc?text=No+Image'" /></td>
+                        <td><strong>${g.title}</strong></td>
+                        <td>${kategoriLabels[g.kategori] || g.kategori}</td>
+                        <td><button class="btn-action edit" onclick="showToast('Fitur edit galeri segera hadir!','info')">Edit</button>
+                        <button class="btn-action delete" onclick="galeriData.splice(${i},1);renderGaleri();showToast('Foto dihapus!','success')">Hapus</button></td>
+                    `;
+                    tbody.appendChild(row);
+                }
+                document.getElementById('galeriBadge').textContent = galeriData.length;
+            }
+
+            function renderVideos() {
+                var tbody = document.getElementById('videoTableBody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                if (videoData.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;">Belum ada data video</td></tr>';
+                    return;
+                }
+                for (var i = 0; i < videoData.length; i++) {
+                    var v = videoData[i];
+                    var row = document.createElement('tr');
+                    var statusLabel = v.status === 'active' ? '✅ Aktif' : '📝 Draft';
+                    var statusClass = v.status === 'active' ? 'active' : 'pending';
+                    var isVideo = v.url && (v.url.includes('.mp4') || v.url.includes('.webm'));
+                    row.innerHTML = `
+                        <td>${i + 1}</td>
+                        <td><strong>${v.title}</strong></td>
+                        <td><code style="font-size:11px;background:#f0f4f9;padding:2px 8px;border-radius:4px;word-break:break-all;">${v.url}</code></td>
+                        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                        <td><button class="btn-action edit" onclick="editVideo(${v.id})">Edit</button>
+                        <button class="btn-action delete" onclick="deleteVideo(${v.id})">Hapus</button></td>
+                    `;
+                    tbody.appendChild(row);
+                }
+                var activeVideo = videoData.find(function(v) { return v.status === 'active'; });
+                var infoEl = document.getElementById('homepageVideoInfo');
+                if (infoEl) {
+                    infoEl.textContent = activeVideo ? activeVideo.title : 'Tidak ada video aktif';
+                    infoEl.style.color = activeVideo ? '#28a745' : '#dc3545';
+                }
+                document.getElementById('videoBadge').textContent = videoData.length;
             }
 
             function editVideo(id) {
-                const video = videoData.find(v => v.id === id);
+                var video = videoData.find(function(v) { return v.id === id; });
                 if (!video) return;
-                const newTitle = prompt('Edit Judul Video:', video.title);
+                var newTitle = prompt('Edit Judul Video:', video.title);
                 if (newTitle !== null && newTitle.trim()) {
                     video.title = newTitle.trim();
                     renderVideos();
+                    showToast('✅ Video berhasil diupdate!', 'success');
                 }
             }
 
             function deleteVideo(id) {
                 if (!confirm('Yakin ingin menghapus video ini?')) return;
-                videoData = videoData.filter(v => v.id !== id);
+                videoData = videoData.filter(function(v) { return v.id !== id; });
                 renderVideos();
-                alert('✅ Video berhasil dihapus!');
+                showToast('✅ Video berhasil dihapus!', 'success');
             }
 
-            // ============================================
-            // ADMIN MANAGEMENT
-            // ============================================
-            const levelDescriptions = {
-                superadmin: '🟠 Akses penuh ke semua menu termasuk User Management dan Pengaturan Sistem.',
-                adminadv: '🔵 Akses ke semua data kecuali User Management dan Pengaturan Sistem.',
-                adminreg: '🟢 Akses terbatas: hanya bisa melihat data, tidak bisa mengedit atau menghapus.'
-            };
-
-            function openModalAdmin() {
-                document.getElementById('modalAdmin').classList.add('show');
-                document.body.style.overflow = 'hidden';
-                document.getElementById('formAdmin').reset();
-                document.getElementById('levelDescription').textContent = 'Pilih level akses untuk melihat deskripsi';
-            }
-
-            function closeModalAdmin() {
-                document.getElementById('modalAdmin').classList.remove('show');
-                document.body.style.overflow = '';
-            }
-
-            document.getElementById('adminLevel').addEventListener('change', function() {
-                const desc = levelDescriptions[this.value] || 'Pilih level akses untuk melihat deskripsi';
-                document.getElementById('levelDescription').textContent = desc;
-            });
-
-            function saveAdmin(e) {
-                e.preventDefault();
-                const username = document.getElementById('adminUsername').value.trim();
-                const fullname = document.getElementById('adminFullname').value.trim();
-                const email = document.getElementById('adminEmail').value.trim();
-                const password = document.getElementById('adminPassword').value;
-                const level = document.getElementById('adminLevel').value;
-                const status = document.getElementById('adminStatus').value;
-
-                if (!username || !fullname || !email || !password || !level) {
-                    alert('⚠️ Semua field wajib diisi!');
-                    return;
+            function renderAdmins() {
+                var tbody = document.getElementById('adminTableBody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                var levelLabels = {
+                    superadmin: '<span class="status-badge active">Super Admin</span>',
+                    adminadv: '<span class="status-badge" style="background:#17a2b8;color:#fff;">Admin Advance</span>',
+                    adminreg: '<span class="status-badge" style="background:#6c757d;color:#fff;">Admin Biasa</span>'
+                };
+                var statusLabels = {
+                    active: '<span class="status-badge active">Aktif</span>',
+                    inactive: '<span class="status-badge inactive">Tidak Aktif</span>'
+                };
+                for (var i = 0; i < adminData.length; i++) {
+                    var a = adminData[i];
+                    var row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>${a.username}</strong></td>
+                        <td>${a.name}</td>
+                        <td>${levelLabels[a.level] || a.level}</td>
+                        <td>${statusLabels[a.status] || a.status}</td>
+                        <td><button class="btn-action edit" onclick="editAdmin('${a.username}')">Edit</button>
+                        <button class="btn-action delete" onclick="deleteAdmin('${a.username}')">Hapus</button></td>
+                    `;
+                    tbody.appendChild(row);
                 }
+                document.getElementById('adminBadge').textContent = adminData.length;
+            }
 
-                adminData.push({ username, name: fullname, level, status });
+            function editAdmin(username) {
+                var admin = adminData.find(function(a) { return a.username === username; });
+                if (!admin) return;
+                var newName = prompt('Edit Nama Admin:', admin.name);
+                if (newName !== null && newName.trim()) {
+                    admin.name = newName.trim();
+                    renderAdmins();
+                    showToast('✅ Admin berhasil diupdate!', 'success');
+                }
+            }
+
+            function deleteAdmin(username) {
+                if (!confirm('Yakin ingin menghapus admin ' + username + '?')) return;
+                adminData = adminData.filter(function(a) { return a.username !== username; });
                 renderAdmins();
-                closeModalAdmin();
-                alert('✅ Admin ' + fullname + ' berhasil ditambahkan!');
+                showToast('✅ Admin ' + username + ' berhasil dihapus!', 'success');
+            }
+
+            // ============================================
+            // ROOM RENDER FUNCTIONS
+            // ============================================
+            function renderVisualRooms() {
+                var grid = document.getElementById('roomVisualGrid');
+                if (!grid) return;
+                grid.innerHTML = '';
+                for (var i = 0; i < roomsData.length; i++) {
+                    var room = roomsData[i];
+                    var box = document.createElement('div');
+                    box.className = 'room-box';
+                    var statusMap = {
+                        occupied: { label: 'Terisi', class: 'occupied' },
+                        empty: { label: 'Kosong', class: 'empty' },
+                        maintenance: { label: 'Maintenance', class: 'maintenance' }
+                    };
+                    var status = statusMap[room.status] || statusMap.empty;
+                    box.innerHTML = `
+                        <div class="room-number">${room.id}</div>
+                        <div class="room-type">${room.type} • Lantai ${room.floor}</div>
+                        <div class="room-status-box ${status.class}">${status.label}</div>
+                        ${room.status === 'occupied' ? '<div class="room-tenant">👤 ' + room.tenant + '</div>' : ''}
+                        ${room.status === 'occupied' ? '<div class="room-date">📅 ' + room.date + '</div>' : ''}
+                    `;
+                    grid.appendChild(box);
+                }
+                document.getElementById('roomBadge').textContent = roomsData.length;
+            }
+
+            function renderTableRooms() {
+                var tbody = document.getElementById('kamarTableBody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                for (var i = 0; i < roomsData.length; i++) {
+                    var room = roomsData[i];
+                    var statusMap = {
+                        occupied: { label: 'Terisi' },
+                        empty: { label: 'Kosong' },
+                        maintenance: { label: 'Maintenance' }
+                    };
+                    var status = statusMap[room.status] || statusMap.empty;
+                    var row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>${room.id}</strong></td>
+                        <td>${room.type}</td>
+                        <td>${room.floor}</td>
+                        <td>Rp ${room.price.toLocaleString('id-ID')}</td>
+                        <td>${room.tenant || '-'}</td>
+                        <td><span class="status-badge" style="${room.status === 'occupied' ? 'background:#dc3545;color:#fff;' : room.status === 'empty' ? 'background:#28a745;color:#fff;' : 'background:#ffc107;color:#333;'}">${status.label}</span></td>
+                        <td><button class="btn-action edit" onclick="showToast('Fitur edit kamar segera hadir!','info')">Edit</button>
+                        <button class="btn-action delete" onclick="showToast('Fitur hapus kamar segera hadir!','info')">Hapus</button></td>
+                    `;
+                    tbody.appendChild(row);
+                }
+            }
+
+            function renderPenghuni() {
+                var tbody = document.getElementById('penghuniTableBody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                for (var i = 0; i < penghuniData.length; i++) {
+                    var p = penghuniData[i];
+                    var row = document.createElement('tr');
+                    var statusLabel = p.status === 'active' ? 'Aktif' : 'Tidak Aktif';
+                    var statusClass = p.status === 'active' ? 'active' : 'inactive';
+                    row.innerHTML = `
+                        <td><strong>${p.name}</strong></td>
+                        <td>${p.room}</td>
+                        <td>${p.phone}</td>
+                        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                        <td><button class="btn-action edit" onclick="showToast('Fitur edit penghuni segera hadir!','info')">Edit</button>
+                        <button class="btn-action delete" onclick="showToast('Fitur hapus penghuni segera hadir!','info')">Hapus</button></td>
+                    `;
+                    tbody.appendChild(row);
+                }
+                document.getElementById('tenantBadge').textContent = penghuniData.length;
+            }
+
+            function renderPembayaran() {
+                var tbody = document.getElementById('pembayaranTableBody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                for (var i = 0; i < pembayaranData.length; i++) {
+                    var p = pembayaranData[i];
+                    var row = document.createElement('tr');
+                    var statusLabel = p.status === 'paid' ? 'Lunas' : 'Pending';
+                    var statusClass = p.status === 'paid' ? 'active' : 'pending';
+                    row.innerHTML = `
+                        <td><strong>${p.invoice}</strong></td>
+                        <td>${p.tenant}</td>
+                        <td>${p.room}</td>
+                        <td>Rp ${p.amount.toLocaleString('id-ID')}</td>
+                        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                        <td><button class="btn-action edit" onclick="showToast('Fitur detail pembayaran segera hadir!','info')">Detail</button></td>
+                    `;
+                    tbody.appendChild(row);
+                }
             }
 
             // ============================================
             // SIDEBAR NAVIGATION
             // ============================================
-            const menuItems = document.querySelectorAll('.menu-item[data-section]');
-            const contentSections = document.querySelectorAll('.content-section');
-            const breadcrumb = document.getElementById('breadcrumb');
+            var menuItems = document.querySelectorAll('.menu-item[data-section]');
+            var contentSections = document.querySelectorAll('.content-section');
+            var breadcrumb = document.getElementById('breadcrumb');
 
-            const menuTitles = {
+            var menuTitles = {
                 dashboard: 'Dashboard Admin',
                 'visual-kamar': 'Visual Kamar',
                 kamar: 'Data Kamar',
@@ -1761,37 +2479,65 @@
             };
 
             function navigateTo(sectionId) {
-                menuItems.forEach(item => {
-                    item.classList.remove('active');
-                    if (item.dataset.section === sectionId) item.classList.add('active');
-                });
-                contentSections.forEach(section => {
-                    section.classList.remove('active');
-                    if (section.id === 'section-' + sectionId) section.classList.add('active');
-                });
+                for (var i = 0; i < menuItems.length; i++) {
+                    menuItems[i].classList.remove('active');
+                    if (menuItems[i].dataset.section === sectionId) {
+                        menuItems[i].classList.add('active');
+                    }
+                }
+                for (var j = 0; j < contentSections.length; j++) {
+                    contentSections[j].classList.remove('active');
+                    if (contentSections[j].id === 'section-' + sectionId) {
+                        contentSections[j].classList.add('active');
+                    }
+                }
                 breadcrumb.textContent = menuTitles[sectionId] || sectionId;
-
-                // Tutup semua dropdown setelah navigasi
-                document.querySelectorAll('.sub-menu.open').forEach(sub => sub.classList.remove('open'));
-                document.querySelectorAll('.arrow.open').forEach(arr => arr.classList.remove('open'));
-
+                document.querySelectorAll('.sub-menu.open').forEach(function(sub) { sub.classList.remove('open'); });
+                document.querySelectorAll('.arrow.open').forEach(function(arr) { arr.classList.remove('open'); });
                 closeSidebar();
+                setTimeout(checkScrollIndicator, 400);
             }
 
-            menuItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    navigateTo(this.dataset.section);
-                });
-            });
             window.navigateTo = navigateTo;
+
+            for (var m = 0; m < menuItems.length; m++) {
+                (function(item) {
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigateTo(this.dataset.section);
+                    });
+                })(menuItems[m]);
+            }
+
+            // ============================================
+            // TOGGLE DROPDOWN
+            // ============================================
+            window.toggleMenu = function(button) {
+                var subMenu = button.nextElementSibling;
+                var arrow = button.querySelector('.arrow');
+                subMenu.classList.toggle('open');
+                if (arrow) arrow.classList.toggle('open');
+
+                var allGroups = document.querySelectorAll('.menu-group');
+                for (var g = 0; g < allGroups.length; g++) {
+                    var group = allGroups[g];
+                    var toggle = group.querySelector('.menu-toggle');
+                    var sub = group.querySelector('.sub-menu');
+                    var arr = group.querySelector('.arrow');
+                    if (sub !== subMenu && sub.classList.contains('open')) {
+                        sub.classList.remove('open');
+                        if (arr) arr.classList.remove('open');
+                    }
+                }
+                setTimeout(checkScrollIndicator, 400);
+            };
 
             // ============================================
             // SIDEBAR TOGGLE
             // ============================================
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebarOverlay');
-            const mobileToggle = document.getElementById('mobileToggle');
+            var sidebar = document.getElementById('sidebar');
+            var sidebarOverlay = document.getElementById('sidebarOverlay');
+            var mobileToggle = document.getElementById('mobileToggle');
 
             function openSidebar() {
                 sidebar.classList.add('open');
@@ -1810,16 +2556,30 @@
 
             window.addEventListener('resize', function() {
                 if (window.innerWidth > 992) closeSidebar();
+                checkScrollIndicator();
             });
+
+            // ============================================
+            // SCROLL INDICATOR
+            // ============================================
+            function checkScrollIndicator() {
+                var sidebarEl = document.getElementById('sidebar');
+                var indicator = document.getElementById('scrollIndicator');
+                if (sidebarEl.scrollHeight > sidebarEl.clientHeight + 10) {
+                    indicator.classList.add('show');
+                } else {
+                    indicator.classList.remove('show');
+                }
+            }
 
             // ============================================
             // LOGOUT
             // ============================================
             document.getElementById('btnLogout').addEventListener('click', function() {
                 if (confirm('Yakin ingin keluar dari dashboard admin?')) {
-                    sessionStorage.removeItem(SESSION_KEY);
-                    sessionStorage.removeItem(USER_KEY);
-                    sessionStorage.removeItem(ROLE_KEY);
+                    sessionStorage.removeItem('admin_logged_in');
+                    sessionStorage.removeItem('admin_username');
+                    sessionStorage.removeItem('admin_role');
                     window.location.href = 'admin-login.html';
                 }
             });
@@ -1829,41 +2589,50 @@
             // ============================================
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
-                    if (document.getElementById('modalAdmin').classList.contains('show')) closeModalAdmin();
-                    if (document.getElementById('modalVideo').classList.contains('show')) closeModalVideo();
+                    var modals = document.querySelectorAll('.modal-overlay.show');
+                    modals.forEach(function(modal) {
+                        closeModal(modal.id);
+                    });
                     closeSidebar();
                 }
             });
 
-            // Close modal on overlay click
-            document.getElementById('modalAdmin').addEventListener('click', function(e) {
-                if (e.target === this) closeModalAdmin();
-            });
-            document.getElementById('modalVideo').addEventListener('click', function(e) {
-                if (e.target === this) closeModalVideo();
+            // Close modals on overlay click
+            document.querySelectorAll('.modal-overlay').forEach(function(modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeModal(this.id);
+                    }
+                });
             });
 
             // ============================================
             // INIT
             // ============================================
+            // Admin info
+            var adminName = sessionStorage.getItem('admin_username') || 'Admin';
+            var adminRole = sessionStorage.getItem('admin_role') || 'Super Administrator';
+            document.getElementById('adminName').textContent = adminName;
+            document.getElementById('adminRole').textContent = adminRole;
+            document.getElementById('adminAvatar').textContent = adminName.charAt(0).toUpperCase();
+
+            // Render semua data
             renderVisualRooms();
             renderTableRooms();
+            renderPenghuni();
+            renderPembayaran();
+            renderBanners();
+            renderGaleri();
             renderVideos();
             renderAdmins();
 
-            // Buka dropdown pertama (CMS Website) secara default
-            setTimeout(function() {
-                const firstGroup = document.querySelector('.menu-group');
-                if (firstGroup) {
-                    const toggle = firstGroup.querySelector('.menu-toggle');
-                    if (toggle) toggle.click();
-                }
-            }, 500);
+            // Check scroll indicator
+            setTimeout(checkScrollIndicator, 500);
 
             console.log('✅ JDI KOSKITA - Admin Dashboard v3.0 Loaded');
             console.log('👤 Login sebagai: ' + adminName + ' (' + adminRole + ')');
-            console.log('🎬 CMS Video siap digunakan!');
-            console.log('👨‍💼 Admin Management siap digunakan!');
+            console.log('📤 Upload support: Firebase & Cloudinary');
+            console.log('📊 CMS: Banner, Galeri, Video, Admin siap digunakan!');
 
         })();
     </script>

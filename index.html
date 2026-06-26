@@ -6,8 +6,8 @@
     <title>JDI KOSKITA - Smart Boarding House Management System</title>
     <style>
         /* ============================================================
-                   RESET & BASE
-                   ============================================================ */
+           RESET & BASE
+           ============================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -25,8 +25,8 @@
         }
 
         /* ============================================================
-                   HEADER & NAVIGATION
-                   ============================================================ */
+           HEADER & NAVIGATION
+           ============================================================ */
         header {
             background: #0A2E6D;
             color: #fff;
@@ -165,8 +165,8 @@
         }
 
         /* ============================================================
-                   HERO SECTION - SLIDER DENGAN 6 GAMBAR
-                   ============================================================ */
+           HERO SECTION - SLIDER DENGAN 6 GAMBAR
+           ============================================================ */
         .hero {
             min-height: 92vh;
             position: relative;
@@ -193,7 +193,7 @@
             transition: opacity 1.5s ease;
         }
 
-        /* 6 Gambar dengan delay berbeda - PATH DIPERBAIKI */
+        /* 6 Gambar dengan delay berbeda */
         .hero-slider .slide:nth-child(1) {
             background-image: url('assets/kost1.jpg');
             animation-delay: 0s;
@@ -308,7 +308,7 @@
             }
         }
 
-        /* Hero Content - Lebar penuh tanpa video di kanan */
+        /* Hero Content */
         .hero-content {
             position: relative;
             z-index: 2;
@@ -442,13 +442,13 @@
         }
 
         /* ============================================================
-                   VIDEO POPUP MODAL (Setengah Layar)
-                   ============================================================ */
+           VIDEO POPUP MODAL - DIPERBAIKI
+           ============================================================ */
         .video-modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 9999;
             justify-content: center;
             align-items: center;
@@ -487,6 +487,45 @@
             display: block;
             max-height: 80vh;
             background: #000;
+            min-height: 300px;
+        }
+
+        /* Video Error / Fallback */
+        .video-error {
+            display: none;
+            padding: 60px 30px;
+            text-align: center;
+            color: #fff;
+            background: #1a1a2e;
+            min-height: 300px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .video-error.show {
+            display: flex;
+        }
+
+        .video-error .error-icon {
+            font-size: 60px;
+            display: block;
+        }
+        .video-error .error-title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .video-error .error-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .video-error .error-desc a {
+            color: #FF7A00;
+            text-decoration: none;
+        }
+        .video-error .error-desc a:hover {
+            text-decoration: underline;
         }
 
         .video-modal-close {
@@ -523,9 +562,39 @@
             backdrop-filter: blur(4px);
         }
 
+        /* Video Loading Spinner */
+        .video-loading {
+            position: absolute;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            z-index: 5;
+        }
+
+        .video-loading.show {
+            display: flex;
+        }
+
+        .video-loading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #FF7A00;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         /* ============================================================
-                   SLIDER INDICATOR DOTS (6 Dots)
-                   ============================================================ */
+           SLIDER INDICATOR DOTS
+           ============================================================ */
         .slider-dots {
             position: absolute;
             bottom: 30px;
@@ -557,8 +626,8 @@
         }
 
         /* ============================================================
-                   FEATURES (Floating Cards)
-                   ============================================================ */
+           FEATURES (Floating Cards)
+           ============================================================ */
         .features-section {
             position: relative;
             margin-top: -60px;
@@ -686,8 +755,8 @@
         }
 
         /* ============================================================
-                   FOOTER
-                   ============================================================ */
+           FOOTER
+           ============================================================ */
         footer {
             background: #1a1a2e;
             color: rgba(255, 255, 255, 0.8);
@@ -737,8 +806,8 @@
         }
 
         /* ============================================================
-                   ANIMATIONS
-                   ============================================================ */
+           ANIMATIONS
+           ============================================================ */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -751,8 +820,8 @@
         }
 
         /* ============================================================
-                   RESPONSIVE
-                   ============================================================ */
+           RESPONSIVE
+           ============================================================ */
         @media (max-width: 1024px) {
             .hero-text h1 {
                 font-size: 44px;
@@ -875,6 +944,7 @@
 
             .video-modal-content video {
                 max-height: 60vh;
+                min-height: 200px;
             }
         }
 
@@ -1005,9 +1075,19 @@
                 left: 12px;
                 padding: 4px 12px;
             }
+
+            .video-error {
+                min-height: 200px;
+                padding: 30px 20px;
+            }
+            .video-error .error-icon {
+                font-size: 40px;
+            }
+            .video-error .error-title {
+                font-size: 18px;
+            }
         }
 
-        /* Tampilkan nav menu di desktop */
         @media (min-width: 577px) {
             .nav-menu {
                 display: flex !important;
@@ -1021,11 +1101,10 @@
 <body>
 
     <!-- ============================================================
-    HEADER - SEMUA LINK SUDAH DIPERBAIKI + LANGUAGE SWITCHER
+    HEADER
     ============================================================ -->
     <header>
         <div class="header-container">
-            <!-- LOGO KIRI - PATH DIPERBAIKI -->
             <div class="logo">
                 <img src="assets/logo-jdi.png" alt="Logo JDI KOSKITA" />
                 <div>
@@ -1034,14 +1113,12 @@
                 </div>
             </div>
 
-            <!-- Hamburger (Mobile) -->
             <div class="hamburger" id="hamburger" aria-label="Toggle navigation">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
 
-            <!-- Navigation + Language Switcher -->
             <nav class="nav-menu" id="navMenu">
                 <a href="index.html" id="menuHome">Beranda</a>
                 <a href="cek-in.html" id="menuCheckin">Cek-in</a>
@@ -1052,7 +1129,6 @@
                 <a href="admin-login.html" class="btn-login" id="menuAdminLogin">🔐 Login Admin</a>
                 <a href="#" class="btn-login" id="menuGuestLogin">👤 Login Tamu</a>
 
-                <!-- Language Switcher -->
                 <div class="lang-switcher">
                     <button class="lang-btn active" data-lang="id" onclick="switchLanguage('id')">
                         <span class="flag">🇮🇩</span> ID
@@ -1066,10 +1142,9 @@
     </header>
 
     <!-- ============================================================
-    HERO SECTION - SLIDER DENGAN 6 GAMBAR
+    HERO SECTION
     ============================================================ -->
     <section class="hero">
-        <!-- Background Slider - 6 Gambar -->
         <div class="hero-slider">
             <div class="slide"></div>
             <div class="slide"></div>
@@ -1079,14 +1154,12 @@
             <div class="slide"></div>
         </div>
 
-        <!-- Decorative Shapes -->
         <div class="hero-shapes">
             <div class="shape"></div>
             <div class="shape"></div>
             <div class="shape"></div>
         </div>
 
-        <!-- Slider Dots - 6 Dots -->
         <div class="slider-dots">
             <span class="dot active"></span>
             <span class="dot"></span>
@@ -1096,7 +1169,6 @@
             <span class="dot"></span>
         </div>
 
-        <!-- Hero Content - TANPA VIDEO PLAYER -->
         <div class="hero-content">
             <div class="hero-text">
                 <h1 id="heroTitle">Selamat Datang di<br /><span class="highlight">JDI KOSKITA</span></h1>
@@ -1107,7 +1179,6 @@
                     cepat, dan aman.
                 </p>
                 <div class="btn-group">
-                    <!-- Tombol Download Playstore -->
                     <a href="#" class="btn-download" id="btnDownloadPlaystore">
                         <span class="play-icon">▶</span>
                         <span class="btn-text">
@@ -1122,21 +1193,45 @@
     </section>
 
     <!-- ============================================================
-    VIDEO POPUP MODAL
+    VIDEO POPUP MODAL - DIPERBAIKI DENGAN FALLBACK
     ============================================================ -->
     <div class="video-modal-overlay" id="videoModal">
         <div class="video-modal-content">
             <button class="video-modal-close" id="closeVideoModal">✕</button>
-            <video id="modalVideo" controls>
+
+            <!-- Loading Spinner -->
+            <div class="video-loading" id="videoLoading">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Video Player -->
+            <video id="modalVideo" controls preload="metadata">
+                <!-- Coba beberapa format -->
                 <source src="assets/video/jdiiklan.mp4" type="video/mp4" />
-                <span id="videoNotSupported">Browser Anda tidak mendukung video.</span>
+                <source src="assets/video/jdiiklan.webm" type="video/webm" />
+                <source src="assets/video/jdiiklan.ogv" type="video/ogg" />
+                <!-- Fallback jika semua gagal -->
             </video>
+
+            <!-- Error State -->
+            <div class="video-error" id="videoError">
+                <span class="error-icon">🎬</span>
+                <div class="error-title">Video Tidak Dapat Diputar</div>
+                <div class="error-desc">
+                    Maaf, video tidak dapat dimuat. Coba salah satu opsi berikut:<br /><br />
+                    📥 <a href="assets/video/jdiiklan.mp4" download>Download Video</a> &nbsp;|&nbsp;
+                    🔗 <a href="https://www.youtube.com/embed/xxx" target="_blank">Tonton di YouTube</a>
+                    <br /><br />
+                    <span style="font-size:12px;opacity:0.5;">Pastikan file video tersedia di folder assets/video/</span>
+                </div>
+            </div>
+
             <div class="video-modal-title" id="videoModalTitle">🎬 Video Profil JDI KOSKITA</div>
         </div>
     </div>
 
     <!-- ============================================================
-    FEATURES (Floating Cards)
+    FEATURES
     ============================================================ -->
     <section class="features-section">
         <div class="features-container">
@@ -1146,7 +1241,6 @@
             </div>
 
             <div class="card-container">
-                <!-- CARD 1: Data Kamar -->
                 <div class="card">
                     <span class="card-number">01</span>
                     <div class="icon-bg">🏠</div>
@@ -1156,7 +1250,6 @@
                     </p>
                 </div>
 
-                <!-- CARD 2: Data Penghuni -->
                 <div class="card">
                     <span class="card-number">02</span>
                     <div class="icon-bg">👤</div>
@@ -1166,7 +1259,6 @@
                     </p>
                 </div>
 
-                <!-- CARD 3: Pembayaran -->
                 <div class="card">
                     <span class="card-number">03</span>
                     <div class="icon-bg">💳</div>
@@ -1176,7 +1268,6 @@
                     </p>
                 </div>
 
-                <!-- CARD 4: Dashboard -->
                 <div class="card">
                     <span class="card-number">04</span>
                     <div class="icon-bg">📊</div>
@@ -1190,7 +1281,7 @@
     </section>
 
     <!-- ============================================================
-    FOOTER - SEMUA LINK SUDAH DIPERBAIKI
+    FOOTER
     ============================================================ -->
     <footer>
         <div class="footer-brand">JDI <span>KOSKITA</span></div>
@@ -1209,7 +1300,7 @@
     </footer>
 
     <!-- ============================================================
-    JAVASCRIPT - MULTI LANGUAGE
+    JAVASCRIPT
     ============================================================ -->
     <script>
         (function() {
@@ -1224,7 +1315,6 @@
                     name: 'Indonesia',
                     flag: '🇮🇩',
                     translations: {
-                        // Header
                         'headerTagline': 'Smart Boarding House Management System',
                         'menuHome': 'Beranda',
                         'menuCheckin': 'Cek-in',
@@ -1234,20 +1324,13 @@
                         'menuContact': 'Kontak',
                         'menuAdminLogin': '🔐 Login Admin',
                         'menuGuestLogin': '👤 Login Tamu',
-
-                        // Hero
                         'heroTitle': 'Selamat Datang di<br /><span class="highlight">JDI KOSKITA</span>',
                         'heroSubtitle': 'Platform Digital Manajemen Rumah Kos Modern',
                         'heroDescription': 'Kelola kamar, penghuni, pembayaran, dan laporan secara online dalam satu sistem yang mudah, cepat, dan aman.',
                         'downloadSmall': 'GET IT ON',
                         'downloadBig': 'Google Play',
                         'watchVideoText': 'Lihat Video',
-
-                        // Video Modal
-                        'videoNotSupported': 'Browser Anda tidak mendukung video.',
                         'videoModalTitle': '🎬 Video Profil JDI KOSKITA',
-
-                        // Features
                         'featuresTitle': 'Kelola Kos dengan <span class="highlight">Mudah</span>',
                         'featuresSubText': 'Semua fitur yang Anda butuhkan dalam satu platform',
                         'featureRoomTitle': 'Data Kamar',
@@ -1258,8 +1341,6 @@
                         'featurePaymentDesc': 'Monitoring pembayaran bulanan secara otomatis, real-time, dan notifikasi jatuh tempo.',
                         'featureDashboardTitle': 'Dashboard',
                         'featureDashboardDesc': 'Laporan keuangan, okupansi kamar, dan statistik bisnis dalam satu dashboard.',
-
-                        // Footer
                         'footerTagline': 'Smart Boarding House Management System',
                         'footerCopyright': '© 2026 JDI KOSKITA. All Rights Reserved.',
                         'footerHome': 'Beranda',
@@ -1276,7 +1357,6 @@
                     name: 'English',
                     flag: '🇬🇧',
                     translations: {
-                        // Header
                         'headerTagline': 'Smart Boarding House Management System',
                         'menuHome': 'Home',
                         'menuCheckin': 'Check-in',
@@ -1286,20 +1366,13 @@
                         'menuContact': 'Contact',
                         'menuAdminLogin': '🔐 Admin Login',
                         'menuGuestLogin': '👤 Guest Login',
-
-                        // Hero
                         'heroTitle': 'Welcome to<br /><span class="highlight">JDI KOSKITA</span>',
                         'heroSubtitle': 'Digital Platform for Modern Boarding House Management',
                         'heroDescription': 'Manage rooms, tenants, payments, and reports online in one easy, fast, and secure system.',
                         'downloadSmall': 'GET IT ON',
                         'downloadBig': 'Google Play',
                         'watchVideoText': 'Watch Video',
-
-                        // Video Modal
-                        'videoNotSupported': 'Your browser does not support the video tag.',
                         'videoModalTitle': '🎬 JDI KOSKITA Profile Video',
-
-                        // Features
                         'featuresTitle': 'Manage Boarding House <span class="highlight">Easily</span>',
                         'featuresSubText': 'All features you need in one platform',
                         'featureRoomTitle': 'Room Data',
@@ -1310,8 +1383,6 @@
                         'featurePaymentDesc': 'Automated monthly payment monitoring, real-time, and due date notifications.',
                         'featureDashboardTitle': 'Dashboard',
                         'featureDashboardDesc': 'Financial reports, room occupancy, and business statistics in one dashboard.',
-
-                        // Footer
                         'footerTagline': 'Smart Boarding House Management System',
                         'footerCopyright': '© 2026 JDI KOSKITA. All Rights Reserved.',
                         'footerHome': 'Home',
@@ -1331,7 +1402,7 @@
             let currentLang = localStorage.getItem('jdi_lang') || 'id';
 
             // ============================================
-            // SWITCH LANGUAGE FUNCTION
+            // SWITCH LANGUAGE
             // ============================================
             window.switchLanguage = function(langCode) {
                 if (langCode === currentLang) return;
@@ -1341,33 +1412,24 @@
                 updateLangButtons(langCode);
             };
 
-            // ============================================
-            // APPLY LANGUAGE
-            // ============================================
             function applyLanguage(langCode) {
                 const langData = LANGUAGES[langCode];
                 if (!langData) return;
-
                 const t = langData.translations;
 
-                // Update HTML lang attribute
                 document.documentElement.lang = langCode;
 
-                // Update all elements with data-lang attribute
                 document.querySelectorAll('[data-lang]').forEach(el => {
                     const key = el.getAttribute('data-lang');
                     if (t[key] !== undefined) {
                         if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
                             el.placeholder = t[key];
-                        } else if (el.tagName === 'IMG') {
-                            el.alt = t[key];
                         } else {
                             el.innerHTML = t[key];
                         }
                     }
                 });
 
-                // Update specific elements by ID
                 const idMap = {
                     'headerTagline': 'headerTagline',
                     'menuHome': 'menuHome',
@@ -1384,7 +1446,6 @@
                     'downloadSmall': 'downloadSmall',
                     'downloadBig': 'downloadBig',
                     'watchVideoText': 'watchVideoText',
-                    'videoNotSupported': 'videoNotSupported',
                     'videoModalTitle': 'videoModalTitle',
                     'featuresTitle': 'featuresTitle',
                     'featuresSubText': 'featuresSubText',
@@ -1417,9 +1478,6 @@
                 console.log('🌐 Language switched to:', langCode, '-', LANGUAGES[langCode].name);
             }
 
-            // ============================================
-            // UPDATE LANGUAGE BUTTONS
-            // ============================================
             function updateLangButtons(langCode) {
                 document.querySelectorAll('.lang-btn').forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.lang === langCode);
@@ -1427,49 +1485,111 @@
             }
 
             // ============================================
-            // 1. SLIDER DOTS - 6 DOTS
+            // 1. SLIDER DOTS
             // ============================================
             const dots = document.querySelectorAll('.dot');
             let currentDot = 0;
             const totalDots = dots.length;
 
             setInterval(function() {
-                dots.forEach(function(d) {
-                    d.classList.remove('active');
-                });
+                dots.forEach(function(d) { d.classList.remove('active'); });
                 currentDot = (currentDot + 1) % totalDots;
                 dots[currentDot].classList.add('active');
             }, 5000);
 
             dots.forEach(function(dot, index) {
                 dot.addEventListener('click', function() {
-                    dots.forEach(function(d) {
-                        d.classList.remove('active');
-                    });
+                    dots.forEach(function(d) { d.classList.remove('active'); });
                     dot.classList.add('active');
                     currentDot = index;
                 });
             });
 
             // ============================================
-            // 2. VIDEO POPUP MODAL
+            // 2. VIDEO POPUP MODAL - DIPERBAIKI
             // ============================================
             const btnWatchVideo = document.getElementById('btnWatchVideo');
             const videoModal = document.getElementById('videoModal');
             const closeVideoModal = document.getElementById('closeVideoModal');
             const modalVideo = document.getElementById('modalVideo');
+            const videoLoading = document.getElementById('videoLoading');
+            const videoError = document.getElementById('videoError');
+
+            // Cek apakah video bisa diputar
+            function checkVideoSupport() {
+                const video = modalVideo;
+                // Cek apakah ada source yang bisa diputar
+                const sources = video.querySelectorAll('source');
+                let hasSupportedSource = false;
+
+                sources.forEach(function(source) {
+                    const type = source.getAttribute('type');
+                    if (type && video.canPlayType(type) !== '') {
+                        hasSupportedSource = true;
+                    }
+                });
+
+                // Jika tidak ada source yang didukung, tampilkan error
+                if (!hasSupportedSource) {
+                    videoError.classList.add('show');
+                    video.style.display = 'none';
+                    videoLoading.classList.remove('show');
+                    return false;
+                }
+
+                return true;
+            }
 
             if (btnWatchVideo) {
                 btnWatchVideo.addEventListener('click', function(e) {
                     e.preventDefault();
+
+                    // Reset state
+                    videoError.classList.remove('show');
+                    videoLoading.classList.add('show');
+                    modalVideo.style.display = 'block';
+                    modalVideo.style.opacity = '0';
+
+                    // Tampilkan modal
                     videoModal.classList.add('show');
-                    modalVideo.load();
-                    setTimeout(function() {
-                        modalVideo.play().catch(function(err) {
-                            console.log('Autoplay tidak diizinkan oleh browser:', err);
-                        });
-                    }, 300);
                     document.body.style.overflow = 'hidden';
+
+                    // Load video
+                    modalVideo.load();
+
+                    // Cek support setelah load
+                    setTimeout(function() {
+                        const supported = checkVideoSupport();
+
+                        if (supported) {
+                            // Coba play
+                            modalVideo.play().then(function() {
+                                videoLoading.classList.remove('show');
+                                modalVideo.style.opacity = '1';
+                            }).catch(function(err) {
+                                console.log('Autoplay tidak diizinkan:', err);
+                                videoLoading.classList.remove('show');
+                                modalVideo.style.opacity = '1';
+                                // Tampilkan tombol play
+                            });
+                        } else {
+                            videoLoading.classList.remove('show');
+                        }
+                    }, 500);
+
+                    // Event listener untuk error video
+                    modalVideo.onerror = function() {
+                        videoLoading.classList.remove('show');
+                        videoError.classList.add('show');
+                        modalVideo.style.display = 'none';
+                        console.log('Video error:', modalVideo.error);
+                    };
+
+                    // Event listener untuk video loaded
+                    modalVideo.onloadedmetadata = function() {
+                        videoLoading.classList.remove('show');
+                        modalVideo.style.opacity = '1';
+                    };
                 });
             }
 
@@ -1477,7 +1597,13 @@
                 videoModal.classList.remove('show');
                 modalVideo.pause();
                 modalVideo.currentTime = 0;
+                modalVideo.style.opacity = '1';
+                modalVideo.style.display = 'block';
+                videoError.classList.remove('show');
+                videoLoading.classList.remove('show');
                 document.body.style.overflow = '';
+                // Reset error handler
+                modalVideo.onerror = null;
             }
 
             if (closeVideoModal) {
@@ -1497,18 +1623,7 @@
             });
 
             // ============================================
-            // 3. TOMBOL DOWNLOAD PLAYSTORE
-            // ============================================
-            const btnDownload = document.getElementById('btnDownloadPlaystore');
-            if (btnDownload) {
-                btnDownload.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    alert('🔗 Link Download Playstore akan diarahkan ke aplikasi JDI KOSKITA di Google Play Store.\n\nSilahkan ganti link dengan URL Playstore yang sebenarnya.');
-                });
-            }
-
-            // ============================================
-            // 4. HAMBURGER MENU (Mobile)
+            // 3. HAMBURGER MENU
             // ============================================
             const hamburger = document.getElementById('hamburger');
             const navMenu = document.getElementById('navMenu');
@@ -1528,7 +1643,7 @@
             }
 
             // ============================================
-            // 5. PRELOAD GAMBAR AGAR SLIDER SMOOTH
+            // 4. PRELOAD GAMBAR
             // ============================================
             const images = [
                 'assets/kost1.jpg',
@@ -1545,16 +1660,14 @@
             });
 
             // ============================================
-            // 6. INIT LANGUAGE
+            // 5. INIT LANGUAGE
             // ============================================
-            // Apply saved language
             applyLanguage(currentLang);
             updateLangButtons(currentLang);
 
             console.log('✅ JDI KOSKITA - Multi Language Ready!');
             console.log('🌐 Bahasa saat ini:', LANGUAGES[currentLang].name);
-            console.log('📸 Gambar: kost1.jpg - kost6.jpg');
-            console.log('🎬 Video popup siap diklik tombol "Lihat Video"');
+            console.log('🎬 Video player dengan fallback error siap digunakan');
 
         })();
     </script>
