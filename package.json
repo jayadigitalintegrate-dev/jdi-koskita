@@ -9,5 +9,13 @@
     "start": "echo \"Starting JDI KOSKITA\"",
     "dev": "echo \"Development Mode\"",
     "build": "echo \"Build Project\""
+  },
+  "dependencies": {
+    "connect-flash": "^0.1.1",
+    "dotenv": "^17.4.2",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "firebase-admin": "^14.1.0"
   }
 }

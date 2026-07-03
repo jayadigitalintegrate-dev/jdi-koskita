@@ -4,7 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JDI KOSKITA - Daftar Harga</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
+        :root {
+            --navy: #0A2E6D;
+            --orange: #FF7A00;
+            --bg-soft: #F7F8FA;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --border-soft: #E5E7EB;
+            --success: #16A34A;
+            --success-bg: #E7F6EC;
+            --danger: #DC2626;
+            --danger-bg: #FDECEC;
+            --warning: #B45309;
+            --warning-bg: #FEF3E2;
+            --font-display: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+        }
+
         /* ============================================================
            RESET & BASE
            ============================================================ */
@@ -239,8 +259,18 @@
             font-size: 16px;
         }
 
-        /* ---- Quick Summary ---- */
-        .quick-summary {
+        h1, h2, h3, .section-title h2 {
+            font-family: var(--font-display);
+        }
+
+        .breadcrumb-icon {
+            width: 30px;
+            height: 30px;
+            stroke-width: 2.2;
+            color: var(--orange);
+            vertical-align: -6px;
+        }
+
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 16px;
@@ -257,9 +287,21 @@
         }
 
         .quick-summary .summary-item .summary-icon {
-            font-size: 28px;
-            display: block;
-            margin-bottom: 4px;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(10,46,109,0.06), rgba(255,122,0,0.08));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: var(--navy);
+        }
+
+        .quick-summary .summary-item .summary-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2;
         }
 
         .quick-summary .summary-item .summary-number {
@@ -282,7 +324,16 @@
         }
 
         .section-title .title-icon {
-            font-size: 28px;
+            width: 32px;
+            height: 32px;
+            color: var(--orange);
+            display: inline-flex;
+        }
+
+        .section-title .title-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke-width: 2.2;
         }
 
         .section-title h3 {
@@ -371,26 +422,55 @@
         }
 
         .price-table .room-status {
-            display: inline-block;
-            padding: 4px 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
         }
 
+        .price-table .room-status .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .price-table .room-status.available .status-dot {
+            background: var(--success);
+            box-shadow: 0 0 0 rgba(22,163,74,0.5);
+            animation: pulseDot 2s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% { box-shadow: 0 0 0 0 rgba(22,163,74,0.45); }
+            70% { box-shadow: 0 0 0 6px rgba(22,163,74,0); }
+            100% { box-shadow: 0 0 0 0 rgba(22,163,74,0); }
+        }
+
         .price-table .room-status.available {
-            background: #d4edda;
-            color: #155724;
+            background: var(--success-bg);
+            color: var(--success);
         }
 
         .price-table .room-status.full {
-            background: #f8d7da;
-            color: #721c24;
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+
+        .price-table .room-status.full .status-dot {
+            background: var(--danger);
         }
 
         .price-table .room-status.maintenance {
-            background: #fff3cd;
-            color: #856404;
+            background: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        .price-table .room-status.maintenance .status-dot {
+            background: var(--warning);
         }
 
         .price-table .facility-tags {
@@ -558,7 +638,15 @@
         }
 
         .calculator-container .calc-header .calc-icon {
-            font-size: 28px;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+        }
+
+        .calculator-container .calc-header .calc-icon svg {
+            width: 26px;
+            height: 26px;
+            stroke-width: 2.2;
         }
 
         .calculator-container .calc-header h4 {
@@ -1108,7 +1196,7 @@
     <header>
         <div class="header-container">
             <div class="logo">
-                <img src="assets/logo-jdi.png" alt="Logo JDI KOSKITA" />
+                <img src="../assets/logo-jdi.png" alt="Logo JDI KOSKITA" />
                 <div>
                     <h2>JDI <span>KOSKITA</span></h2>
                     <p id="headerTagline">Smart Boarding House Management System</p>
@@ -1149,7 +1237,7 @@
     ============================================================ -->
     <div class="breadcrumb">
         <div class="breadcrumb-container">
-            <h1 id="breadcrumbTitle">💰 <span>Daftar Harga</span> JDI KOSKITA</h1>
+            <h1 id="breadcrumbTitle"><i data-lucide="wallet" class="breadcrumb-icon"></i> <span>Daftar Harga</span> JDI KOSKITA</h1>
             <div class="breadcrumb-links">
                 <a href="index.html" id="breadcrumbHome">Beranda</a> &gt; <span id="breadcrumbCurrent">Daftar Harga</span>
             </div>
@@ -1178,7 +1266,7 @@
         TABEL HARGA
         ============================================================ -->
         <div class="section-title">
-            <span class="title-icon">🏠</span>
+            <span class="title-icon"><i data-lucide="bed-double"></i></span>
             <h3 id="sectionPriceTitle">Harga <span>Per Tipe Kamar</span></h3>
             <span class="title-line"></span>
         </div>
@@ -1204,7 +1292,7 @@
         DISKON & PROMO
         ============================================================ -->
         <div class="section-title">
-            <span class="title-icon">🏷️</span>
+            <span class="title-icon"><i data-lucide="tag"></i></span>
             <h3 id="sectionDiscountTitle">Diskon & <span>Promo</span></h3>
             <span class="title-line"></span>
         </div>
@@ -1217,7 +1305,7 @@
         BIAYA TAMBAHAN
         ============================================================ -->
         <div class="section-title">
-            <span class="title-icon">📋</span>
+            <span class="title-icon"><i data-lucide="clipboard-list"></i></span>
             <h3 id="sectionFeeTitle">Biaya <span>Tambahan</span></h3>
             <span class="title-line"></span>
         </div>
@@ -1230,14 +1318,14 @@
         KALKULATOR
         ============================================================ -->
         <div class="section-title">
-            <span class="title-icon">🧮</span>
+            <span class="title-icon"><i data-lucide="calculator"></i></span>
             <h3 id="sectionCalcTitle">Simulasi <span>Biaya Sewa</span></h3>
             <span class="title-line"></span>
         </div>
 
         <div class="calculator-container" id="calculatorContainer">
             <div class="calc-header">
-                <span class="calc-icon">🧮</span>
+                <span class="calc-icon"><i data-lucide="calculator"></i></span>
                 <h4 id="calcHeaderTitle">Kalkulator <span>Perkiraan Biaya</span></h4>
             </div>
             <div class="calculator-grid">
@@ -1295,7 +1383,7 @@
         FAQ
         ============================================================ -->
         <div class="section-title">
-            <span class="title-icon">❓</span>
+            <span class="title-icon"><i data-lucide="help-circle"></i></span>
             <h3 id="sectionFaqTitle">Pertanyaan <span>Umum</span></h3>
             <span class="title-line"></span>
         </div>
@@ -1366,7 +1454,7 @@
                         'menuAdminLogin': '🔐 Login Admin',
 
                         // Breadcrumb
-                        'breadcrumbTitle': '💰 <span>Daftar Harga</span> JDI KOSKITA',
+                        'breadcrumbTitle': '<i data-lucide="wallet" class="breadcrumb-icon"></i> <span>Daftar Harga</span> JDI KOSKITA',
                         'breadcrumbHome': 'Beranda',
                         'breadcrumbCurrent': 'Daftar Harga',
 
@@ -1437,7 +1525,7 @@
                         'menuAdminLogin': '🔐 Admin Login',
 
                         // Breadcrumb
-                        'breadcrumbTitle': '💰 <span>Pricing</span> JDI KOSKITA',
+                        'breadcrumbTitle': '<i data-lucide="wallet" class="breadcrumb-icon"></i> <span>Pricing</span> JDI KOSKITA',
                         'breadcrumbHome': 'Home',
                         'breadcrumbCurrent': 'Pricing',
 
@@ -1515,6 +1603,7 @@
                 renderFAQs();
                 renderContact();
                 updateCalculator();
+                if (window.lucide) lucide.createIcons();
             };
 
             // ============================================================
@@ -1722,40 +1811,41 @@
                 const s = HARGA_DATA.summary;
                 quickSummary.innerHTML = `
                     <div class="summary-item">
-                        <span class="summary-icon">💰</span>
+                        <span class="summary-icon"><i data-lucide="wallet"></i></span>
                         <div class="summary-number">${s.priceRange}</div>
                         <div class="summary-label">Harga Sewa / Bulan</div>
                     </div>
                     <div class="summary-item">
-                        <span class="summary-icon">🏦</span>
+                        <span class="summary-icon"><i data-lucide="landmark"></i></span>
                         <div class="summary-number">${s.deposit}</div>
                         <div class="summary-label">Deposit</div>
                     </div>
                     <div class="summary-item">
-                        <span class="summary-icon">💡</span>
+                        <span class="summary-icon"><i data-lucide="zap"></i></span>
                         <div class="summary-number">${s.electricityRate}</div>
                         <div class="summary-label">Biaya Listrik</div>
                     </div>
                     <div class="summary-item">
-                        <span class="summary-icon">📶</span>
+                        <span class="summary-icon"><i data-lucide="wifi"></i></span>
                         <div class="summary-number">${s.wifiStatus}</div>
                         <div class="summary-label">WiFi</div>
                     </div>
                     <div class="summary-item">
-                        <span class="summary-icon">🅿️</span>
+                        <span class="summary-icon"><i data-lucide="car"></i></span>
                         <div class="summary-number">${s.parkingStatus}</div>
                         <div class="summary-label">Parkir</div>
                     </div>
                 `;
+                if (window.lucide) lucide.createIcons();
             }
 
             // Render Price Table
             function renderPriceTable() {
                 const rooms = HARGA_DATA.roomTypes;
                 const statusMap = {
-                    available: { label: '✅ Tersedia', class: 'available' },
-                    full: { label: '🔴 Penuh', class: 'full' },
-                    maintenance: { label: '🛠️ Maintenance', class: 'maintenance' }
+                    available: { label: 'Tersedia', class: 'available' },
+                    full: { label: 'Penuh', class: 'full' },
+                    maintenance: { label: 'Maintenance', class: 'maintenance' }
                 };
 
                 priceTableBody.innerHTML = '';
@@ -1770,19 +1860,21 @@
                     row.innerHTML = `
                         <td>
                             <span class="room-type-name">
-                                <span class="icon">${room.icon}</span> ${room.name}
+                                <span class="icon"><i data-lucide="${room.icon}"></i></span> ${room.name}
                             </span>
-                            ${room.popular ? '<span class="popular-badge">⭐ Populer</span>' : ''}
+                            ${room.popular ? '<span class="popular-badge"><i data-lucide="sparkles"></i> Populer</span>' : ''}
                         </td>
                         <td class="room-price">
-                            Rp ${room.price.toLocaleString('id-ID')}
+                            ${room.discount > 0
+                                ? '<span style="text-decoration:line-through;color:#999;font-size:12px;display:block;">Rp ' + room.price.toLocaleString('id-ID') + '</span>Rp ' + Math.round(room.price * (1 - room.discount / 100)).toLocaleString('id-ID') + ' <span style="background:#FEF3E2;color:#B45309;font-size:11px;padding:2px 8px;border-radius:10px;">-' + room.discount + '%</span>'
+                                : 'Rp ' + room.price.toLocaleString('id-ID')}
                         </td>
                         <td>Rp ${room.deposit.toLocaleString('id-ID')}</td>
                         <td>
                             <div class="facility-tags">${facilitiesHTML}</div>
                         </td>
                         <td>
-                            <span class="room-status ${status.class}">${status.label}</span>
+                            <span class="room-status ${status.class}"><span class="status-dot"></span>${status.label}</span>
                         </td>
                     `;
                     priceTableBody.appendChild(row);
@@ -1790,6 +1882,7 @@
 
                 // Update calculator dropdown
                 renderCalculatorDropdown();
+                if (window.lucide) lucide.createIcons();
             }
 
             // Render Discounts
@@ -1972,7 +2065,7 @@
                 updateRoomTypes: function(newRooms) {
                     HARGA_DATA.roomTypes = newRooms;
                     renderPriceTable();
-                    updateCalculator();
+                    renderCalculatorDropdown();
                 },
                 updateDiscounts: function(newDiscounts) {
                     HARGA_DATA.discounts = newDiscounts;
@@ -2005,12 +2098,80 @@
             renderFAQs();
             renderContact();
             updateCalculator();
+            if (window.lucide) lucide.createIcons();
 
             console.log('✅ JDI KOSKITA - Daftar Harga CMS Ready + Multi Language');
             console.log('🌐 Bahasa saat ini:', LANGUAGES[currentLang].name);
             console.log('💰 Data harga dapat diedit melalui window.HargaCMS');
 
         })();
+
+        // Jaring pengaman: pastikan semua icon ter-render setelah halaman sepenuhnya siap
+        window.addEventListener('load', function() {
+            if (window.lucide) lucide.createIcons();
+        });
+    </script>
+
+    <!-- ============================================================
+    FIREBASE - REAL-TIME ROOM TYPES DARI FIRESTORE
+    ============================================================ -->
+    <script type="module">
+        import { db } from "../firebase/config/firebase-config.js";
+        import {
+            collection,
+            onSnapshot
+        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+        // Mapping teks icon -> nama Lucide icon
+        const ICON_MAP = {
+            bed: 'bed-single',
+            sofa: 'sofa',
+            crown: 'crown'
+        };
+
+        const roomTypesRef = collection(db, "roomTypes");
+
+        // Dengarkan perubahan data secara real-time.
+        // Setiap kali admin update data di Firestore (lewat CMS nanti),
+        // halaman ini akan otomatis refresh tanpa perlu reload.
+        onSnapshot(roomTypesRef, (snapshot) => {
+            if (snapshot.empty) {
+                console.warn('⚠️ Collection roomTypes masih kosong di Firestore.');
+                return;
+            }
+
+            const rooms = [];
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                rooms.push({
+                    id: doc.id,
+                    name: data.name || '-',
+                    price: data.price || 0,
+                    deposit: data.deposit || 0,
+                    facilities: data.facilities || [],
+                    status: (data.availableRooms > 0) ? 'available' : 'full',
+                    availableRooms: data.availableRooms || 0,
+                    totalRooms: data.totalRooms || 0,
+                    popular: data.popular || false,
+                    discount: data.discount || 0,
+                    icon: ICON_MAP[data.icon] || data.icon || 'bed-single',
+                    image: data.image || ''
+                });
+            });
+
+            // Urutkan berdasarkan harga termurah dulu
+            rooms.sort((a, b) => a.price - b.price);
+
+            // Kirim ke fungsi render yang sudah ada di script utama
+            if (window.HargaCMS && typeof window.HargaCMS.updateRoomTypes === 'function') {
+                window.HargaCMS.updateRoomTypes(rooms);
+                console.log('🔥 Data kamar ter-update real-time dari Firestore:', rooms);
+            } else {
+                console.error('❌ window.HargaCMS belum siap. Cek urutan script.');
+            }
+        }, (error) => {
+            console.error('❌ Gagal mengambil data roomTypes dari Firestore:', error);
+        });
     </script>
 
 </body>

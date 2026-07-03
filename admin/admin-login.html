@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Admin - JDI KOSKITA</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <style>
         /* ============================================================
            RESET & BASE
@@ -320,10 +322,10 @@
         <!-- Login Form -->
         <form class="login-form" id="loginForm">
             <div class="form-group">
-                <label>Username <span class="required">*</span></label>
+                <label>Email <span class="required">*</span></label>
                 <div class="input-icon">
                     <span class="icon">👤</span>
-                    <input type="text" id="username" placeholder="Masukkan username" value="admin" required />
+                    <input type="email" id="username" placeholder="Masukkan email" required />
                 </div>
             </div>
 
@@ -331,7 +333,7 @@
                 <label>Password <span class="required">*</span></label>
                 <div class="input-icon">
                     <span class="icon">🔒</span>
-                    <input type="password" id="password" placeholder="Masukkan password" value="bukadong821" required />
+                    <input type="password" id="password" placeholder="Masukkan password" required />
                 </div>
             </div>
 
@@ -355,7 +357,7 @@
         </div>
 
         <div class="login-footer">
-            Kembali ke <a href="index.html">Beranda</a> &bull; v2.0.1
+            Kembali ke <a href="../website/index.html">Beranda</a> &bull; v3.0
         </div>
     </div>
 
@@ -371,51 +373,63 @@
             const loginLoading = document.getElementById('loginLoading');
             const loginError = document.getElementById('loginError');
 
-            // Credentials yang valid
-            const VALID_CREDENTIALS = {
-                username: 'admin',
-                password: 'bukadong821'
+            // ============================================
+            // FIREBASE AUTH
+            // ============================================
+            var firebaseConfig = {
+                apiKey: "AIzaSyBBjQbXnnOxc4MkO8bg4iiTIL7FoEoiers",
+                authDomain: "jdi-koskita.firebaseapp.com",
+                projectId: "jdi-koskita",
+                storageBucket: "jdi-koskita.firebasestorage.app",
+                messagingSenderId: "280684880955",
+                appId: "1:280684880955:web:6199875974b69bfc89681e",
+                measurementId: "G-RPFK3BB1CQ"
             };
-
-            // Simpan ke session untuk demo
-            const SESSION_KEY = 'admin_logged_in';
+            firebase.initializeApp(firebaseConfig);
+            var auth = firebase.auth();
 
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                const user = username.value.trim();
+                const email = username.value.trim();
                 const pass = password.value.trim();
 
-                // Validasi kosong
-                if (!user || !pass) {
-                    showError('Username dan password wajib diisi!');
+                if (!email || !pass) {
+                    showError('Email dan password wajib diisi!');
                     return;
                 }
 
-                // Cek kredensial
-                if (user === VALID_CREDENTIALS.username && pass === VALID_CREDENTIALS.password) {
-                    // Login berhasil
-                    sessionStorage.setItem(SESSION_KEY, 'true');
-                    sessionStorage.setItem('admin_username', user);
-                    sessionStorage.setItem('admin_login_time', new Date().toISOString());
+                loginText.style.display = 'none';
+                loginLoading.style.display = 'inline';
+                loginBtn.disabled = true;
 
-                    // Tampilkan loading
-                    loginText.style.display = 'none';
-                    loginLoading.style.display = 'inline';
-                    loginBtn.disabled = true;
+                auth.signInWithEmailAndPassword(email, pass)
+                    .then(function(userCredential) {
+                        sessionStorage.setItem('admin_logged_in', 'true');
+                        sessionStorage.setItem('admin_username', userCredential.user.email);
+                        sessionStorage.setItem('admin_login_time', new Date().toISOString());
 
-                    // Redirect ke dashboard setelah 1 detik
-                    setTimeout(function() {
-                        window.location.href = 'admin-dashboard.html';
-                    }, 800);
-                } else {
-                    showError('⚠️ Username atau password salah. Silakan coba lagi.');
-                    // Animasi shake pada form
-                    document.querySelector('.login-container').style.animation = 'shake 0.4s ease';
-                    setTimeout(function() {
-                        document.querySelector('.login-container').style.animation = 'slideUp 0.6s ease';
-                    }, 500);
-                }
+                        setTimeout(function() {
+                            window.location.href = 'admin-dashboard.html';
+                        }, 500);
+                    })
+                    .catch(function(error) {
+                        loginText.style.display = 'inline';
+                        loginLoading.style.display = 'none';
+                        loginBtn.disabled = false;
+
+                        var pesan = '⚠️ Email atau password salah. Silakan coba lagi.';
+                        if (error.code === 'auth/too-many-requests') {
+                            pesan = '⚠️ Terlalu banyak percobaan gagal. Coba lagi beberapa saat lagi.';
+                        } else if (error.code === 'auth/user-disabled') {
+                            pesan = '⚠️ Akun ini telah dinonaktifkan.';
+                        }
+                        showError(pesan);
+                        document.querySelector('.login-container').style.animation = 'shake 0.4s ease';
+                        setTimeout(function() {
+                            document.querySelector('.login-container').style.animation = 'slideUp 0.6s ease';
+                        }, 500);
+                    });
             });
 
             function showError(message) {
@@ -433,14 +447,14 @@
                 }
             });
 
-            // Cek apakah sudah login sebelumnya
-            if (sessionStorage.getItem(SESSION_KEY) === 'true') {
-                // Langsung redirect ke dashboard
-                window.location.href = 'admin-dashboard.html';
-            }
+            // Cek apakah sudah login sebelumnya (via Firebase Auth state, bukan cuma sessionStorage)
+            auth.onAuthStateChanged(function(user) {
+                if (user) {
+                    window.location.href = 'admin-dashboard.html';
+                }
+            });
 
-            console.log('🔐 Admin Login Page Loaded');
-            console.log('📝 Gunakan username: admin | password: bukadong821');
+            console.log('🔐 Admin Login Page Loaded (Firebase Authentication)');
 
         })();
     </script>

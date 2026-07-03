@@ -7,6 +7,10 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js">
     </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js">
+    </script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js">
     </script>
     <style>
@@ -1229,6 +1233,62 @@
     </div>
 
     <!-- ============================================================
+    MODAL - EDIT HARGA
+    ============================================================ -->
+    <div class="modal-overlay" id="modalHarga">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>💰 Edit Harga <span id="hargaModalRoomName"></span></h3>
+                <button class="modal-close" onclick="closeModal('modalHarga')">✕</button>
+            </div>
+            <form id="formHarga" onsubmit="saveHarga(event)">
+                <input type="hidden" id="hargaRoomId" />
+                <div class="form-group">
+                    <label>Harga per Bulan (Rp) <span class="required">*</span></label>
+                    <input type="number" id="hargaPrice" min="0" step="1000" required />
+                </div>
+                <div class="form-group">
+                    <label>Deposit (Rp) <span class="required">*</span></label>
+                    <input type="number" id="hargaDeposit" min="0" step="1000" required />
+                </div>
+                <div class="form-group">
+                    <label>Diskon</label>
+                    <select id="hargaDiscount">
+                        <option value="0">Tanpa Diskon</option>
+                        <option value="10">10%</option>
+                        <option value="20">20%</option>
+                        <option value="30">30%</option>
+                        <option value="40">40%</option>
+                        <option value="50">50%</option>
+                        <option value="60">60%</option>
+                        <option value="70">70%</option>
+                        <option value="80">80%</option>
+                        <option value="90">90%</option>
+                        <option value="100">100% (Gratis)</option>
+                    </select>
+                    <small style="color:#888;font-size:12px;" id="hargaDiscountPreview">Harga setelah diskon: -</small>
+                </div>
+                <div class="form-group">
+                    <label>Total Kamar <span class="required">*</span></label>
+                    <input type="number" id="hargaTotalRooms" min="0" required />
+                </div>
+                <div class="form-group">
+                    <label>Kamar Tersedia <span class="required">*</span></label>
+                    <input type="number" id="hargaAvailableRooms" min="0" required />
+                    <small style="color:#888;font-size:12px;">Badge status di halaman publik otomatis berubah "Tersedia"/"Penuh" berdasarkan angka ini.</small>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="hargaPopular" style="width:auto;margin-right:8px;" />Tandai sebagai "Populer" (badge ⭐ di halaman publik)</label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modalHarga')">Batal</button>
+                    <button type="submit" class="btn-save" id="hargaSaveBtn">💾 Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
     SIDEBAR
     ============================================================ -->
     <aside class="sidebar" id="sidebar">
@@ -1560,7 +1620,22 @@
         <div class="content-section" id="section-faq"><div class="empty-state"><span class="empty-icon">❓</span><h4>CMS FAQ</h4><p>Kelola pertanyaan umum di sini.</p></div></div>
         <div class="content-section" id="section-pengumuman"><div class="empty-state"><span class="empty-icon">📢</span><h4>CMS Pengumuman</h4><p>Kelola pengumuman di sini.</p></div></div>
         <div class="content-section" id="section-fasilitas"><div class="empty-state"><span class="empty-icon">⭐</span><h4>Fasilitas</h4><p>Kelola data fasilitas di sini.</p></div></div>
-        <div class="content-section" id="section-harga"><div class="empty-state"><span class="empty-icon">💰</span><h4>Harga</h4><p>Kelola data harga di sini.</p></div></div>
+        <div class="content-section" id="section-harga">
+            <div class="section-header">
+                <h3>💰 Kelola <span>Harga & Ketersediaan Kamar</span></h3>
+            </div>
+            <div style="background:#fff8f0;border-radius:12px;padding:14px 20px;margin-bottom:16px;border:1px solid #ffe0c0;font-size:13px;color:#664;">
+                📡 Data ini <strong>real-time</strong> — perubahan di sini langsung tampil di halaman Daftar Harga publik tanpa perlu refresh.
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Tipe Kamar</th><th>Harga/Bulan</th><th>Diskon</th><th>Deposit</th><th>Total Kamar</th><th>Tersedia</th><th>Populer</th><th>Aksi</th></tr></thead>
+                    <tbody id="hargaTableBody">
+                        <tr><td colspan="8" style="text-align:center;color:#888;">Memuat data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <div class="content-section" id="section-booking"><div class="empty-state"><span class="empty-icon">📅</span><h4>Booking</h4><p>Kelola data booking di sini.</p></div></div>
         <div class="content-section" id="section-checkin"><div class="empty-state"><span class="empty-icon">✅</span><h4>Check In</h4><p>Kelola proses check in penghuni baru di sini.</p></div></div>
         <div class="content-section" id="section-checkout"><div class="empty-state"><span class="empty-icon">🚪</span><h4>Check Out</h4><p>Kelola proses check out penghuni di sini.</p></div></div>
@@ -1570,7 +1645,48 @@
         <div class="content-section" id="section-pemasukan"><div class="empty-state"><span class="empty-icon">📈</span><h4>Pemasukan</h4><p>Kelola pemasukan kos di sini.</p></div></div>
         <div class="content-section" id="section-kas-besar"><div class="empty-state"><span class="empty-icon">🏛️</span><h4>Kas Besar</h4><p>Kelola kas besar di sini.</p></div></div>
         <div class="content-section" id="section-kas-kecil"><div class="empty-state"><span class="empty-icon">💰</span><h4>Kas Kecil</h4><p>Kelola kas kecil di sini.</p></div></div>
-        <div class="content-section" id="section-neraca-laba"><div class="empty-state"><span class="empty-icon">📊</span><h4>Neraca Laba</h4><p>Lihat neraca laba rugi di sini.</p></div></div>
+        <div class="content-section" id="section-neraca-laba">
+            <div class="section-header">
+                <h3>📊 Neraca Laba & <span>Kalkulator PPh</span></h3>
+            </div>
+
+            <div style="background:#fff8f0;border-radius:12px;padding:16px 20px;margin-bottom:20px;border:1px solid #ffe0c0;font-size:13px;color:#664;line-height:1.6;">
+                ℹ️ <strong>Ketentuan Pajak Kos-Kosan (Wajib Pajak Orang Pribadi):</strong><br />
+                Dikenakan <strong>PPh Final 0,5%</strong> dari omzet tahunan, sesuai PP 23/2018. Omzet <strong>Rp 500.000.000 pertama per tahun dibebaskan</strong> dari PPh. Pajak daerah (PBJT) tergantung Perda masing-masing wilayah — cek ke Bapenda setempat.
+                <br /><span style="font-size:11px;opacity:0.7;">*Perhitungan ini estimasi umum, bukan pengganti konsultasi resmi dengan konsultan pajak/kantor pajak.</span>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                <div class="table-wrapper">
+                    <h4 style="margin-bottom:16px;color:#0A2E6D;">🧮 Kalkulator PPh Final</h4>
+                    <div class="form-group">
+                        <label>Omzet Tahun Ini (Rp)</label>
+                        <input type="number" id="pphOmzet" min="0" step="100000" placeholder="Contoh: 60000000" />
+                    </div>
+                    <button type="button" class="btn-add" style="width:100%;justify-content:center;" onclick="hitungPPh()">Hitung PPh Terutang</button>
+
+                    <div id="pphResult" style="margin-top:20px;display:none;">
+                        <table>
+                            <tr><td>Omzet Tahunan</td><td style="text-align:right;" id="pphOmzetOut">-</td></tr>
+                            <tr><td>Batas Bebas Pajak</td><td style="text-align:right;">Rp 500.000.000</td></tr>
+                            <tr><td>Omzet Kena Pajak</td><td style="text-align:right;" id="pphOmzetKenaPajak">-</td></tr>
+                            <tr><td><strong>PPh Final Terutang (0,5%)</strong></td><td style="text-align:right;"><strong id="pphTerutang" style="color:#FF7A00;font-size:16px;">-</strong></td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <h4 style="margin-bottom:12px;color:#0A2E6D;">💰 Ringkasan Keuangan</h4>
+                    <table>
+                        <tr><td>Kas Besar</td><td style="text-align:right;"><strong>Rp 25.000.000</strong></td></tr>
+                        <tr><td>Kas Kecil</td><td style="text-align:right;"><strong>Rp 5.000.000</strong></td></tr>
+                        <tr><td>Pemasukan Bulan Ini</td><td style="text-align:right;"><strong style="color:#28a745;">+Rp 4.200.000</strong></td></tr>
+                        <tr><td>Pengeluaran Bulan Ini</td><td style="text-align:right;"><strong style="color:#dc3545;">-Rp 1.800.000</strong></td></tr>
+                    </table>
+                    <p style="font-size:12px;color:#999;margin-top:12px;">📌 Data ini masih statis (belum terhubung Transaksi/Kas real). Akan disambungkan setelah modul Akuntansi & Keuangan selesai dibangun.</p>
+                </div>
+            </div>
+        </div>
         <div class="content-section" id="section-laporan-statistik"><div class="empty-state"><span class="empty-icon">📋</span><h4>Laporan Statistik</h4><p>Lihat laporan statistik di sini.</p></div></div>
         <div class="content-section" id="section-promo"><div class="empty-state"><span class="empty-icon">🏷️</span><h4>Promo</h4><p>Kelola promo di sini.</p></div></div>
         <div class="content-section" id="section-voucher"><div class="empty-state"><span class="empty-icon">🎫</span><h4>Voucher</h4><p>Kelola voucher di sini.</p></div></div>
@@ -1594,24 +1710,42 @@
             // FIREBASE CONFIG
             // ============================================
             var firebaseConfig = {
-                apiKey: "YOUR_API_KEY",
-                authDomain: "YOUR_PROJECT.firebaseapp.com",
-                projectId: "YOUR_PROJECT_ID",
-                storageBucket: "YOUR_PROJECT.appspot.com",
-                messagingSenderId: "YOUR_SENDER_ID",
-                appId: "YOUR_APP_ID"
+                apiKey: "AIzaSyBBjQbXnnOxc4MkO8bg4iiTIL7FoEoiers",
+                authDomain: "jdi-koskita.firebaseapp.com",
+                projectId: "jdi-koskita",
+                storageBucket: "jdi-koskita.firebasestorage.app",
+                messagingSenderId: "280684880955",
+                appId: "1:280684880955:web:6199875974b69bfc89681e",
+                measurementId: "G-RPFK3BB1CQ"
             };
 
-            var useFirebase = false;
+            var useFirebase = true;
+            var db = null;
+            var auth = null;
 
-            if (useFirebase && firebaseConfig.apiKey !== "YOUR_API_KEY") {
+            if (useFirebase) {
                 try {
                     firebase.initializeApp(firebaseConfig);
-                    console.log('✅ Firebase initialized!');
+                    db = firebase.firestore();
+                    auth = firebase.auth();
+                    console.log('✅ Firebase & Firestore initialized!');
                 } catch (e) {
                     console.warn('⚠️ Firebase init failed:', e);
                     useFirebase = false;
                 }
+            }
+
+            // ============================================
+            // AUTH GUARD — tolak akses kalau belum login
+            // ============================================
+            if (auth) {
+                auth.onAuthStateChanged(function(user) {
+                    if (!user) {
+                        window.location.href = 'admin-login.html';
+                    } else {
+                        sessionStorage.setItem('admin_username', user.email);
+                    }
+                });
             }
 
             // ============================================
@@ -2220,6 +2354,182 @@
             }
 
             // ============================================
+            // MODUL HARGA (Firestore: roomTypes) - REAL-TIME
+            // ============================================
+            var hargaData = [];
+
+            function renderHargaTable() {
+                var tbody = document.getElementById('hargaTableBody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+
+                if (hargaData.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#888;">Belum ada data. Cek koneksi Firestore.</td></tr>';
+                    return;
+                }
+
+                hargaData.sort(function(a, b) { return a.price - b.price; });
+
+                for (var i = 0; i < hargaData.length; i++) {
+                    var r = hargaData[i];
+                    var row = document.createElement('tr');
+                    var tersediaBadge = r.availableRooms > 0
+                        ? '<span class="status-badge active">' + r.availableRooms + ' Tersedia</span>'
+                        : '<span class="status-badge inactive">Penuh</span>';
+                    var discountCell = r.discount > 0
+                        ? '<span class="status-badge pending">-' + r.discount + '%</span><br><small style="color:#28a745;">Rp ' + Math.round(r.price * (1 - r.discount / 100)).toLocaleString('id-ID') + '</small>'
+                        : '-';
+                    row.innerHTML = `
+                        <td><strong>${r.name}</strong></td>
+                        <td>Rp ${r.price.toLocaleString('id-ID')}</td>
+                        <td>${discountCell}</td>
+                        <td>Rp ${r.deposit.toLocaleString('id-ID')}</td>
+                        <td>${r.totalRooms}</td>
+                        <td>${tersediaBadge}</td>
+                        <td>${r.popular ? '⭐ Ya' : '-'}</td>
+                        <td><button class="btn-action edit" onclick="openHargaModal('${r.id}')">Edit</button></td>
+                    `;
+                    tbody.appendChild(row);
+                }
+            }
+
+            window.openHargaModal = function(id) {
+                var room = hargaData.find(function(r) { return r.id === id; });
+                if (!room) return;
+                document.getElementById('hargaRoomId').value = room.id;
+                document.getElementById('hargaModalRoomName').textContent = '- ' + room.name;
+                document.getElementById('hargaPrice').value = room.price;
+                document.getElementById('hargaDeposit').value = room.deposit;
+                document.getElementById('hargaTotalRooms').value = room.totalRooms;
+                document.getElementById('hargaAvailableRooms').value = room.availableRooms;
+                document.getElementById('hargaPopular').checked = !!room.popular;
+                document.getElementById('hargaDiscount').value = room.discount || 0;
+                updateDiscountPreview();
+                openModal('modalHarga');
+            };
+
+            function updateDiscountPreview() {
+                var price = parseInt(document.getElementById('hargaPrice').value, 10) || 0;
+                var discount = parseInt(document.getElementById('hargaDiscount').value, 10) || 0;
+                var previewEl = document.getElementById('hargaDiscountPreview');
+                if (discount > 0) {
+                    var finalPrice = Math.round(price * (1 - discount / 100));
+                    previewEl.textContent = 'Harga setelah diskon: Rp ' + finalPrice.toLocaleString('id-ID');
+                    previewEl.style.color = '#28a745';
+                } else {
+                    previewEl.textContent = 'Harga setelah diskon: -';
+                    previewEl.style.color = '#888';
+                }
+            }
+            document.getElementById('hargaPrice').addEventListener('input', updateDiscountPreview);
+            document.getElementById('hargaDiscount').addEventListener('change', updateDiscountPreview);
+
+            window.saveHarga = async function(e) {
+                e.preventDefault();
+                var id = document.getElementById('hargaRoomId').value;
+                var price = parseInt(document.getElementById('hargaPrice').value, 10);
+                var deposit = parseInt(document.getElementById('hargaDeposit').value, 10);
+                var totalRooms = parseInt(document.getElementById('hargaTotalRooms').value, 10);
+                var availableRooms = parseInt(document.getElementById('hargaAvailableRooms').value, 10);
+                var popular = document.getElementById('hargaPopular').checked;
+                var discount = parseInt(document.getElementById('hargaDiscount').value, 10) || 0;
+
+                if (availableRooms > totalRooms) {
+                    showToast('⚠️ Kamar tersedia tidak boleh lebih dari total kamar!', 'error');
+                    return;
+                }
+
+                if (!useFirebase || !db) {
+                    showToast('⚠️ Firestore belum terhubung. Perubahan tidak tersimpan.', 'error');
+                    return;
+                }
+
+                var saveBtn = document.getElementById('hargaSaveBtn');
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Menyimpan...';
+
+                try {
+                    await db.collection('roomTypes').doc(id).update({
+                        price: price,
+                        deposit: deposit,
+                        totalRooms: totalRooms,
+                        availableRooms: availableRooms,
+                        popular: popular,
+                        discount: discount
+                    });
+                    closeModal('modalHarga');
+                    showToast('✅ Data harga berhasil diupdate! Cek halaman publik.', 'success');
+                } catch (error) {
+                    console.error('Gagal update harga:', error);
+                    showToast('⚠️ Gagal menyimpan: ' + error.message, 'error');
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = '💾 Simpan Perubahan';
+                }
+            };
+
+            function initHargaListener() {
+                if (!useFirebase || !db) {
+                    document.getElementById('hargaTableBody').innerHTML =
+                        '<tr><td colspan="7" style="text-align:center;color:#dc3545;">⚠️ Firestore tidak terhubung</td></tr>';
+                    return;
+                }
+
+                db.collection('roomTypes').onSnapshot(function(snapshot) {
+                    hargaData = [];
+                    snapshot.forEach(function(doc) {
+                        var d = doc.data();
+                        hargaData.push({
+                            id: doc.id,
+                            name: d.name || '-',
+                            price: d.price || 0,
+                            deposit: d.deposit || 0,
+                            totalRooms: d.totalRooms || 0,
+                            availableRooms: d.availableRooms || 0,
+                            popular: d.popular || false,
+                            discount: d.discount || 0
+                        });
+                    });
+                    renderHargaTable();
+                    console.log('🔥 Data harga ter-update real-time dari Firestore:', hargaData);
+                }, function(error) {
+                    console.error('Gagal ambil data roomTypes:', error);
+                    document.getElementById('hargaTableBody').innerHTML =
+                        '<tr><td colspan="7" style="text-align:center;color:#dc3545;">⚠️ Gagal memuat data: ' + error.message + '</td></tr>';
+                });
+            }
+
+            // ============================================
+            // KALKULATOR PPH FINAL (Kos-Kosan)
+            // ============================================
+            window.hitungPPh = function() {
+                var omzetInput = document.getElementById('pphOmzet').value;
+                var omzet = parseFloat(omzetInput);
+
+                if (!omzetInput || isNaN(omzet) || omzet < 0) {
+                    showToast('⚠️ Masukkan angka omzet yang valid!', 'error');
+                    return;
+                }
+
+                var batasBebasPajak = 500000000; // Rp 500 juta pertama bebas pajak
+                var tarifPPh = 0.005; // 0,5%
+
+                var omzetKenaPajak = Math.max(0, omzet - batasBebasPajak);
+                var pphTerutang = omzetKenaPajak * tarifPPh;
+
+                document.getElementById('pphOmzetOut').textContent = 'Rp ' + omzet.toLocaleString('id-ID');
+                document.getElementById('pphOmzetKenaPajak').textContent = 'Rp ' + omzetKenaPajak.toLocaleString('id-ID');
+                document.getElementById('pphTerutang').textContent = 'Rp ' + pphTerutang.toLocaleString('id-ID');
+                document.getElementById('pphResult').style.display = 'block';
+
+                if (omzetKenaPajak === 0) {
+                    showToast('✅ Omzet masih di bawah Rp 500 juta — dibebaskan dari PPh!', 'success');
+                } else {
+                    showToast('✅ Perhitungan PPh selesai', 'success');
+                }
+            };
+
+            // ============================================
             // SIDEBAR NAVIGATION
             // ============================================
             var menuItems = document.querySelectorAll('.menu-item[data-section]');
@@ -2364,10 +2674,15 @@
             // ============================================
             document.getElementById('btnLogout').addEventListener('click', function() {
                 if (confirm('Yakin ingin keluar dari dashboard admin?')) {
-                    sessionStorage.removeItem('admin_logged_in');
-                    sessionStorage.removeItem('admin_username');
-                    sessionStorage.removeItem('admin_role');
-                    window.location.href = 'admin-login.html';
+                    if (auth) {
+                        auth.signOut().then(function() {
+                            sessionStorage.clear();
+                            window.location.href = 'admin-login.html';
+                        });
+                    } else {
+                        sessionStorage.clear();
+                        window.location.href = 'admin-login.html';
+                    }
                 }
             });
 
@@ -2409,6 +2724,7 @@
             renderGaleri();
             renderVideos();
             renderAdmins();
+            initHargaListener();
 
             setTimeout(checkScrollIndicator, 500);
 

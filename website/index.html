@@ -195,27 +195,27 @@
 
         /* 6 Gambar dengan delay berbeda */
         .hero-slider .slide:nth-child(1) {
-            background-image: url('assets/kost1.jpg');
+            background-image: url('../assets/kost1.jpg');
             animation-delay: 0s;
         }
         .hero-slider .slide:nth-child(2) {
-            background-image: url('assets/kost2.jpg');
+            background-image: url('../assets/kost2.jpg');
             animation-delay: 5s;
         }
         .hero-slider .slide:nth-child(3) {
-            background-image: url('assets/kost3.jpg');
+            background-image: url('../assets/kost3.jpg');
             animation-delay: 10s;
         }
         .hero-slider .slide:nth-child(4) {
-            background-image: url('assets/kost4.jpg');
+            background-image: url('../assets/kost4.jpg');
             animation-delay: 15s;
         }
         .hero-slider .slide:nth-child(5) {
-            background-image: url('assets/kost5.jpg');
+            background-image: url('../assets/kost5.jpg');
             animation-delay: 20s;
         }
         .hero-slider .slide:nth-child(6) {
-            background-image: url('assets/kost6.jpg');
+            background-image: url('../assets/kost6.jpg');
             animation-delay: 25s;
         }
 
@@ -1106,7 +1106,7 @@
     <header>
         <div class="header-container">
             <div class="logo">
-                <img src="assets/logo-jdi.png" alt="Logo JDI KOSKITA" />
+                <img src="../assets/logo-jdi.png" alt="Logo JDI KOSKITA" />
                 <div>
                     <h2>JDI <span>KOSKITA</span></h2>
                     <p id="headerTagline">Smart Boarding House Management System</p>
@@ -1126,7 +1126,7 @@
                 <a href="fasilitas.html" id="menuFacilities">Fasilitas</a>
                 <a href="daftar-harga.html" id="menuPricing">Daftar Harga</a>
                 <a href="kontak.html" id="menuContact">Kontak</a>
-                <a href="admin-login.html" class="btn-login" id="menuAdminLogin">🔐 Login Admin</a>
+                <a href="../admin/admin-login.html" class="btn-login" id="menuAdminLogin">🔐 Login Admin</a>
                 <a href="#" class="btn-login" id="menuGuestLogin">👤 Login Tamu</a>
 
                 <div class="lang-switcher">
@@ -1207,9 +1207,9 @@
             <!-- Video Player -->
             <video id="modalVideo" controls preload="metadata">
                 <!-- Coba beberapa format -->
-                <source src="assets/video/jdiiklan.mp4" type="video/mp4" />
-                <source src="assets/video/jdiiklan.webm" type="video/webm" />
-                <source src="assets/video/jdiiklan.ogv" type="video/ogg" />
+                <source src="../assets/video/jdiiklan.mp4" type="video/mp4" />
+                <source src="../assets/video/jdiiklan.webm" type="video/webm" />
+                <source src="../assets/video/jdiiklan.ogv" type="video/ogg" />
                 <!-- Fallback jika semua gagal -->
             </video>
 
@@ -1219,7 +1219,7 @@
                 <div class="error-title">Video Tidak Dapat Diputar</div>
                 <div class="error-desc">
                     Maaf, video tidak dapat dimuat. Coba salah satu opsi berikut:<br /><br />
-                    📥 <a href="assets/video/jdiiklan.mp4" download>Download Video</a> &nbsp;|&nbsp;
+                    📥 <a href="../assets/video/jdiiklan.mp4" download>Download Video</a> &nbsp;|&nbsp;
                     🔗 <a href="https://www.youtube.com/embed/xxx" target="_blank">Tonton di YouTube</a>
                     <br /><br />
                     <span style="font-size:12px;opacity:0.5;">Pastikan file video tersedia di folder assets/video/</span>
@@ -1295,7 +1295,7 @@
             <a href="fasilitas.html" id="footerFacilities">Fasilitas</a>
             <a href="daftar-harga.html" id="footerPricing">Daftar Harga</a>
             <a href="kontak.html" id="footerContact">Kontak</a>
-            <a href="admin-login.html" id="footerAdminLogin">🔐 Login Admin</a>
+            <a href="../admin/admin-login.html" id="footerAdminLogin">🔐 Login Admin</a>
         </div>
     </footer>
 
@@ -1646,12 +1646,12 @@
             // 4. PRELOAD GAMBAR
             // ============================================
             const images = [
-                'assets/kost1.jpg',
-                'assets/kost2.jpg',
-                'assets/kost3.jpg',
-                'assets/kost4.jpg',
-                'assets/kost5.jpg',
-                'assets/kost6.jpg'
+                '../assets/kost1.jpg',
+                '../assets/kost2.jpg',
+                '../assets/kost3.jpg',
+                '../assets/kost4.jpg',
+                '../assets/kost5.jpg',
+                '../assets/kost6.jpg'
             ];
 
             images.forEach(function(src) {
