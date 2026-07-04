@@ -959,6 +959,42 @@
         }
 
         /* ============================================================
+           AUTH GATE (loading / blocking overlay while Firebase checks auth)
+           ============================================================ */
+        #authGate {
+            position: fixed;
+            inset: 0;
+            background: #f0f4f9;
+            z-index: 100000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+        #authGate .spinner {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #e9edf2;
+            border-top-color: #FF7A00;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        #authGate p {
+            color: #0A2E6D;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        /* Hide real app content until auth is confirmed */
+        body.auth-pending .sidebar,
+        body.auth-pending .main-content {
+            visibility: hidden;
+        }
+
+        /* ============================================================
            RESPONSIVE
            ============================================================ */
         @media (max-width: 992px) {
@@ -1033,7 +1069,13 @@
         }
     </style>
 </head>
-<body>
+<body class="auth-pending">
+
+    <!-- Auth Gate: shown until Firebase confirms login, prevents content flash / unauthorized view -->
+    <div id="authGate">
+        <div class="spinner"></div>
+        <p>Memeriksa sesi login...</p>
+    </div>
 
     <!-- Sidebar Overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -1722,6 +1764,7 @@
             var useFirebase = true;
             var db = null;
             var auth = null;
+            var appStarted = false; // guard so we only initialize the dashboard body once
 
             if (useFirebase) {
                 try {
@@ -1736,16 +1779,88 @@
             }
 
             // ============================================
-            // AUTH GUARD — tolak akses kalau belum login
+            // SESSION INACTIVITY TIMEOUT (30 menit tanpa aktivitas -> logout)
             // ============================================
-            if (auth) {
-                auth.onAuthStateChanged(function(user) {
-                    if (!user) {
-                        window.location.href = 'admin-login.html';
-                    } else {
-                        sessionStorage.setItem('admin_username', user.email);
+            var SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 menit
+            var inactivityTimer = null;
+
+            function resetInactivityTimer() {
+                sessionStorage.setItem('admin_last_activity', Date.now().toString());
+                if (inactivityTimer) clearTimeout(inactivityTimer);
+                inactivityTimer = setTimeout(function() {
+                    showToast('⏰ Sesi berakhir karena tidak ada aktivitas. Silakan login kembali.', 'info');
+                    doLogout();
+                }, SESSION_TIMEOUT_MS);
+            }
+
+            function isSessionExpired() {
+                var last = parseInt(sessionStorage.getItem('admin_last_activity'), 10);
+                if (!last) return false;
+                return (Date.now() - last) > SESSION_TIMEOUT_MS;
+            }
+
+            ['click', 'keydown', 'mousemove', 'scroll'].forEach(function(evt) {
+                document.addEventListener(evt, function() {
+                    if (!document.body.classList.contains('auth-pending')) {
+                        resetInactivityTimer();
                     }
-                });
+                }, { passive: true });
+            });
+
+            function doLogout() {
+                sessionStorage.clear();
+                if (auth) {
+                    auth.signOut().finally(function() {
+                        window.location.href = 'admin-login.html';
+                    });
+                } else {
+                    window.location.href = 'admin-login.html';
+                }
+            }
+
+            // ============================================
+            // AUTH GUARD — tolak akses kalau belum login
+            // "Fail closed": kalau Firebase gagal init sama sekali, tetap
+            // arahkan ke halaman login, jangan biarkan dashboard terbuka.
+            // ============================================
+            var authGate = document.getElementById('authGate');
+
+            function revealApp(user) {
+                if (appStarted) return; // cegah init dobel kalau onAuthStateChanged terpanggil lagi
+                appStarted = true;
+
+                sessionStorage.setItem('admin_username', user.email);
+                if (!sessionStorage.getItem('admin_login_time')) {
+                    sessionStorage.setItem('admin_login_time', new Date().toISOString());
+                }
+
+                document.body.classList.remove('auth-pending');
+                if (authGate) authGate.style.display = 'none';
+
+                resetInactivityTimer();
+                startDashboard();
+            }
+
+            function redirectToLogin() {
+                sessionStorage.clear();
+                window.location.href = 'admin-login.html';
+            }
+
+            if (!auth) {
+                // Firebase gagal dimuat/inisialisasi -> jangan tampilkan dashboard sama sekali.
+                redirectToLogin();
+            } else {
+                if (isSessionExpired()) {
+                    redirectToLogin();
+                } else {
+                    auth.onAuthStateChanged(function(user) {
+                        if (!user) {
+                            redirectToLogin();
+                        } else {
+                            revealApp(user);
+                        }
+                    });
+                }
             }
 
             // ============================================
@@ -2357,6 +2472,7 @@
             // MODUL HARGA (Firestore: roomTypes) - REAL-TIME
             // ============================================
             var hargaData = [];
+            var hargaUnsubscribe = null;
 
             function renderHargaTable() {
                 var tbody = document.getElementById('hargaTableBody');
@@ -2475,7 +2591,7 @@
                     return;
                 }
 
-                db.collection('roomTypes').onSnapshot(function(snapshot) {
+                hargaUnsubscribe = db.collection('roomTypes').onSnapshot(function(snapshot) {
                     hargaData = [];
                     snapshot.forEach(function(doc) {
                         var d = doc.data();
@@ -2674,15 +2790,7 @@
             // ============================================
             document.getElementById('btnLogout').addEventListener('click', function() {
                 if (confirm('Yakin ingin keluar dari dashboard admin?')) {
-                    if (auth) {
-                        auth.signOut().then(function() {
-                            sessionStorage.clear();
-                            window.location.href = 'admin-login.html';
-                        });
-                    } else {
-                        sessionStorage.clear();
-                        window.location.href = 'admin-login.html';
-                    }
+                    doLogout();
                 }
             });
 
@@ -2708,29 +2816,38 @@
             });
 
             // ============================================
-            // INIT
+            // INIT (dipanggil HANYA setelah auth dikonfirmasi valid)
             // ============================================
-            var adminName = sessionStorage.getItem('admin_username') || 'Admin';
-            var adminRole = sessionStorage.getItem('admin_role') || 'Super Administrator';
-            document.getElementById('adminName').textContent = adminName;
-            document.getElementById('adminRole').textContent = adminRole;
-            document.getElementById('adminAvatar').textContent = adminName.charAt(0).toUpperCase();
+            function startDashboard() {
+                var adminName = sessionStorage.getItem('admin_username') || 'Admin';
+                var adminRole = sessionStorage.getItem('admin_role') || 'Super Administrator';
+                document.getElementById('adminName').textContent = adminName;
+                document.getElementById('adminRole').textContent = adminRole;
+                document.getElementById('adminAvatar').textContent = adminName.charAt(0).toUpperCase();
 
-            renderVisualRooms();
-            renderTableRooms();
-            renderPenghuni();
-            renderPembayaran();
-            renderBanners();
-            renderGaleri();
-            renderVideos();
-            renderAdmins();
-            initHargaListener();
+                renderVisualRooms();
+                renderTableRooms();
+                renderPenghuni();
+                renderPembayaran();
+                renderBanners();
+                renderGaleri();
+                renderVideos();
+                renderAdmins();
+                initHargaListener();
 
-            setTimeout(checkScrollIndicator, 500);
+                setTimeout(checkScrollIndicator, 500);
 
-            console.log('✅ JDI KOSKITA - Admin Dashboard v3.0 Loaded');
-            console.log('👤 Login sebagai: ' + adminName + ' (' + adminRole + ')');
-            console.log('📊 CMS: Banner, Galeri, Video, Admin siap digunakan!');
+                console.log('✅ JDI KOSKITA - Admin Dashboard v3.0 Loaded');
+                console.log('👤 Login sebagai: ' + adminName + ' (' + adminRole + ')');
+                console.log('📊 CMS: Banner, Galeri, Video, Admin siap digunakan!');
+            }
+
+            // Lepaskan listener Firestore saat pindah halaman, biar tidak
+            // ada koneksi "menggantung" yang bikin sesi jadi berat/aneh.
+            window.addEventListener('beforeunload', function() {
+                if (hargaUnsubscribe) hargaUnsubscribe();
+                if (inactivityTimer) clearTimeout(inactivityTimer);
+            });
 
         })();
     </script>
