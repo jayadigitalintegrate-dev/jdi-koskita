@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,9 +33,11 @@
             0% {
                 background-position: 0% 50%;
             }
+
             50% {
                 background-position: 100% 50%;
             }
+
             100% {
                 background-position: 0% 50%;
             }
@@ -71,6 +74,7 @@
                 opacity: 0;
                 transform: translateY(30px) scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -236,13 +240,16 @@
         }
 
         @keyframes shake {
+
             0%,
             100% {
                 transform: translateX(0);
             }
+
             25% {
                 transform: translateX(-8px);
             }
+
             75% {
                 transform: translateX(8px);
             }
@@ -295,16 +302,20 @@
             gap: 14px;
             color: #fff;
         }
+
         #checkingOverlay .spinner {
             width: 38px;
             height: 38px;
-            border: 4px solid rgba(255,255,255,0.25);
+            border: 4px solid rgba(255, 255, 255, 0.25);
             border-top-color: #FF7A00;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
+
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Responsive */
@@ -330,6 +341,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Overlay pemeriksaan sesi awal -->
@@ -365,7 +377,8 @@
                 <label>Password <span class="required">*</span></label>
                 <div class="input-icon">
                     <span class="icon">🔒</span>
-                    <input type="password" id="password" placeholder="Masukkan password" required autocomplete="current-password" />
+                    <input type="password" id="password" placeholder="Masukkan password" required
+                        autocomplete="current-password" />
                 </div>
             </div>
 
@@ -394,7 +407,7 @@
     </div>
 
     <script>
-        (function() {
+        (function () {
             'use strict';
 
             const loginForm = document.getElementById('loginForm');
@@ -413,20 +426,25 @@
             // ============================================
             // FIREBASE AUTH
             // ============================================
+
             var firebaseConfig = {
                 apiKey: "AIzaSyBBjQbXnnOxc4MkO8bg4iiTIl7FoEoiers",
                 authDomain: "jdi-koskita.firebaseapp.com",
+                databaseURL: "https://jdi-koskita-default-rtdb.asia-southeast1.firebasedatabase.app",
                 projectId: "jdi-koskita",
                 storageBucket: "jdi-koskita.firebasestorage.app",
                 messagingSenderId: "280684880955",
-                appId: "1:280684880955:web:6199875974b69bfc89681e",
-                measurementId: "G-RPFK3BB1CQ"
+                appId: "1:280684880955:web:ffa5dcc4e91a4dee89681e",
+                measurementId: "G-8YYEZTZVGW"
             };
-            firebase.initializeApp(firebaseConfig);
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+
             var auth = firebase.auth();
-            console.log(firebase.app().options.apiKey);
 
-
+            console.log("Firebase Config:", firebase.app().options);
 
             function goToDashboard() {
                 if (isSubmitting) return; // hindari redirect ganda
@@ -442,7 +460,7 @@
             // Form submit TIDAK lagi melakukan redirect sendiri via setTimeout,
             // supaya tidak terjadi race antara dua jalur redirect berbeda
             // (ini penyebab "redirect setelah login pernah gagal").
-            auth.onAuthStateChanged(function(user) {
+            auth.onAuthStateChanged(function (user) {
                 initialCheckDone = true;
                 if (user) {
                     goToDashboard();
@@ -453,11 +471,11 @@
 
             // Jaga-jaga: kalau Firebase lambat/gagal menentukan status auth
             // (mis. koneksi lambat), jangan biarkan overlay nyangkut selamanya.
-            setTimeout(function() {
+            setTimeout(function () {
                 if (!initialCheckDone) hideCheckingOverlay();
             }, 4000);
 
-            loginForm.addEventListener('submit', function(e) {
+            loginForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 if (isSubmitting) return;
 
@@ -481,10 +499,10 @@
                     : firebase.auth.Auth.Persistence.SESSION;
 
                 auth.setPersistence(persistence)
-                    .then(function() {
+                    .then(function () {
                         return auth.signInWithEmailAndPassword(email, pass);
                     })
-                    .then(function(userCredential) {
+                    .then(function (userCredential) {
                         sessionStorage.setItem('admin_username', userCredential.user.email);
                         sessionStorage.setItem('admin_login_time', new Date().toISOString());
                         sessionStorage.setItem('admin_last_activity', Date.now().toString());
@@ -492,9 +510,9 @@
                         // Firebase mengkonfirmasi state berubah, bukan di sini,
                         // supaya hanya ada satu jalur redirect yang aktif.
                     })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         console.log(error.code, error.message);
-                        
+
                         loginText.style.display = 'inline';
                         loginLoading.style.display = 'none';
                         loginBtn.disabled = false;
@@ -509,7 +527,7 @@
                         }
                         showError(pesan);
                         document.querySelector('.login-container').style.animation = 'shake 0.4s ease';
-                        setTimeout(function() {
+                        setTimeout(function () {
                             document.querySelector('.login-container').style.animation = 'slideUp 0.6s ease';
                         }, 500);
                     });
@@ -518,14 +536,14 @@
             function showError(message) {
                 loginError.textContent = message;
                 loginError.classList.add('show');
-                setTimeout(function() {
+                setTimeout(function () {
                     loginError.classList.remove('show');
                 }, 5000);
             }
 
             // Enter key submit — hanya trigger submit form, tanpa dispatch
             // event submit tambahan yang bisa membuat percobaan login dobel.
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter' && document.activeElement &&
                     (document.activeElement === username || document.activeElement === password)) {
                     loginForm.requestSubmit ? loginForm.requestSubmit() : loginForm.dispatchEvent(new Event('submit', { cancelable: true }));
@@ -538,4 +556,5 @@
     </script>
 
 </body>
+
 </html>
