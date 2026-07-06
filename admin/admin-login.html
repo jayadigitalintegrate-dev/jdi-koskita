@@ -490,6 +490,8 @@
                         // supaya hanya ada satu jalur redirect yang aktif.
                     })
                     .catch(function(error) {
+                        console.log(error.code, error.message);
+                        
                         loginText.style.display = 'inline';
                         loginLoading.style.display = 'none';
                         loginBtn.disabled = false;
