@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -167,55 +168,33 @@
         /* ============================================================
            HERO SECTION - SLIDER DENGAN 6 GAMBAR
            ============================================================ */
-        .hero {
-            min-height: 92vh;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        /* Background Slider - 6 Gambar */
-        .hero-slider {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-        }
-
-        .hero-slider .slide {
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            opacity: 0;
-            animation: slideAnimation 30s infinite;
-            transition: opacity 1.5s ease;
-        }
-
-        /* 6 Gambar dengan delay berbeda */
         .hero-slider .slide:nth-child(1) {
-            background-image: url('../assets/kost1.jpg');
+            background-image: url('assets/kost1.jpg');
             animation-delay: 0s;
         }
+
         .hero-slider .slide:nth-child(2) {
-            background-image: url('../assets/kost2.jpg');
+            background-image: url('assets/kost2.jpg');
             animation-delay: 5s;
         }
+
         .hero-slider .slide:nth-child(3) {
-            background-image: url('../assets/kost3.jpg');
+            background-image: url('assets/kost3.jpg');
             animation-delay: 10s;
         }
+
         .hero-slider .slide:nth-child(4) {
-            background-image: url('../assets/kost4.jpg');
+            background-image: url('assets/kost4.jpg');
             animation-delay: 15s;
         }
+
         .hero-slider .slide:nth-child(5) {
-            background-image: url('../assets/kost5.jpg');
+            background-image: url('assets/kost5.jpg');
             animation-delay: 20s;
         }
+
         .hero-slider .slide:nth-child(6) {
-            background-image: url('../assets/kost6.jpg');
+            background-image: url('assets/kost6.jpg');
             animation-delay: 25s;
         }
 
@@ -224,18 +203,22 @@
                 opacity: 0;
                 transform: scale(1.05);
             }
+
             6% {
                 opacity: 1;
                 transform: scale(1);
             }
+
             20% {
                 opacity: 1;
                 transform: scale(1);
             }
+
             26% {
                 opacity: 0;
                 transform: scale(1.03);
             }
+
             100% {
                 opacity: 0;
                 transform: scale(1.03);
@@ -275,6 +258,7 @@
             right: -100px;
             animation-delay: 0s;
         }
+
         .hero-shapes .shape:nth-child(2) {
             width: 350px;
             height: 350px;
@@ -283,6 +267,7 @@
             left: -80px;
             animation-delay: -7s;
         }
+
         .hero-shapes .shape:nth-child(3) {
             width: 250px;
             height: 250px;
@@ -293,16 +278,20 @@
         }
 
         @keyframes floatShape {
+
             0%,
             100% {
                 transform: translate(0, 0) scale(1);
             }
+
             25% {
                 transform: translate(30px, -40px) scale(1.05);
             }
+
             50% {
                 transform: translate(-20px, 30px) scale(0.95);
             }
+
             75% {
                 transform: translate(40px, 20px) scale(1.02);
             }
@@ -476,6 +465,7 @@
                 opacity: 0;
                 transform: scale(0.9) translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1) translateY(0);
@@ -512,18 +502,22 @@
             font-size: 60px;
             display: block;
         }
+
         .video-error .error-title {
             font-size: 22px;
             font-weight: 700;
         }
+
         .video-error .error-desc {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
         }
+
         .video-error .error-desc a {
             color: #FF7A00;
             text-decoration: none;
         }
+
         .video-error .error-desc a:hover {
             text-decoration: underline;
         }
@@ -813,6 +807,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -826,6 +821,7 @@
             .hero-text h1 {
                 font-size: 44px;
             }
+
             .hero-text .subtitle {
                 font-size: 20px;
             }
@@ -905,18 +901,22 @@
                     opacity: 0;
                     transform: scale(1.05);
                 }
+
                 5% {
                     opacity: 1;
                     transform: scale(1);
                 }
+
                 18% {
                     opacity: 1;
                     transform: scale(1);
                 }
+
                 23% {
                     opacity: 0;
                     transform: scale(1.03);
                 }
+
                 100% {
                     opacity: 0;
                     transform: scale(1.03);
@@ -926,18 +926,23 @@
             .hero-slider .slide:nth-child(1) {
                 animation-delay: 0s;
             }
+
             .hero-slider .slide:nth-child(2) {
                 animation-delay: 4s;
             }
+
             .hero-slider .slide:nth-child(3) {
                 animation-delay: 8s;
             }
+
             .hero-slider .slide:nth-child(4) {
                 animation-delay: 12s;
             }
+
             .hero-slider .slide:nth-child(5) {
                 animation-delay: 16s;
             }
+
             .hero-slider .slide:nth-child(6) {
                 animation-delay: 20s;
             }
@@ -957,9 +962,11 @@
                 width: 48px;
                 height: 48px;
             }
+
             .logo h2 {
                 font-size: 20px;
             }
+
             .logo p {
                 font-size: 10px;
             }
@@ -1006,6 +1013,7 @@
                 font-size: 16px;
                 line-height: 26px;
             }
+
             .hero-text .description {
                 font-size: 14px;
                 line-height: 24px;
@@ -1039,9 +1047,11 @@
             .features-header h2 {
                 font-size: 26px;
             }
+
             .card-container {
                 grid-template-columns: 1fr;
             }
+
             .card {
                 padding: 24px 20px;
             }
@@ -1080,9 +1090,11 @@
                 min-height: 200px;
                 padding: 30px 20px;
             }
+
             .video-error .error-icon {
                 font-size: 40px;
             }
+
             .video-error .error-title {
                 font-size: 18px;
             }
@@ -1092,12 +1104,14 @@
             .nav-menu {
                 display: flex !important;
             }
+
             .hamburger {
                 display: none !important;
             }
         }
     </style>
 </head>
+
 <body>
 
     <!-- ============================================================
@@ -1186,7 +1200,8 @@
                             <span class="big" id="downloadBig">Google Play</span>
                         </span>
                     </a>
-                    <a href="#" class="btn btn-outline" id="btnWatchVideo">▶ <span id="watchVideoText">Lihat Video</span></a>
+                    <a href="#" class="btn btn-outline" id="btnWatchVideo">▶ <span id="watchVideoText">Lihat
+                            Video</span></a>
                 </div>
             </div>
         </div>
@@ -1222,7 +1237,8 @@
                     📥 <a href="../assets/video/jdiiklan.mp4" download>Download Video</a> &nbsp;|&nbsp;
                     🔗 <a href="https://www.youtube.com/embed/xxx" target="_blank">Tonton di YouTube</a>
                     <br /><br />
-                    <span style="font-size:12px;opacity:0.5;">Pastikan file video tersedia di folder assets/video/</span>
+                    <span style="font-size:12px;opacity:0.5;">Pastikan file video tersedia di folder
+                        assets/video/</span>
                 </div>
             </div>
 
@@ -1303,7 +1319,7 @@
     JAVASCRIPT
     ============================================================ -->
     <script>
-        (function() {
+        (function () {
             'use strict';
 
             // ============================================
@@ -1404,7 +1420,7 @@
             // ============================================
             // SWITCH LANGUAGE
             // ============================================
-            window.switchLanguage = function(langCode) {
+            window.switchLanguage = function (langCode) {
                 if (langCode === currentLang) return;
                 currentLang = langCode;
                 localStorage.setItem('jdi_lang', langCode);
@@ -1491,15 +1507,15 @@
             let currentDot = 0;
             const totalDots = dots.length;
 
-            setInterval(function() {
-                dots.forEach(function(d) { d.classList.remove('active'); });
+            setInterval(function () {
+                dots.forEach(function (d) { d.classList.remove('active'); });
                 currentDot = (currentDot + 1) % totalDots;
                 dots[currentDot].classList.add('active');
             }, 5000);
 
-            dots.forEach(function(dot, index) {
-                dot.addEventListener('click', function() {
-                    dots.forEach(function(d) { d.classList.remove('active'); });
+            dots.forEach(function (dot, index) {
+                dot.addEventListener('click', function () {
+                    dots.forEach(function (d) { d.classList.remove('active'); });
                     dot.classList.add('active');
                     currentDot = index;
                 });
@@ -1522,7 +1538,7 @@
                 const sources = video.querySelectorAll('source');
                 let hasSupportedSource = false;
 
-                sources.forEach(function(source) {
+                sources.forEach(function (source) {
                     const type = source.getAttribute('type');
                     if (type && video.canPlayType(type) !== '') {
                         hasSupportedSource = true;
@@ -1541,7 +1557,7 @@
             }
 
             if (btnWatchVideo) {
-                btnWatchVideo.addEventListener('click', function(e) {
+                btnWatchVideo.addEventListener('click', function (e) {
                     e.preventDefault();
 
                     // Reset state
@@ -1558,15 +1574,15 @@
                     modalVideo.load();
 
                     // Cek support setelah load
-                    setTimeout(function() {
+                    setTimeout(function () {
                         const supported = checkVideoSupport();
 
                         if (supported) {
                             // Coba play
-                            modalVideo.play().then(function() {
+                            modalVideo.play().then(function () {
                                 videoLoading.classList.remove('show');
                                 modalVideo.style.opacity = '1';
-                            }).catch(function(err) {
+                            }).catch(function (err) {
                                 console.log('Autoplay tidak diizinkan:', err);
                                 videoLoading.classList.remove('show');
                                 modalVideo.style.opacity = '1';
@@ -1578,7 +1594,7 @@
                     }, 500);
 
                     // Event listener untuk error video
-                    modalVideo.onerror = function() {
+                    modalVideo.onerror = function () {
                         videoLoading.classList.remove('show');
                         videoError.classList.add('show');
                         modalVideo.style.display = 'none';
@@ -1586,7 +1602,7 @@
                     };
 
                     // Event listener untuk video loaded
-                    modalVideo.onloadedmetadata = function() {
+                    modalVideo.onloadedmetadata = function () {
                         videoLoading.classList.remove('show');
                         modalVideo.style.opacity = '1';
                     };
@@ -1610,13 +1626,13 @@
                 closeVideoModal.addEventListener('click', closeModal);
             }
 
-            videoModal.addEventListener('click', function(e) {
+            videoModal.addEventListener('click', function (e) {
                 if (e.target === videoModal) {
                     closeModal();
                 }
             });
 
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && videoModal.classList.contains('show')) {
                     closeModal();
                 }
@@ -1629,12 +1645,12 @@
             const navMenu = document.getElementById('navMenu');
 
             if (hamburger && navMenu) {
-                hamburger.addEventListener('click', function() {
+                hamburger.addEventListener('click', function () {
                     navMenu.classList.toggle('open');
                 });
 
-                navMenu.querySelectorAll('a').forEach(function(link) {
-                    link.addEventListener('click', function() {
+                navMenu.querySelectorAll('a').forEach(function (link) {
+                    link.addEventListener('click', function () {
                         if (window.innerWidth <= 576) {
                             navMenu.classList.remove('open');
                         }
@@ -1646,15 +1662,15 @@
             // 4. PRELOAD GAMBAR
             // ============================================
             const images = [
-                '../assets/kost1.jpg',
-                '../assets/kost2.jpg',
-                '../assets/kost3.jpg',
-                '../assets/kost4.jpg',
-                '../assets/kost5.jpg',
-                '../assets/kost6.jpg'
+                "assets/kost1.jpg",
+                "assets/kost2.jpg",
+                "assets/kost3.jpg",
+                "assets/kost4.jpg",
+                "assets/kost5.jpg",
+                "assets/kost6.jpg"
             ];
 
-            images.forEach(function(src) {
+            images.forEach(function (src) {
                 const img = new Image();
                 img.src = src;
             });
@@ -1673,23 +1689,24 @@
 
         const hero = document.querySelector(".hero");
 
-let current = 0;
+        let current = 0;
 
-function changeBackground() {
-    current = (current + 1) % images.length;
+        function changeBackground() {
+            current = (current + 1) % images.length;
 
-    hero.style.opacity = "0";
+            hero.style.opacity = "0";
 
-    setTimeout(() => {
-        hero.style.backgroundImage = `linear-gradient(rgba(8,35,82,.55),rgba(8,35,82,.55)), url('${images[current]}')`;
-        hero.style.opacity = "1";
-    }, 500);
-}
+            setTimeout(() => {
+                hero.style.backgroundImage = `linear-gradient(rgba(8,35,82,.55),rgba(8,35,82,.55)), url('${images[current]}')`;
+                hero.style.opacity = "1";
+            }, 500);
+        }
 
-hero.style.transition = "opacity .8s ease";
+        hero.style.transition = "opacity .8s ease";
 
-setInterval(changeBackground, 5000);
+        setInterval(changeBackground, 5000);
     </script>
 
 </body>
+
 </html>
