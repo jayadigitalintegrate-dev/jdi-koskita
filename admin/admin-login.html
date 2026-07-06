@@ -424,6 +424,9 @@
             };
             firebase.initializeApp(firebaseConfig);
             var auth = firebase.auth();
+            console.log(firebase.app().options.apiKey);
+
+
 
             function goToDashboard() {
                 if (isSubmitting) return; // hindari redirect ganda
