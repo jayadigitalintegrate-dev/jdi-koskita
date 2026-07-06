@@ -1752,7 +1752,7 @@
             // FIREBASE CONFIG
             // ============================================
             var firebaseConfig = {
-                apiKey: "AIzaSyBBjQbXnnOxc4MkO8bg4iiTIL7FoEoiers",
+                apiKey: "AIzaSyBBjQbXnnOxc4MkO8bg4iiTIl7FoEoiers",
                 authDomain: "jdi-koskita.firebaseapp.com",
                 projectId: "jdi-koskita",
                 storageBucket: "jdi-koskita.firebasestorage.app",
@@ -1853,13 +1853,32 @@
                 if (isSessionExpired()) {
                     redirectToLogin();
                 } else {
+                    var authCheckDone = false;
                     auth.onAuthStateChanged(function(user) {
+                        authCheckDone = true;
                         if (!user) {
                             redirectToLogin();
                         } else {
                             revealApp(user);
                         }
                     });
+
+                    // Pengaman: kalau onAuthStateChanged macet/tidak pernah terpanggil
+                    // (misalnya request verifikasi sesi ke server Firebase nyangkut karena
+                    // koneksi/ekstensi browser/proxy), jangan biarkan spinner "Memeriksa sesi
+                    // login..." berputar selamanya. Fallback: pakai data sesi yang tersimpan
+                    // di sessionStorage (hasil login sebelumnya) untuk tetap membuka dashboard.
+                    setTimeout(function() {
+                        if (authCheckDone || appStarted) return;
+                        var cachedEmail = sessionStorage.getItem('admin_username');
+                        if (cachedEmail) {
+                            console.warn('⚠️ onAuthStateChanged timeout - menggunakan sesi cache:', cachedEmail);
+                            revealApp({ email: cachedEmail });
+                        } else {
+                            console.warn('⚠️ onAuthStateChanged timeout - tidak ada sesi cache, redirect ke login.');
+                            redirectToLogin();
+                        }
+                    }, 8000);
                 }
             }
 
